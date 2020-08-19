@@ -1,0 +1,39 @@
+{
+    "name": "hexo-next-publist",
+    "version": "1.0.0",
+    "description": "Filterable publication list",
+    "author": "Aetf",
+    "license": "BSD-2-Clause",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Aetf/hexo-next-publist.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Aetf/hexo-next-publist/issues"
+    },
+    "homepage": "https://github.com/Aetf/hexo-next-publist",
+    "keywords": [
+        "hexo",
+        "publication",
+        "academia"
+    ],
+    "main": "src/index.js",
+    "scripts": {
+        "test": "mocha"
+    },
+    "dependencies": {
+        "@retorquere/bibtex-parser": "^3.2.10",
+        "bluebird": "^3.7.2",
+        "citation-js": "^0.5.0-alpha.6",
+        "hexo-fs": "^3.1.0",
+        "hexo-theme-next": "^8.0.0-rc.5",
+        "js-yaml": "^3.14.0",
+        "lodash": "^4.17.20",
+        "moment": "^2.27.0",
+        "url": "^0.11.0"
+    },
+    "devDependencies": {
+        "hexo": "^5.0.2",
+        "hexo-cli": "^4.2.0"
+    }
+}

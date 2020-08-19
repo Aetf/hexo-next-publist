@@ -1,0 +1,108 @@
+<div id="timeline">
+    <div class="timeline-search-panel">
+        <h4>Filters:</h4>
+        <label class="select-box">
+            <select>
+                <option value="all" selected>All Venues</option>
+                {% for venueType, venueNames in venues %}
+                {% if venueNames | length %}
+                <optgroup label="{{ venueType }}">
+                {% for venueName in venueNames %}
+                    <option value="{{ venueName }}">{{ venueName }}</option>
+                {% endfor %}
+                </optgroup>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <span class="select-arrow">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                     version="1.1" viewBox="0 0 129 129"
+                     enable-background="new 0 0 129 129"
+                     width="512px" height="512px">
+                    <g>
+                        <path d="m121.3,34.6c-1.6-1.6-4.2-1.6-5.8,0l-51,51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8,0-1.6,1.6-1.6,4.2 0,5.8l53.9,53.9c0.8,0.8 1.8,1.2 2.9,1.2 1,0 2.1-0.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2 0.1-5.8z"/>
+                    </g>
+                </svg>
+            </span>
+        </label>
+        {% for venueType in venues.keys() %}
+        <label class="check-box">
+            <input type="checkbox" checked="checked" value="{{ venueType }}"> {{ venueType }}
+        </label>
+        {% endfor %}
+    </div>
+    <div class="pub-list">
+    {% set year = '' %}
+    {% for pub in publications %}
+    {% if pub.year !== year %}
+        {% if year !== '' %}
+            </ul>
+        </section>
+        {% endif %}
+        {% set year = pub.year %}
+        <section class="year">
+            <div class="year-mark-wrapper">
+                <span class="year-mark" data-year="{{ year }}"></span>
+            </div>
+            <ul>
+    {% endif %}
+                {# A single block for a paper #}
+                <li data-pub-venue="{{ conferences[pub.confkey].venue }}"
+                    data-pub-cat="{{ conferences[pub.confkey].cat }}">
+                    <div class="pub-block">
+                        <div class="pub-title">
+                            {# use first link as title link if possible #}
+                            {%- if pub.links.length() > 0 -%}
+                                <a target="_blank" href="{{ pub.links[0].href }}">{{ pub.title }}</a>
+                            {%- else -%}
+                                {{ pub.title }}
+                            {%- endif -%}
+                            {%- if pub.date.isAfter(moment().subtract(6, 'months')) -%}
+                                <span class="label primary">New</span>
+                            {%- endif -%}
+                        </div>
+                        {%- if pub.badges.length() > 0 -%}
+                        <div class="pub-badges">
+                            {%- for badge in pub.badges -%}
+                                <span class="label default pub-badge">{{ badge }}</span>
+                            {%- endfor -%}
+                        </div>
+                        {%- endif -%}
+                        <div class="pub-authors">
+                            {% set comma = joiner(",") %}
+                            {%- for author in pub.authors -%}
+                                {%- if not loop.last -%}
+                                    {{- comma() -}}
+                                {%- elif not loop.first -%}
+                                    and
+                                {%- endif -%}
+                            <span class="pub-author pub-author-{{ author | replace(' ', '-') }}">{{ author | replace(' ', '\u00a0') }}</span>
+                            {%- endfor -%}
+                        </div>
+                        <div class="pub-conference">
+                            {{ conferences[pub.confkey].name }}
+                            (<a target="_blank" title="{{ conferences[pub.confkey].acceptance }}"
+                                href="{{ conferences[pub.confkey].url }}">{{ pub.confkey }}</a>)
+                        </div>
+                        <div class="pub-abstract">
+                            <blockquote>
+                                {{- pub.abstract }}
+                            </blockquote>
+                        </div>
+                        <div class="pub-links">
+                            {% for link in pub.links %}
+                                <a target="_blank" href="{{ link.href }}">[{{ link.name }}]</a>
+                            {% endfor %}
+                            <a class="pub-link-bibtex" data-clipboard-text="{{ pub.bibtex }}">[bibtex]</a>
+                            <a class="pub-link-abstract">[abstract]</a>
+                        </div>
+                    </div>
+                </li>
+    {% endfor %}
+    {# close last section #}
+    {%- if year !== '' -%}
+            </ul>
+        </section>
+    {%- endif -%}
+    </div>
+</div>
