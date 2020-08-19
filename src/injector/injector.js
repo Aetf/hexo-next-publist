@@ -9,7 +9,7 @@ function Injector(hexo, opts) {
 }
 
 Injector.prototype._inject = function (injects) {
-    injects.headEnd.file('publist-headend', pathFn.join(TEMPLATE_DIR, 'headend.njk'), {}, {cache: true});
+    injects.head.file('publist-headend', pathFn.join(TEMPLATE_DIR, 'headend.njk'), {}, {cache: true});
     injects.bodyEnd.file('publist-bodyend', pathFn.join(TEMPLATE_DIR, 'bodyend.njk'), {}, {cache: true});
 };
 

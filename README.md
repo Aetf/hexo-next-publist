@@ -31,7 +31,7 @@ The following shows every option:
 
 ```yaml
 # directory used for relative links in publication items
-publication_dir: assets/pub
+pub_dir: assets/pub
 # where should the publist js and css files be served
 # publist will generate its own js and css file under this prefix
 assets_prefix: assets/publist

@@ -5,7 +5,7 @@
             <select>
                 <option value="all" selected>All Venues</option>
                 {% for venueType, venueNames in venues %}
-                {% if venueNames | length %}
+                {% if venueNames.length > 0 %}
                 <optgroup label="{{ venueType }}">
                 {% for venueName in venueNames %}
                     <option value="{{ venueName }}">{{ venueName }}</option>
@@ -52,7 +52,7 @@
                     <div class="pub-block">
                         <div class="pub-title">
                             {# use first link as title link if possible #}
-                            {%- if pub.links.length() > 0 -%}
+                            {%- if pub.links.length > 0 -%}
                                 <a target="_blank" href="{{ pub.links[0].href }}">{{ pub.title }}</a>
                             {%- else -%}
                                 {{ pub.title }}
@@ -61,7 +61,7 @@
                                 <span class="label primary">New</span>
                             {%- endif -%}
                         </div>
-                        {%- if pub.badges.length() > 0 -%}
+                        {%- if pub.badges.length > 0 -%}
                         <div class="pub-badges">
                             {%- for badge in pub.badges -%}
                                 <span class="label default pub-badge">{{ badge }}</span>

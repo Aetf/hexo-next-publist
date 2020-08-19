@@ -1,27 +1,12 @@
 'use strict';
 
 const pathFn = require('path');
+const fs = require('hexo-fs');
 const _ = require('lodash');
 const Promise = require('bluebird');
 const moment = require('moment');
-const yaml = require('js-yaml');
-const url = require('url');
-const bibtexChunker = require('@retorquere/bibtex-parser/chunker');
 const bibtexParser = require('@retorquere/bibtex-parser');
 const { TEMPLATE_DIR } = require('../consts');
-
-function bindHelpers(locals) {
-    const helpers = hexo.extend.helper.list();
-    const keys = Object.keys(helpers);
-    let key = '';
-
-    for (let i = 0, len = keys.length; i < len; i++) {
-        key = keys[i];
-        locals[key] = helpers[key].bind(locals);
-    }
-
-    return locals;
-}
 
 /**
  * Flatten a multidimensional object
@@ -67,7 +52,8 @@ class PublistTag {
         this.pub_dir = opts.pub_dir;
 
         // flatten the list of conferences to pair of [confKey, confVal];
-        let confs = Object.entries(opts.venues).flatMap(([cat, val]) => {
+        let confs = Object.entries(opts.venues);
+        confs = confs.flatMap(([cat, val]) => {
             return Object.entries(val)
                 .map(([confKey, confVal]) => [confKey, {...defConf, ...confVal, cat}])
                 .map(([confKey, confVal]) => [confKey, {...confVal, date: moment(confVal.date)}]);
@@ -75,18 +61,18 @@ class PublistTag {
         this.conferences = new Map(confs);
 
         // venues grouped by cat
-        this.venues = new Map(_.mapValues(
+        this.venues = new Map(Object.entries(_.mapValues(
             opts.venues,
             (confs) => [...new Set(Object.values(confs).map(conf => conf.venue))].sort()
-        ).entries());
+        )));
     }
 
     _itemFromEntry = async (entry) => {
-        const { conferences } = this;
+        const { hexo, conferences } = this;
 
         // cross reference to conference to get the year
         const confkey = _.get(entry.fields, 'publist_confkey[0]', '');
-        const date = conferences[confkey].date;
+        const date = conferences.has(confkey) ? conferences.get(confkey).date : moment();
 
         // links are in the format "link_name || link_ref"
         const links = _.get(entry.fields, 'publist_link', []).map(link => {
@@ -159,11 +145,16 @@ class PublistTag {
     _tag = async (args, content) => {
         const { hexo, conferences, venues } = this;
 
+        // content is read from the first args
+        const bibstring = await fs.readFile(pathFn.join(hexo.source_dir, '_data', args[0]));
         // parse content as bibtex
-        const bib = bibtexParser.parse(content, {
+        const bib = bibtexParser.parse(bibstring, {
             raw: true,
             unnestMode: 'preserve',
         });
+        if (bib.errors.length > 0) {
+            this.hexo.log.error(bib.errors);
+        }
         // construct list of items
         const items = await Promise.all(bib.entries.map(this._itemFromEntry));
         // sort them by conference date and filter
@@ -171,7 +162,7 @@ class PublistTag {
             .sort((a, b) => a.date.diff(b.date))
             .filter(item => item.date.isBefore(moment()));
 
-        const locals = bindHelpers({
+        const locals = this._bindHelpers({
             args,
             // directly inject items into the template context
             publications,
@@ -192,10 +183,18 @@ class PublistTag {
         }, locals);
     }
 
+    _bindHelpers = (locals) => {
+        const helpers = this.hexo.extend.helper.list();
+        for (let key of Object.keys(helpers)) {
+            locals[key] = helpers[key].bind(locals);
+        }
+
+        return locals;
+    }
+
     register = () => {
-        const { hexo } = this
-        hexo.extend.tag.register('publist', this._tag, { ends: true, async: true });
+        this.hexo.extend.tag.register('publist', this._tag, { ends: true, async: true });
     };
 }
 
-module.exports = TagPlugin;
+module.exports = PublistTag;
