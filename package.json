@@ -24,7 +24,6 @@
     },
     "dependencies": {
         "@retorquere/bibtex-parser": "^3.2.10",
-        "bluebird": "^3.7.2",
         "lodash": "^4.17.20",
         "moment": "^2.27.0",
         "parent-require": "^1.0.0"

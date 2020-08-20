@@ -1,6 +1,5 @@
 'use strict';
 
-const Promise = require('bluebird');
 const { extname, join } = require('path');
 const prequire = require('parent-require');
 
@@ -19,16 +18,13 @@ const process = (ctx, { prefix }, name) => {
     };
 
     // join any prefix
-    ctx.log.info(`Publist asset prefix is '${prefix}'`);
     path = join(prefix, path);
-
 
     if (asset.renderable && ctx.render.isRenderable(path)) {
       // Replace extension name if the asset is renderable
       const filename = path.substring(0, path.length - extname(path).length);
 
       path = `${filename}.${ctx.render.getOutput(path)}`;
-      ctx.log.info(`Publist asset served at: ${path}`)
 
       data.data = () => ctx.render.render({
         path: source,

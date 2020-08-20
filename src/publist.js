@@ -2,7 +2,6 @@
 
 const pathFn = require('path');
 const _ = require('lodash');
-const Promise = require('bluebird');
 const moment = require('moment');
 const prequire = require('parent-require');
 
