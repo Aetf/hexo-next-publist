@@ -1,13 +1,15 @@
 'use strict';
 
 const pathFn = require('path');
+
 const _ = require('lodash');
 const moment = require('moment');
 const prequire = require('parent-require');
+const stripIndent = require('strip-indent');
+const bibtex = require('@retorquere/bibtex-parser');
 
 const fs = prequire('hexo-fs');
 
-const bibtexParser = require('@retorquere/bibtex-parser');
 const { TEMPLATE_DIR } = require('./consts');
 
 /**
@@ -71,19 +73,21 @@ class PublistTag {
         )));
     }
 
-    _itemFromEntry = async ([rawentry, entry]) => {
+    _itemFromEntry = async ({ entry, bibStr, abs }) => {
         const { hexo, conferences } = this;
 
         // publist_confkey: cross reference to conference to get the year
-        const confkey = _.get(rawentry.fields, 'publist_confkey[0]', '');
+        const confkey = _.get(entry.fields, 'publist_confkey[0]', '');
         const date = _.get(conferences, confkey + '.date', moment());
-        // const date = conferences.has(confkey) ? conferences.get(confkey).date : moment();
+
+        // title: entry title
+        const title = _.get(entry.fields, 'title[0]', '');
 
         // publist_link: links are in the format "link_name || link_ref"
-        const links = _.get(rawentry.fields, 'publist_link', []).map(link => {
+        const links = _.get(entry.fields, 'publist_link', []).map(link => {
             let [name, href] = link.split(' || ');
             if (href == null) {
-                this.hexo.log.w(`Publication item ${entry.fields['title'][0]} has a link without url: ${name}`);
+                this.hexo.log.w(`Publication item ${title} has a link without url: ${name}`);
                 href = '';
             }
 
@@ -95,79 +99,107 @@ class PublistTag {
             return { name, href };
         });
 
-        // reconstruct bibtxt source, this is VERY primitive, and does not handle anything special
-        // other than:
-        // - concating authors with 'and'
-        // - protect everything in title
-        const fieldsstring = Object.entries(rawentry.fields)
-            .filter(([name, values]) => {
-                if (name.startsWith('publist_')) {
-                    return false;
-                }
-                if (values.length < 1) {
-                    return false;
-                }
-                return true
-            })
-            .map(([name, values]) => {
-                let val = values[0];
-                if (name === 'author') {
-                    val = values.join(' and ');
-                } else if (name === 'title') {
-                    val = `{${val}}`;
-                }
-                return `    ${name} = {${values[0]}}`;
-            });
-        let bibtex = `@${rawentry.type}{${rawentry.key},\n`;
-        bibtex += fieldsstring.join(',\n')
-        bibtex += '\n}\n';
-
         // render abstruct using simple markdown
-        const abstract = await hexo.render.render({
-            text: _.get(rawentry.fields, 'publist_abstract[0]', ''),
-            engine: 'markdown'
-        });
+        const abstract = await hexo.render.render(
+            { text: abs, engine: 'markdown' },
+            { 
+                gfm: false,
+                breaks: false,
+            }
+        );
 
         return {
-            title: _.get(entry.fields, 'title[0]', ''),
-            authors: entry.creators.author.map(({lastName, firstName}) => `${firstName} ${lastName}`),
             citekey: entry.key,
-            badges: _.get(rawentry.fields, 'publist_badge', []),
+            title,
+            authors: entry.creators.author.map(({lastName, firstName}) => `${firstName} ${lastName}`),
+            badges: _.get(entry.fields, 'publist_badge', []),
             confkey,
             date,
             year: date.format('YYYY'),
             abstract,
             links,
-            bibtex,
+            bibtex: bibStr,
         };
     }
 
+    _parseBibEntries = async (input) => {
+        // chunk into pieces for easier association of raw data and parsed data
+        let chunks = await bibtex.chunker(input, { async: true });
+
+        const publistPtn = /^publist_/;
+        const opts = {
+            async: true,
+            verbatimFields: [publistPtn],
+        }
+        let res = chunks.filter(chunk => chunk.entry).map(async chunk => {
+            if (chunk.error) {
+                this.hexo.log.error('Ignoring bibtex chunk due to error: ' + chunk.error);
+                return { error: true };
+            }
+            const text = chunk.text;
+            // normal info
+            const bib = await bibtex.parse(text, opts);
+            if (bib.errors.length !== 0) {
+                this.hexo.log.error('Ignoring bibtex chunk due to error: ' + bib.errors.join(' '));
+                return { error: true };
+            }
+            if (bib.entries.length !== 1) {
+                throw new TypeError('Expected chunk to have only one entry');
+            }
+            const entry = bib.entries[0];
+            // get ast
+            const ast = await bibtex.ast(text, opts);
+            if (ast.length !== 1
+                || ast[0].kind !== 'Bibliography'
+                || ast[0].children.length !== 1
+                || ast[0].children[0].kind !== 'Entry'
+                ) {
+                throw new TypeError('Expected only one entry chunk in the ast');
+            }
+            const entryAst = ast[0].children[0];
+
+            // reconstruct original text after striping fields
+            const fields = entryAst.fields.filter(field => !publistPtn.test(field.name));
+            let bibStr = `@${entryAst.type}{${entryAst.id},\n`;
+            bibStr += fields.map(field => '    ' + field.source.trim()).join('\n');
+            bibStr += '\n}\n';
+
+            // get abstract
+            let abs = '';
+            const absField = entryAst.fields.find(field => field.name === 'publist_abstract');
+            if (absField) {
+                const concat_source = (node) => {
+                    if (Array.isArray(node)) {
+                        return node.map(concat_source).join('');
+                    }
+
+                    return node.source || concat_source(node.value);
+                }
+                abs = concat_source(absField.value).replace(/^{/, '').replace(/}$/, '');
+                // strip surrounding braces
+                abs = stripIndent(abs).trim();
+            }
+
+            return { entry, bibStr, abs, error: false };
+        });
+        res = await Promise.all(res);
+        return res
+            .filter(elem => !elem.error)
+            .map(elem => _.pick(elem, ['entry', 'bibStr', 'abs']));
+    }
+
     /**
-     *
      * @param {*} args Arguments to the tag. An array of string, they are whitespace splited.
-     * @param {*} content The content between the open and end tag.
      */
-    _tag = async (args, content) => {
+    _tag = async (args) => {
         const { hexo, conferences, venues } = this;
 
         // content is read from the first args
         const bibstring = await fs.readFile(pathFn.join(hexo.source_dir, '_data', args[0]));
         // parse content as bibtex
-        const rawbib = bibtexParser.parse(bibstring, {
-            raw: true,
-            unnestMode: 'preserve',
-        });
-        if (rawbib.errors.length > 0) {
-            this.hexo.log.error(rawbib.errors);
-        }
-        // parse a second time without raw to render the titles
-        const bib = bibtexParser.parse(bibstring);
-        if (bib.errors.length > 0) {
-            this.hexo.log.error(bib.errors);
-        }
-
+        const entries = await this._parseBibEntries(bibstring);
         // construct list of items
-        const items = await Promise.all(zip(rawbib.entries, bib.entries).map(this._itemFromEntry));
+        const items = await Promise.all(entries.map(this._itemFromEntry));
         // sort them by conference date and filter
         const publications = items
             .sort((a, b) => a.date.diff(b.date))
@@ -202,13 +234,9 @@ class PublistTag {
 
         return locals;
     }
-
-    register = () => {
-        this.hexo.extend.tag.register('publist', this._tag, { ends: true, async: true });
-    };
 }
 
 module.exports = ctx => {
     const tag = new PublistTag(ctx);
-    ctx.extend.tag.register('publist', tag._tag, { ends: true, async: true });
+    ctx.extend.tag.register('publist', tag._tag, { async: true });
 };

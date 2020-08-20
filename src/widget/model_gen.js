@@ -5,22 +5,38 @@ const prequire = require('parent-require');
 
 const fs = prequire('hexo-fs');
 
-const process = (ctx, { prefix }, name) => {
+function mapAsync(array, callbackfn) {
+  return Promise.all(array.map(callbackfn));
+}
+
+async function filterAsync(array, callbackfn) {
+  const filterMap = await mapAsync(array, callbackfn);
+  return array.filter((value, index) => filterMap[index]);
+}
+
+const process = async (ctx, { prefix }, name) => {
   prefix = prefix || '';
 
-  return Promise.filter(ctx.model(name).toArray(), asset => fs.exists(asset.source).tap(exist => {
-    if (!exist) return asset.remove();
-  })).map(asset => {
-    const { source } = asset;
-    let { path } = asset;
+  let files = await ctx.model(name).toArray();
+  files = await filterAsync(files, async file => {
+    const e = await fs.exists(file.source);
+    if (!e) {
+      await file.remove();
+    }
+    return e;
+  });
+
+  return await mapAsync(files, async file => {
+    const { source } = file;
+    let { path } = file;
     const data = {
-      modified: asset.modified
+      modified: file.modified
     };
 
     // join any prefix
     path = join(prefix, path);
 
-    if (asset.renderable && ctx.render.isRenderable(path)) {
+    if (file.renderable && ctx.render.isRenderable(path)) {
       // Replace extension name if the asset is renderable
       const filename = path.substring(0, path.length - extname(path).length);
 
@@ -44,9 +60,10 @@ module.exports = (ctx, opts, ...names) => {
   /**
    * An asset generator for as many models as given by `names`
    */
-  return () => {
-    return Promise.all(
+  return async () => {
+    const data = await Promise.all(
       names.map(name => process(ctx, opts, name))
-    ).then(data => [].concat(...data));
+    );
+    return [].concat(...data);
   }
 };

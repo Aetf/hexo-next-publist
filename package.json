@@ -26,7 +26,8 @@
         "@retorquere/bibtex-parser": "^3.2.10",
         "lodash": "^4.17.20",
         "moment": "^2.27.0",
-        "parent-require": "^1.0.0"
+        "parent-require": "^1.0.0",
+        "strip-indent": "^3.0.0"
     },
     "peerDependencies": {
         "hexo": "^5.0.2",
