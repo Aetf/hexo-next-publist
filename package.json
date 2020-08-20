@@ -25,21 +25,21 @@
     "dependencies": {
         "@retorquere/bibtex-parser": "^3.2.10",
         "bluebird": "^3.7.2",
-        "citation-js": "^0.5.0-alpha.6",
-        "hexo-fs": "^3.1.0",
-        "hexo-theme-next": "^8.0.0-rc.5",
-        "js-yaml": "^3.14.0",
         "lodash": "^4.17.20",
         "moment": "^2.27.0",
-        "url": "^0.11.0"
+        "parent-require": "^1.0.0"
+    },
+    "peerDependencies": {
+        "hexo": "^5.0.2",
+        "hexo-util": "^2.2.0",
+        "hexo-fs": "^3.1.0",
+        "hexo-renderer-babelify": "0.0.2",
+        "hexo-renderer-nunjucks": "^2.0.0",
+        "hexo-theme-next": "^8.0.0-rc.5"
     },
     "devDependencies": {
         "ava": "^3.11.1",
         "eslint": "^7.7.0",
-        "hexo": "^5.0.2",
-        "hexo-cli": "^4.2.0",
-        "hexo-renderer-nunjucks": "^2.0.0",
-        "hexo-renderer-marked": "^3.0.0",
         "hexo-test-utils": "^0.4.1"
     }
 }

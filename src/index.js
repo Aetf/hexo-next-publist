@@ -2,17 +2,27 @@
 
 /* global hexo */
 
-const { getOptions } = require('./option');
-const AssetsGenerator = require('./generator/assets');
-const Injector = require('./injector/injector');
-const TagPlugin = require('./tag/publist');
+const _ = require('lodash');
+const { DEFAULT_OPTIONS } = require('./consts');
+
+function processOptions (hexo) {
+    let opts = _.defaults({}, hexo.config.publist, DEFAULT_OPTIONS);
+
+    if (!opts.assets_prefix.endsWith('/')) {
+        opts.assets_prefix = opts.assets_prefix + '/';
+    }
+
+    hexo.config.publist = opts;
+
+    return opts;
+}
 
 function register(hexo) {
-    var opts = getOptions(hexo);
+    const opts = processOptions(hexo);
 
-    new AssetsGenerator(hexo, opts).register();
-    new Injector(hexo, opts).register();
-    new TagPlugin(hexo, opts).register();
+    require('./injector')(hexo);
+    require('./widget')(hexo);
+    require('./publist')(hexo);
 }
 
 register(hexo);

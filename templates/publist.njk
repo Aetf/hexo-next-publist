@@ -1,4 +1,4 @@
-<div id="timeline">
+<div id="timeline" class="publist">
     <div class="timeline-search-panel">
         <h4>Filters:</h4>
         <label class="select-box">
@@ -25,7 +25,7 @@
                 </svg>
             </span>
         </label>
-        {% for venueType in venues.keys() %}
+        {% for venueType, venueNames in venues %}
         <label class="check-box">
             <input type="checkbox" checked="checked" value="{{ venueType }}"> {{ venueType }}
         </label>
@@ -56,38 +56,37 @@
                                 <a target="_blank" href="{{ pub.links[0].href }}">{{ pub.title }}</a>
                             {%- else -%}
                                 {{ pub.title }}
-                            {%- endif -%}
-                            {%- if pub.date.isAfter(moment().subtract(6, 'months')) -%}
+                            {%- endif %}
+                            {% if pub.date.isAfter(moment().subtract(6, 'months')) -%}
                                 <span class="label primary">New</span>
-                            {%- endif -%}
+                            {%- endif %}
                         </div>
-                        {%- if pub.badges.length > 0 -%}
+                        {% if pub.badges.length > 0 -%}
                         <div class="pub-badges">
-                            {%- for badge in pub.badges -%}
+                            {%- for badge in pub.badges %}
                                 <span class="label default pub-badge">{{ badge }}</span>
-                            {%- endfor -%}
+                            {% endfor -%}
                         </div>
-                        {%- endif -%}
+                        {%- endif %}
                         <div class="pub-authors">
-                            {% set comma = joiner(",") %}
+                            {% set comma = joiner(",") -%}
                             {%- for author in pub.authors -%}
-                                {%- if not loop.last -%}
-                                    {{- comma() -}}
-                                {%- elif not loop.first -%}
-                                    and
-                                {%- endif -%}
-                            <span class="pub-author pub-author-{{ author | replace(' ', '-') }}">{{ author | replace(' ', '\u00a0') }}</span>
-                            {%- endfor -%}
+                                {{ comma() }}
+                                {%- if loop.last and not loop.first %} and {% endif %}
+                            <span class="pub-author pub-author-{{ author | replace(' ', '-') }}">{{ author | replace(' ', '&nbsp') | safe }}</span>
+                            {%- endfor %}
                         </div>
                         <div class="pub-conference">
                             {{ conferences[pub.confkey].name }}
                             (<a target="_blank" title="{{ conferences[pub.confkey].acceptance }}"
                                 href="{{ conferences[pub.confkey].url }}">{{ pub.confkey }}</a>)
                         </div>
-                        <div class="pub-abstract">
-                            <blockquote>
-                                {{- pub.abstract }}
-                            </blockquote>
+                        <div class="pub-abstract-frame">
+                            <div class="pub-abstract">
+                                <blockquote>
+                                    {{- pub.abstract }}
+                                </blockquote>
+                            </div>
                         </div>
                         <div class="pub-links">
                             {% for link in pub.links %}

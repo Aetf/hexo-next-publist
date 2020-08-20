@@ -134,9 +134,16 @@
     font-style: italic;
 }
 
+.pub-block .pub-abstract-frame {
+    height: 0px;
+    overflow: hidden;
+    /*
+     * Emulate velocity's default swing curve
+     * see https://stackoverflow.com/a/9245729/2441376
+     */
+    transition: height 0.4s cubic-bezier(.02, .01, .47, 1);
+}
 .pub-block .pub-abstract {
-    display: none;
-
     padding: 1em 0em;
 }
 .pub-block .pub-abstract p:last-child {

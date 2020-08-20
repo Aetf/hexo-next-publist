@@ -1,12 +1,15 @@
 'use strict';
 
 const pathFn = require('path');
-const fs = require('hexo-fs');
 const _ = require('lodash');
 const Promise = require('bluebird');
 const moment = require('moment');
+const prequire = require('parent-require');
+
+const fs = prequire('hexo-fs');
+
 const bibtexParser = require('@retorquere/bibtex-parser');
-const { TEMPLATE_DIR } = require('../consts');
+const { TEMPLATE_DIR } = require('./consts');
 
 /**
  * Flatten a multidimensional object
@@ -31,10 +34,12 @@ function flattenObject(obj) {
     );
 }
 
+const zip = (arr1, arr2) => arr1.map((k, i) => [k, arr2[i]]);
+
 class PublistTag {
-    constructor(hexo, opts) {
+    constructor(hexo) {
         this.hexo = hexo;
-        this._loadConfig(opts);
+        this._loadConfig(hexo.config.publist);
     }
 
     /**
@@ -58,24 +63,25 @@ class PublistTag {
                 .map(([confKey, confVal]) => [confKey, {...defConf, ...confVal, cat}])
                 .map(([confKey, confVal]) => [confKey, {...confVal, date: moment(confVal.date)}]);
         });
-        this.conferences = new Map(confs);
+        this.conferences = _.fromPairs(confs);
 
         // venues grouped by cat
-        this.venues = new Map(Object.entries(_.mapValues(
+        this.venues = _.fromPairs(Object.entries(_.mapValues(
             opts.venues,
             (confs) => [...new Set(Object.values(confs).map(conf => conf.venue))].sort()
         )));
     }
 
-    _itemFromEntry = async (entry) => {
+    _itemFromEntry = async ([rawentry, entry]) => {
         const { hexo, conferences } = this;
 
-        // cross reference to conference to get the year
-        const confkey = _.get(entry.fields, 'publist_confkey[0]', '');
-        const date = conferences.has(confkey) ? conferences.get(confkey).date : moment();
+        // publist_confkey: cross reference to conference to get the year
+        const confkey = _.get(rawentry.fields, 'publist_confkey[0]', '');
+        const date = _.get(conferences, confkey + '.date', moment());
+        // const date = conferences.has(confkey) ? conferences.get(confkey).date : moment();
 
-        // links are in the format "link_name || link_ref"
-        const links = _.get(entry.fields, 'publist_link', []).map(link => {
+        // publist_link: links are in the format "link_name || link_ref"
+        const links = _.get(rawentry.fields, 'publist_link', []).map(link => {
             let [name, href] = link.split(' || ');
             if (href == null) {
                 this.hexo.log.w(`Publication item ${entry.fields['title'][0]} has a link without url: ${name}`);
@@ -94,7 +100,7 @@ class PublistTag {
         // other than:
         // - concating authors with 'and'
         // - protect everything in title
-        const fieldsstring = Object.entries(entry.fields)
+        const fieldsstring = Object.entries(rawentry.fields)
             .filter(([name, values]) => {
                 if (name.startsWith('publist_')) {
                     return false;
@@ -113,13 +119,13 @@ class PublistTag {
                 }
                 return `    ${name} = {${values[0]}}`;
             });
-        let bibtex = `@${entry.type}{${entry.key},\n`;
+        let bibtex = `@${rawentry.type}{${rawentry.key},\n`;
         bibtex += fieldsstring.join(',\n')
         bibtex += '\n}\n';
 
         // render abstruct using simple markdown
         const abstract = await hexo.render.render({
-            text: _.get(entry.fields, 'publist_abstract[0]', ''),
+            text: _.get(rawentry.fields, 'publist_abstract[0]', ''),
             engine: 'markdown'
         });
 
@@ -127,7 +133,7 @@ class PublistTag {
             title: _.get(entry.fields, 'title[0]', ''),
             authors: entry.creators.author.map(({lastName, firstName}) => `${firstName} ${lastName}`),
             citekey: entry.key,
-            badges: _.get(entry.fields, 'publist_badge', []),
+            badges: _.get(rawentry.fields, 'publist_badge', []),
             confkey,
             date,
             year: date.format('YYYY'),
@@ -148,15 +154,21 @@ class PublistTag {
         // content is read from the first args
         const bibstring = await fs.readFile(pathFn.join(hexo.source_dir, '_data', args[0]));
         // parse content as bibtex
-        const bib = bibtexParser.parse(bibstring, {
+        const rawbib = bibtexParser.parse(bibstring, {
             raw: true,
             unnestMode: 'preserve',
         });
+        if (rawbib.errors.length > 0) {
+            this.hexo.log.error(rawbib.errors);
+        }
+        // parse a second time without raw to render the titles
+        const bib = bibtexParser.parse(bibstring);
         if (bib.errors.length > 0) {
             this.hexo.log.error(bib.errors);
         }
+
         // construct list of items
-        const items = await Promise.all(bib.entries.map(this._itemFromEntry));
+        const items = await Promise.all(zip(rawbib.entries, bib.entries).map(this._itemFromEntry));
         // sort them by conference date and filter
         const publications = items
             .sort((a, b) => a.date.diff(b.date))
@@ -197,4 +209,7 @@ class PublistTag {
     };
 }
 
-module.exports = PublistTag;
+module.exports = ctx => {
+    const tag = new PublistTag(ctx);
+    ctx.extend.tag.register('publist', tag._tag, { ends: true, async: true });
+};
