@@ -131,7 +131,7 @@ class PublistTag {
                 year: date.format('YYYY'),
             };
         })
-        .sort((a, b) => a.date.diff(b.date))
+        .sort((a, b) => b.date.diff(a.date))
         .filter(pub => pub.date.isBefore(now));
 
         const locals = this._bindHelpers({
