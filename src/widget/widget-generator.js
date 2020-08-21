@@ -1,9 +1,9 @@
 'use strict';
 
 const { extname, join } = require('path');
-const prequire = require('parent-require');
 
-const fs = prequire('hexo-fs');
+const fs = require('hexo-fs');
+const browserify = require('browserify');
 
 function mapAsync(array, callbackfn) {
   return Promise.all(array.map(callbackfn));
@@ -36,7 +36,30 @@ const process = async (ctx, { prefix }, name) => {
     // join any prefix
     path = join(prefix, path);
 
-    if (file.renderable && ctx.render.isRenderable(path)) {
+    if (extname(path) === 'js') {
+      // browserify js
+      data.data = () => browserify({ debug: true })
+        .add(source)
+        .transform('babelify', {
+          presets: [
+            [
+              '@babel/preset-env',
+              {
+                targets: {
+                  edge: "17",
+                  firefox: "60",
+                  chrome: "67",
+                  safari: "11.1",
+                },
+                useBuiltIns: "usage",
+              }
+            ]
+          ],
+          sourceMapsAbsolute: true
+        })
+        .bundle();
+    } else if (file.renderable && ctx.render.isRenderable(path)) {
+      // default handling of other types
       // Replace extension name if the asset is renderable
       const filename = path.substring(0, path.length - extname(path).length);
 
