@@ -49,6 +49,10 @@ function publist() {
             tgt.classList.toggle('shown');
             if (tgt.classList.contains('shown')) {
                 tgt.style.height = `${tgt.scrollHeight}px`;
+                tgt.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                });
             } else {
                 tgt.style.height = `0px`;
             }
