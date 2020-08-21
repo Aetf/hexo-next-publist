@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/hexo-next-publist.svg)](https://badge.fury.io/js/hexo-next-publist)
 [![npm dependencies](https://david-dm.org/Aetf/hexo-next-publist.svg)](https://david-dm.org/Aetf/hexo-next-publist)
-[![Build Status](https://travis-ci.org/Aetf/hexo-next-publist.svg?branch=master)](https://travis-ci.org/Aetf/hexo-next-publist)
+[![Build Status](https://github.com/Aetf/hexo-next-publist/workflows/Node.js%20CI/badge.svg)](https://github.com/Aetf/hexo-next-publist/actions?query=workflow%3A"Node.js+CI")
 
 [![NPM](https://nodei.co/npm/hexo-next-publist.png)](https://npmjs.org/package/hexo-next-publist)
 
