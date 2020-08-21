@@ -62,7 +62,7 @@ function publist() {
     function removeClass(elems, ...className) {
         elems.forEach(elem => elem.classList.remove(...className));
     }
-    document.querySelectorAll('.timeline-search-panel').forEach(searchPanel => {
+    document.querySelectorAll('.publist .timeline-search-panel').forEach(searchPanel => {
         const publist = searchPanel.closest('.publist');
         const select = searchPanel.querySelector('.select-box select');
 

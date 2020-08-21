@@ -1,5 +1,4 @@
 'use strict'
-/* global hexo */
 
 const pathFn = require('path');
 const prequire = require('parent-require');
@@ -8,21 +7,22 @@ const Box = prequire('hexo/lib/box');
 const { Asset } = prequire('hexo/lib/models');
 const { Pattern } = prequire('hexo-util');
 
-const createModelGenerator = require('./model_gen');
+const createWidgetGenerator = require('./widget-generator');
 
 class WidgetProcessor {
-    constructor(ctx) {
+    constructor(ctx, name) {
         this.ctx = ctx;
+        this.name = name;
 
         // include everything in widget folder
         this.pattern = new Pattern(path => true);
     }
 
     process = async (file) => {
-        const { ctx } = this;
+        const { ctx, name } = this;
         const id = pathFn.relative(ctx.base_dir, file.source).replace(/\\/g, '/');
-        const PublistAsset = ctx.model('PublistAsset');
-        const doc = PublistAsset.findById(id);
+        const model = ctx.model(name);
+        const doc = model.findById(id);
 
         if (file.type === 'delete') {
             if (doc) {
@@ -31,7 +31,7 @@ class WidgetProcessor {
             return;
         }
 
-        const res = await PublistAsset.save({
+        const res = await model.save({
             _id: id,
             path: file.path,
             modified: file.type !== 'skip',
@@ -42,36 +42,37 @@ class WidgetProcessor {
 }
 
 class Widget extends Box {
-    constructor(ctx) {
-        // widget_dir must be from the ctx.base_dir/node_modules
-        // which may be a symlink. So we can not directly use WIDGET_DIR
-        const widget_dir = pathFn.join(ctx.base_dir, 'node_modules', 'hexo-next-publist', 'widget');
-        super(ctx, widget_dir);
+    constructor(ctx, base, name) {
+        super(ctx, base);
         this.processors = [
-            new WidgetProcessor(ctx),
+            new WidgetProcessor(ctx, name),
         ];
     }
 }
 
-module.exports = ctx => {
+/**
+ * A widget box
+ * @param {*} ctx The hexo instance
+ * @param {string} name Unique name of the box
+ * @param {string} base Base path of the box
+ * @param {*} options Must contains a baseUrl key, which will be the baseUrl to serve files
+ */
+module.exports = (ctx, name, base, { baseUrl }) => {
     // register a new model
-    ctx.model('PublistAsset', Asset(ctx));
-    // register a new generator for the PublistAsset model
-    const modelGenerator = createModelGenerator(
+    ctx.model(name, Asset(ctx));
+    // register a new generator for the model
+    ctx.extend.generator.register(`${name}-widget`, createWidgetGenerator(
         ctx,
-        {
-            prefix: ctx.config.publist.assets_prefix,
-        },
-        'PublistAsset'
-    );
-    ctx.extend.generator.register('publist-asset', modelGenerator);
+        { prefix: baseUrl },
+        name,
+    ));
 
     // create the widget box once
-    const publist_widget = new Widget(ctx);
+    const widget = new Widget(ctx, base, name);
 
     ctx.extend.filter.register('before_generate', async () => {
         // run widget.process, which calls our widget processor and
         // save discovered files to PublistAsset model
-        await publist_widget.process();
+        await widget.process();
     });
 }

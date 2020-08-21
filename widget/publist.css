@@ -133,6 +133,9 @@
 .pub-block .pub-conference {
     font-style: italic;
 }
+.pub-block .pub-conference .pub-conference-acceptance {
+    font-style: normal;
+}
 
 .pub-block .pub-abstract-frame {
     height: 0px;
@@ -148,6 +151,11 @@
 }
 .pub-block .pub-abstract p:last-child {
     margin-bottom: 0px;
+}
+
+.pub-block .pub-author.pub-highlight {
+    /* Highlight authors */
+    font-weight: bold;
 }
 
 /* timeline search panel */
@@ -167,7 +175,7 @@
     background: white;
     z-index: 10;
 }
-#timeline .timeline-search-panel h4 {
+.timeline-search-panel h4 {
     margin: 0em 1em 0em .5em;
     padding: 0px;
 }
@@ -245,9 +253,4 @@
 /* Filter */
 .filter-hide {
     display: none !important;
-}
-
-/* Highlight myself */
-.pub-author-Peifeng-Yu {
-    font-weight: bold;
 }

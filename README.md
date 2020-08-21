@@ -19,25 +19,21 @@ The source code is available on [Github](https://github.com/Aetf/Aetf.github.io)
 
 This will install `hexo-next-publist` and add it as a dependency in your `package.json`.
 
+NOTE: There are also several peer dependencies you may need to install.
+Follow the instruction printed when running the previous command to install the missing ones.
+
 ## Usage
 
-### Configuration
+### Tag usage
 
-`_data/publist.yml`
+To insert publist, use the following in the post markdown source.
+The content between the tags defines any conferences the bibtex file will refer.
 
-This contains categories, conference list, and prefix for assets and servable files
-
-The following shows every option:
-
-```yaml
-# directory used for relative links in publication items
+```
+{% publist mypubs %}
 pub_dir: assets/pub
-# where should the publist js and css files be served
-# publist will generate its own js and css file under this prefix
-assets_prefix: assets/publist
-# Map of venue types to venues
+highlight_authors: []
 venues:
-  # key is also used in display
   Conferences:
     # conference short name
     MLSys'20:
@@ -55,55 +51,63 @@ venues:
   Posters: {}
   Demos: {}
   Journals: {}
+{% endpublist %}
 ```
 
-### Servable files
+The only argument is the name of bib file, in `source/_data` folder.
 
-`sources/assets/pub`
+You'll need to add some publist specific fields, but they will be striped out when display.
 
-One folder per entry, containing bibtex, abstract, pdf, and any additional files
+- `publist_link`, `publist_badge`, and `publist_abstract` are optional.
+- `publist_link` and `publist_badge` can be specified multiple times.
 
-### Tag usage
+One subfolder following the entry key per entry, containing bibtex, abstract, pdf, and any additional files.
+If the link part starts with `/`, then it is intepreted as absolute path.
 
-To insert publist, use the following in the post markdown source.
-
+`source/_data/mypub.bib`
 ```bibtex
-{% publist %}
 @inproceedings{yu20mlsys,
     title = {{Salus}: Find-grained {GPU} Sharing primitives for Deep Learning Applications},
     author = {Yu, Peifeng and Chowdhury, Mosharaf},
     booktitle = {Proceedings of the 3rd Conference on Machine Learning and Systems},
     year = {2020},
-    % publist specific settings, they will not show up in the end result
+
     publist_confkey = {MLSys'20},
-    publist_link = {paper || yu20mlsys/yu20mlsys.pdf},
-    publist_link = {talk || yu20mlsys/yu20mlsys-talk.pptx},
-    publist_link = {poster || yu20mlsys/yu20mlsys-poster.pdf},
+    publist_link = {paper || yu20mlsys.pdf},
+    publist_link = {talk || yu20mlsys-talk.pptx},
+    publist_link = {poster || yu20mlsys-poster.pdf},
     publist_badge = {Artifacts Available},
     publist_badge = {Artifacts Evaluated Functional},
     publist_badge = {Artifacts Replicated},
     publist_abstract = {
-        Unlike traditional resources such as CPU or the network, modern GPUs do not natively support
-        fine-grained sharing primitives.
-        Consequently, implementing common policies such as time sharing and preemption are expensive. Worse,
-        when a deep learning (DL) application cannot completely use a GPU's resources, the GPU cannot be efficiently shared
-        between multiple applications, leading to GPU underutilization.
+      This is an abstract.
 
-        We present Salus to enable two GPU sharing primitives: __fast job
-        switching__ and __memory sharing__, to achieve fine-grained GPU sharing
-        among multiple DL applications. Salus is an efficient, consolidated
-        execution service that exposes the GPU to different DL applications, and it
-        enforces fine-grained sharing by performing iteration scheduling and
-        addressing associated memory management issues. We show that these primitives
-        can then be used to implement flexible sharing policies. Our integration of
-        Salus with TensorFlow and evaluation on popular DL jobs shows that Salus
-        can improve the average completion time of DL training jobs by 3.19x, GPU utilization for hyper-parameter tuning by 2.38x, and GPU
-        utilization of DL inference applications by 42x over not sharing
-        the GPU and 7x over NVIDIA MPS with small overhead.
+      The common spaces before each line will be stripped.
     }
 }
-{% endpublist %}
 ```
 
-`/path/to/file` is relative to `code_dir` in `_config.yml`.
-And inline options have the same format as those used in backtick code blocks.
+### Configuration
+
+#### Global options in `_config.yml`
+
+```yaml
+publist:
+  # directory used for relative links in publication items
+  pub_dir: assets/pub
+  # where should the publist js and css files be served
+  # publist will generate its own js and css file under this prefix
+  assets_prefix: assets/publist
+```
+
+
+## Internals
+
+- `_config.yml` contains main options under the key `publist`.
+- `src/injector.js` injects `templates/{headend,bodyend}.njk` to every page,
+but the content will only be inserted if the front-matter contains `publist_enabled: true`
+- `src/widget` implements a hexo box, processing all assets under `widget`, and serving them.
+- `src/bib-renderer.js` reads `.bib` files under `source/_data` in the user's repo. The result will
+be available as data in the data model.
+- `src/publist.js` is the actual tag plugin, which reads bib data
+from the data model and renders the html.

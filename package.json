@@ -27,19 +27,18 @@
         "lodash": "^4.17.20",
         "moment": "^2.27.0",
         "parent-require": "^1.0.0",
-        "strip-indent": "^3.0.0"
+        "strip-indent": "^3.0.0",
+        "hexo-fs": "^3.1.0"
     },
     "peerDependencies": {
         "hexo": "^5.0.2",
         "hexo-util": "^2.2.0",
-        "hexo-fs": "^3.1.0",
         "hexo-renderer-babelify": "0.0.2",
         "hexo-renderer-nunjucks": "^2.0.0",
         "hexo-theme-next": "^8.0.0-rc.5"
     },
     "devDependencies": {
         "ava": "^3.11.1",
-        "eslint": "^7.7.0",
-        "hexo-test-utils": "^0.4.1"
+        "eslint": "^7.7.0"
     }
 }
