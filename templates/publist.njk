@@ -57,7 +57,7 @@
                             {%- else -%}
                                 {{ pub.title }}
                             {%- endif %}
-                            {% if pub.date.isAfter(moment().subtract(6, 'months')) -%}
+                            {% if pub.date.isAfter(moment().subtract(config.publist.new_month, 'months')) -%}
                                 <span class="label primary">New</span>
                             {%- endif %}
                         </div>

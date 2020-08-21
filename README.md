@@ -100,11 +100,11 @@ If the link part starts with `/`, then it is intepreted as absolute path.
 
 ```yaml
 publist:
-  # directory used for relative links in publication items
-  pub_dir: assets/pub
   # where should the publist js and css files be served
   # publist will generate its own js and css file under this prefix
   assets_prefix: assets/publist
+  # entries within the last `new_months` will be marked new
+  new_months: 3
 ```
 
 
