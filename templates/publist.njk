@@ -90,6 +90,7 @@
                             {%- endif %}
                         </div>
                         {%- endif %}
+                        {% if pub.abstract.length > 0 -%}
                         <div class="pub-abstract-frame">
                             <div class="pub-abstract">
                                 <blockquote>
@@ -97,12 +98,15 @@
                                 </blockquote>
                             </div>
                         </div>
+                        {%- endif %}
                         <div class="pub-links">
                             {%- for link in pub.links %}
                             <a target="_blank" href="{{ link.href }}">[{{ link.name }}]</a>
                             {%- endfor %}
                             <a class="pub-link-bibtex" data-clipboard-text="{{ pub.bibStr }}">[bibtex]</a>
+                            {% if pub.abstract.length > 0 -%}
                             <a class="pub-link-abstract">[abstract]</a>
+                            {%- endif %}
                         </div>
                     </div>
                 </li>
