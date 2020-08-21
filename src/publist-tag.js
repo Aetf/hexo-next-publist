@@ -29,7 +29,12 @@ class PublistTag {
             cat: '',
         };
 
-        const obj = yaml.safeLoad(content);
+        const obj = {
+            pub_dir: '',
+            venues: {},
+            highlight_authors: [],
+            ...yaml.safeLoad(content),
+        };
 
         // flatten the list of conferences
         let confs = Object.entries(obj.venues);
@@ -87,15 +92,30 @@ class PublistTag {
         const hexoData = hexo.locals.get('data');
         let pubs = [];
         if (!_.has(hexoData, dataName)) {
-            hexo.log.warn(`Could not find your bibtex file named ${dataName}.bib`);
-            console.log(hexoData);
+            hexo.log.warn(`Could not find your bibtex file named ${dataName}.bib or there were errors when parsing`);
         } else {
             pubs = hexoData[dataName];
+            if (!Array.isArray(pubs)) {
+                hexo.log.error(`There were errors when parsing ${dataName}.bib, publist will be empty`);
+                pubs = [];
+            }
         }
 
         pubs = pubs.map(pub => {
-            // cross reference conference's date,
-            const date = _.get(confs, pub.confkey + '.date', now);
+            // first try get by cross referencing conference's date,
+            const conf = _.get(confs, pub.confkey);
+            let date = _.get(conf, 'date');
+            if (!date) {
+                // try the bib year and month field
+                const mon = _.get(pub.bib.fields, 'month[0]', '1');
+                const monFmt = parseInt(mon) ? 'MM' : 'MMM';
+                const year = _.get(pub.bib.fields, 'year[0]', now.format('YYYY'));
+
+                date = moment(`${year} ${mon}`, `YYYY ${monFmt}`);
+                if (!date) {
+                    date = now;
+                }
+            }
             // also treat the link href.
             const links = pub.links.map(({ name, href }) => {
                 return {
@@ -106,6 +126,7 @@ class PublistTag {
             return {
                 ...pub,
                 links,
+                conf,
                 date,
                 year: date.format('YYYY'),
             };
@@ -116,7 +137,6 @@ class PublistTag {
         const locals = this._bindHelpers({
             // directly inject items into the template context
             pubs,
-            confs,
             venues,
             highlight_authors,
             // emulate hexo's own local environment in the rendering

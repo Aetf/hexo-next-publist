@@ -62,7 +62,7 @@ async function parseBibEntries(ctx, opts, input) {
         bibStr += '\n}\n';
 
         // get abstract
-        let abs = '';
+        let abstract = '';
         const absField = entryAst.fields.find(field => field.name === 'publist_abstract');
         if (absField) {
             const concat_source = (node) => {
@@ -72,20 +72,31 @@ async function parseBibEntries(ctx, opts, input) {
 
                 return node.source || concat_source(node.value);
             }
-            abs = concat_source(absField.value).replace(/^{/, '').replace(/}$/, '');
+            abstract = concat_source(absField.value).replace(/^{/, '').replace(/}$/, '');
             // strip surrounding braces
-            abs = stripIndent(abs).trim();
+            abstract = stripIndent(abstract).trim();
+            // render using simple markdown
+            abstract = await ctx.render.render(
+                { text: abstract, engine: 'markdown' },
+                { 
+                    gfm: false,
+                    breaks: false,
+                }
+            );
+        } else {
+            // fallback to normal abstract
+            abstract = _.get(entry.fields, 'abstract[0]', '');
         }
 
-        return { entry, bibStr, abs, error: false };
+        return { entry, bibStr, abstract, error: false };
     });
     res = await Promise.all(res);
     return res
         .filter(elem => !elem.error)
-        .map(elem => _.pick(elem, ['entry', 'bibStr', 'abs']));
+        .map(elem => _.pick(elem, ['entry', 'bibStr', 'abstract']));
 }
 
-async function itemFromEntry(ctx, opts, { entry, bibStr, abs }) {
+async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
     const citekey = entry.key;
 
     // publist_confkey: cross reference to conference to get the year
@@ -105,15 +116,6 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abs }) {
         return { name, href };
     });
 
-    // render abstruct using simple markdown
-    const abstract = await ctx.render.render(
-        { text: abs, engine: 'markdown' },
-        { 
-            gfm: false,
-            breaks: false,
-        }
-    );
-
     return {
         citekey,
         title,
@@ -122,6 +124,7 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abs }) {
         confkey,
         abstract,
         links,
-        bibtex: bibStr,
+        bibStr,
+        bib: entry,
     };
 }

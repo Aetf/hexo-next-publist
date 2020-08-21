@@ -47,8 +47,8 @@
             <ul>
     {%- endif -%}
                 {#- A single block for a paper #}
-                <li data-pub-venue="{{ confs[pub.confkey].venue }}"
-                    data-pub-cat="{{ confs[pub.confkey].cat }}">
+                <li data-pub-venue="{{ pub.conf.venue }}"
+                    data-pub-cat="{{ pub.conf.cat }}">
                     <div class="pub-block">
                         <div class="pub-title">
                             {# use first link as title link if possible #}
@@ -80,14 +80,16 @@
                             </span>
                             {%- endfor %}
                         </div>
+                        {% if pub.conf -%}
                         <div class="pub-conference">
-                            {{ confs[pub.confkey].name }}
-                            (<a target="_blank" title="{{ confs[pub.confkey].acceptance }}"
-                                href="{{ confs[pub.confkey].url }}">{{ pub.confkey }}</a>)
-                            {% if confs[pub.confkey].acceptance -%}
-                            <span class="pub-conference-acceptance">(Acceptance Rate: {{ confs[pub.confkey].acceptance }})</span>
+                            {{ pub.conf.name }}
+                            (<a target="_blank" title="{{ pub.conf.acceptance }}"
+                                href="{{ pub.conf.url }}">{{ pub.confkey }}</a>)
+                            {% if pub.conf.acceptance -%}
+                            <span class="pub-conference-acceptance">(Acceptance Rate: {{ pub.conf.acceptance }})</span>
                             {%- endif %}
                         </div>
+                        {%- endif %}
                         <div class="pub-abstract-frame">
                             <div class="pub-abstract">
                                 <blockquote>
@@ -99,7 +101,7 @@
                             {%- for link in pub.links %}
                             <a target="_blank" href="{{ link.href }}">[{{ link.name }}]</a>
                             {%- endfor %}
-                            <a class="pub-link-bibtex" data-clipboard-text="{{ pub.bibtex }}">[bibtex]</a>
+                            <a class="pub-link-bibtex" data-clipboard-text="{{ pub.bibStr }}">[bibtex]</a>
                             <a class="pub-link-abstract">[abstract]</a>
                         </div>
                     </div>
