@@ -26,6 +26,13 @@ Follow the instruction printed when running the previous command to install the 
 
 ### Tag usage
 
+First of all, you need to add
+```yaml
+publist: true
+```
+to the front-matter of the post/page that you wish to use the publist tag.
+For performance reasons, publist will not inject supplimentary js and css unless told to do so.
+
 To insert publist, use the following in the post markdown source.
 The content between the tags defines any conferences the bibtex file will refer.
 
