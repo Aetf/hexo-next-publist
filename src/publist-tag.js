@@ -53,8 +53,8 @@ class PublistTag {
             subconfs => [... new Set(subconfs.map(conf => conf.venue))].sort()
         );
 
-        // pub_dir
-        const pub_dir = obj.pub_dir.replace(/^\//, '');
+        // ensure pub_dir has no leading / or tailing /
+        const pub_dir = obj.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
 
         return {
             pub_dir,
