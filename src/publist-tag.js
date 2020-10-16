@@ -84,22 +84,31 @@ class PublistTag {
     /**
      * @param {*} args Arguments to the tag. An array of string, they are whitespace splited.
      */
-    _tag = async ([dataName], content) => {
-        const { hexo } = this;
+    _tag = ([dataName], content, context) => {
+        const { hexo, opts } = this;
         const { confs, venues, pub_dir, highlight_authors } = this._loadInstanceOpts(content);
         const now = moment();
 
         const hexoData = hexo.locals.get('data');
         let pubs = [];
         if (!_.has(hexoData, dataName)) {
-            hexo.log.warn(`Could not find your bibtex file named ${dataName}.bib or there were errors when parsing`);
+            hexo.log.warn(`Could not find your bibtex file named ${dataName}.bib`);
         } else {
             pubs = hexoData[dataName];
-            if (!Array.isArray(pubs)) {
-                hexo.log.error(`There were errors when parsing ${dataName}.bib, publist will be empty`);
-                pubs = [];
+            if (pubs.errors.length != 0) {
+                for (const err of pubs.errors) {
+                    hexo.log.error(`Error when parsing ${dataName}.bib: ${err.errorString}`);
+                }
+                if (opts.strict) {
+                    throw new Error(`Abort generating '${context.source}': '${dataName}'.bib contains errors and strict mode is enabled`);
+                } else {
+                    hexo.log.warn(`There were errors when parsing ${dataName}.bib, publist may be incomplete`);
+                }
             }
+            pubs = pubs.items;
         }
+
+        hexo.log.info(`Generating ${pubs.length} bib entries`);
 
         pubs = pubs.map(pub => {
             // first try get by cross referencing conference's date,
@@ -149,8 +158,8 @@ class PublistTag {
             view_dir: TEMPLATE_DIR
         });
 
-        return await hexo.render.render({
-            path: pathFn.join(TEMPLATE_DIR, 'publist.njk')
+        return hexo.render.renderSync({
+            path: pathFn.join(TEMPLATE_DIR, 'publist.njk'),
         }, locals);
     }
 
@@ -166,5 +175,9 @@ class PublistTag {
 
 module.exports = (ctx, opts) => {
     const tag = new PublistTag(ctx, opts);
-    ctx.extend.tag.register('publist', tag._tag, { ends: true, async: true });
+    ctx.extend.tag.register(
+        'publist',
+        function (args, body) { return tag._tag(args, body, this) },
+        { ends: true, async: false }
+    );
 };

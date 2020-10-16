@@ -13,10 +13,13 @@ module.exports = (ctx, opts) => {
 
 async function bibRenderer(ctx, opts, { text }) {
     // parse content as bibtex
-    const entries = await parseBibEntries(ctx, opts, text);
+    const { entries, errors } = await parseBibEntries(ctx, opts, text);
     // construct list of items
     const items = await Promise.all(entries.map(entry => itemFromEntry(ctx, opts, entry)));
-    return items;
+    return {
+        errors,
+        items,
+    };
 }
 
 async function parseBibEntries(ctx, opts, input) {
@@ -28,17 +31,21 @@ async function parseBibEntries(ctx, opts, input) {
         async: true,
         verbatimFields: [publistPtn],
     }
-    let res = chunks.filter(chunk => chunk.entry).map(async chunk => {
+    let res = chunks.filter(chunk => chunk.entry || chunk.error).map(async chunk => {
         if (chunk.error) {
-            ctx.log.error('Ignoring bibtex chunk due to error: ' + chunk.error);
-            return { error: true };
+            return {
+                error: true,
+                errorString: chunk.error,
+            };
         }
         const text = chunk.text;
         // normal info
         const bib = await bibtex.parse(text, bibOptions);
         if (bib.errors.length !== 0) {
-            ctx.log.error('Ignoring bibtex chunk due to error: ' + bib.errors.join(' '));
-            return { error: true };
+            return {
+                error: true,
+                errorString: bib.errors.join(' '),
+            };
         }
         if (bib.entries.length !== 1) {
             throw new TypeError('Expected chunk to have only one entry');
@@ -55,7 +62,7 @@ async function parseBibEntries(ctx, opts, input) {
         }
         const entryAst = ast[0].children[0];
 
-        // reconstruct original text after striping fields
+        // reconstruct original text after striping fields starting with public_
         const fields = entryAst.fields.filter(field => !publistPtn.test(field.name));
         let bibStr = `@${entryAst.type}{${entryAst.id},\n`;
         bibStr += fields.map(field => '    ' + field.source.trim()).join('\n');
@@ -91,9 +98,11 @@ async function parseBibEntries(ctx, opts, input) {
         return { entry, bibStr, abstract, error: false };
     });
     res = await Promise.all(res);
-    return res
+    const entries = res
         .filter(elem => !elem.error)
         .map(elem => _.pick(elem, ['entry', 'bibStr', 'abstract']));
+    const errors = res.filter(elem => elem.error);
+    return { entries, errors };
 }
 
 async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
@@ -116,7 +125,7 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
         return { name, href };
     });
 
-    return {
+    const item = {
         citekey,
         title,
         authors: entry.creators.author.map(({lastName, firstName}) => `${firstName} ${lastName}`),
@@ -127,4 +136,5 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
         bibStr,
         bib: entry,
     };
+    return item;
 }

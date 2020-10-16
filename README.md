@@ -105,6 +105,8 @@ publist:
   assets_prefix: assets/publist
   # entries within the last `new_months` will be marked new
   new_months: 3
+  # if strict mode is enabled, any bibtex parsing errors will be fatal
+  strict: false
 ```
 
 
