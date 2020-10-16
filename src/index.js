@@ -22,7 +22,7 @@ function processOptions (hexo) {
 function register(hexo) {
     const opts = processOptions(hexo);
 
-    // render bib in _data
+    // register renderer bib in _data, which is inside the source box
     require('./bib-renderer')(hexo, opts);
 
     // widget_dir must be from the hexo.base_dir/node_modules

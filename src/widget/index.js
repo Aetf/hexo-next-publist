@@ -2,10 +2,10 @@
 
 const pathFn = require('path');
 const prequire = require('parent-require');
+const { Pattern } = require('hexo-util');
 
 const Box = prequire('hexo/lib/box');
 const { Asset } = prequire('hexo/lib/models');
-const { Pattern } = prequire('hexo-util');
 
 const createWidgetGenerator = require('./widget-generator');
 

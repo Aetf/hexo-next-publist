@@ -1,6 +1,6 @@
 {
     "name": "hexo-next-publist",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "Filterable publication list",
     "author": "Aetf",
     "license": "Apache-2.0",
@@ -23,27 +23,27 @@
         "test": "ava"
     },
     "dependencies": {
-        "@babel/core": "^7.11.4",
-        "@babel/preset-env": "^7.11.0",
-        "@retorquere/bibtex-parser": "^3.2.10",
+        "@babel/core": "^7.12.3",
+        "@babel/preset-env": "^7.12.1",
+        "@retorquere/bibtex-parser": "^3.2.14",
         "babelify": "^10.0.0",
-        "browserify": "^16.5.2",
+        "browserify": "^17.0.0",
         "core-js": "^3.6.5",
         "hexo-fs": "^3.1.0",
+        "hexo-util": "^2.4.0",
         "lodash": "^4.17.20",
-        "moment": "^2.27.0",
+        "moment": "^2.29.1",
         "parent-require": "^1.0.0",
         "strip-indent": "^3.0.0"
     },
     "peerDependencies": {
-        "hexo": "^5.0.2",
-        "hexo-util": "^2.2.0",
-        "hexo-renderer-markdown-it": "^4.1.0",
-        "@iktakahiro/markdown-it-katex": "^4.0.0",
-        "hexo-theme-next": "^8.0.0-rc.5"
+        "hexo": "^5.2.0",
+        "hexo-renderer-markdown-it": "^5.0.0",
+        "@iktakahiro/markdown-it-katex": "^4.0.1",
+        "hexo-theme-next": "^8.0.1"
     },
     "devDependencies": {
-        "ava": "^3.11.1",
-        "eslint": "^7.7.0"
+        "ava": "^3.13.0",
+        "eslint": "^7.11.0"
     }
 }
