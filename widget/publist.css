@@ -117,6 +117,9 @@
 }
 
 /* The publication block */
+.pub-block {
+    text-align: left;
+}
 .pub-block .pub-title {
     font-weight: bold;
 }
