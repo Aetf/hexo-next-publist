@@ -48,7 +48,7 @@ venues:
       venue: MLSys
       # conference full name
       name: The 3rd Conference on Machine Learning and Systems
-      # date for sorting
+      # date for sorting (optional. If this is missing, the year and month in bib entry will be used)
       date: 2020-03-02
       # conference website (optional)
       url: https://mlsys.org/Conferences/2020
@@ -67,6 +67,9 @@ You'll need to add some publist specific fields, but they will be striped out wh
 
 - `publist_link`, `publist_badge`, and `publist_abstract` are optional.
 - `publist_link` and `publist_badge` can be specified multiple times.
+- The content in `publist_abstract` will be rendered as markdown with support for latex math. If this
+field does not present, the normal `abstract` field will be used. However, in this case, the content
+will be used verbatim.
 
 One subfolder following the entry key per entry, containing bibtex, abstract, pdf, and any additional files.
 If the link part starts with `/`, then it is intepreted as absolute path.
