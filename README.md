@@ -70,6 +70,7 @@ You'll need to add some publist specific fields, but they will be striped out wh
 - The content in `publist_abstract` will be rendered as markdown with support for latex math. If this
 field does not present, the normal `abstract` field will be used. However, in this case, the content
 will be used verbatim.
+- Other fields like `publist_xxx` can be added to attach metadata fields to the entry.
 
 One subfolder following the entry key per entry, containing bibtex, abstract, pdf, and any additional files.
 If the link part starts with `/`, then it is intepreted as absolute path.

@@ -48,7 +48,11 @@
     {%- endif -%}
                 {#- A single block for a paper #}
                 <li data-pub-venue="{{ pub.conf.venue }}"
-                    data-pub-cat="{{ pub.conf.cat }}">
+                    data-pub-cat="{{ pub.conf.cat }}"
+                    {% for name, values in pub.meta -%}
+                    data-pub-{{- name -}}="{{ values.join(' ') }}"
+                    {% endfor -%}
+                >
                     <div class="pub-block">
                         <div class="pub-title">
                             {# use first link as title link if possible #}

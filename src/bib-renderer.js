@@ -125,6 +125,23 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
         return { name, href };
     });
 
+    let meta = {};
+    // add other keys starting with "publist_" saved as metadata
+    for (const field of Object.keys(entry.fields)) {
+        if (!field.startsWith('publist_')) {
+            continue
+        }
+        // the name after removing publist_ prefix
+        const name = field.slice('publist_'.length)
+        if (['confkey', 'link', 'badge', 'abstract'].indexOf(name) !== -1) {
+            // already handled
+            continue;
+        }
+
+        // meta
+        meta[name] = _.get(entry.fields, field, []);
+    }
+
     const item = {
         citekey,
         title,
@@ -134,7 +151,9 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
         abstract,
         links,
         bibStr,
+        meta,
         bib: entry,
     };
+
     return item;
 }
