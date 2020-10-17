@@ -66,6 +66,109 @@ function publist() {
     function removeClass(elems, ...className) {
         elems.forEach(elem => elem.classList.remove(...className));
     }
+
+    // search fragment meaning:
+    // search fragment := # (<term>)*
+    // term := / <type> : <value> (, <value>)*
+    // type := venue | tag | topic
+    // value := !all | @cat | <literal>
+    // literal := abc | dea | dfsd
+    const fragRegex = /^#(\/\w+:([@!]?[^@,\/#]+)(,[@!]?[^@,\/#]+)*)+$/;
+    function parseFragment(frag) {
+        console.log('frag is ', frag);
+
+        let filters = {};
+        if (frag == null || !fragRegex.test(frag)) {
+            return filters;
+        }
+        frag = frag.slice(1);  // remove begining '#'
+        for (const part of frag.split('/')) {
+            if (part.length === 0) {
+                continue;
+            }
+            const [name, values] = part.split(':');
+            const valueParts = values.split(',');
+            if (valueParts.indexOf('!all') !== -1) {
+                // the filter does not filter anything, just skip it
+                continue;
+            }
+            filters[name] = valueParts;
+        }
+        return filters;
+    }
+
+    function assembleFragment(filters) {
+        const frag = Object.keys(filters).map(name => {
+            if (filters[name].length === 0) {
+                return '';
+            }
+            const values = filters[name].join(',');
+            return `/${name}:${values}`;
+        })
+        .join('');
+        return `#${frag}`;
+    }
+
+    const FILTER_TO_HIDE = 'publist-filter-tohide';
+    const FILTER_SELECTED = 'publist-filter-selected';
+    function panelDoFilter(searchPanel, filters) {
+        const publist = searchPanel.closest('.publist');
+        console.log('Do filter', searchPanel, filters);
+        // update panel
+
+        // update publist
+        // step 1: mark all selected li
+        for (const name of Object.keys(filters)) {
+            const values = filters[name];
+            for (const value of filters[name]) {
+                let li = [];
+                if (value === '!all') {
+                    li = publist.querySelectorAll('.pub-list li');
+                } else if (name === 'venue' && value.startsWith('@')) {
+                    // special handling of venue, which has categories
+                    li = publist.querySelectorAll(`.pub-list li[data-pub-cat="${value.slice(1)}"]`);
+                } else {
+                    li = publist.querySelectorAll(`.pub-list li[data-pub-${name}="${value}"]`);
+                }
+                addClass(li, FILTER_SELECTED);
+            }
+        }
+        // step 2: mark everything not selected as tohide, and remove the selected class
+        addClass(publist.querySelectorAll(`.pub-list li:not(.${FILTER_SELECTED})`), FILTER_TO_HIDE);
+        removeClass(publist.querySelectorAll(`.pub-list .${FILTER_SELECTED}`), FILTER_SELECTED);
+        // step 3: diff the hide and tohide classes and apply hide which actually hides the elements
+        // hide the whole section if it's empty
+        publist.querySelectorAll('.pub-list section.year').forEach(section => {
+            const items = section.querySelectorAll(`li.${FILTER_TO_HIDE}`);
+            if (items.length == section.querySelectorAll('li').length) {
+                section.classList.add(FILTER_TO_HIDE);
+                removeClass(items, FILTER_TO_HIDE);
+            }
+        });
+        // hide those are not already hidden in this update
+        addClass(publist.querySelectorAll(`.pub-list .${FILTER_TO_HIDE}:not(.filter-hide)`), 'filter-hide');
+        // unhide those should not be hidden in this update
+        removeClass(publist.querySelectorAll(`.pub-list .filter-hide:not(.${FILTER_TO_HIDE})`), 'filter-hide');
+        // remove tohide
+        removeClass(publist.querySelectorAll(`.pub-list .${FILTER_TO_HIDE}`), FILTER_TO_HIDE);
+    }
+
+    function hashChanged() {
+        const filters = parseFragment(location.hash);
+        const frag = assembleFragment(filters);
+        if (frag !== location.hash) {
+            console.log(`Replacing hash '${location.hash}' with '${frag}'`);
+            history.replaceState(null, '', frag);
+            return;
+        }
+        console.log(filters);
+
+        document.querySelectorAll('.publist .timeline-search-panel')
+            .forEach(panel => panelDoFilter(panel, filters));
+    }
+    window.addEventListener("popstate", hashChanged);
+    hashChanged();
+
     document.querySelectorAll('.publist .timeline-search-panel').forEach(searchPanel => {
         const publist = searchPanel.closest('.publist');
         const select = searchPanel.querySelector('.select-box select');
