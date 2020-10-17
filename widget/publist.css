@@ -257,3 +257,105 @@
 .filter-hide {
     display: none !important;
 }
+
+/* Adapt primer css to our theme */
+.publist-search-panel .SelectMenu-modal {
+    /* our theme is rectangular */
+    border-radius: 0;
+    /* we want the modal width to fit its content */
+    width: auto;
+}
+.publist-search-panel .SelectMenu-list--borderless .SelectMenu-divider:first-child {
+    /* Do not show duplicate top border */
+    border-top: 0;
+}
+.publist-search-panel .SelectMenu-divider[aria-checked=true] .SelectMenu-icon--check {
+    /* Also show checked mark in divider */
+    visibility: visible;
+    transition: transform .12s cubic-bezier(0,0,.2,1),visibility 0s linear;
+    transform: scale(1);
+}
+.publist-search-panel .SelectMenu-divider {
+    /* Vertically center the checked mark in divider */
+    display: flex;
+    align-items: center;
+    /* Our divider is also clickable */
+    cursor: pointer;
+}
+
+.publist-search-panel {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+    padding: 1em 0em 1em 0em;
+    margin-top: -1em;
+
+    border-bottom: dashed 1px #ccc;
+
+    position: sticky;
+    top: 0px;
+
+    background: white;
+    z-index: 11;
+}
+
+.publist-search-panel h4 {
+    margin: 0em 1em 0em .5em;
+    padding: 0px;
+}
+
+.publist-search-panel details {
+    margin: 0 18px;
+}
+.publist-search-panel details:first-of-type {
+    margin-left: 0;
+}
+
+.publist-search-panel details > summary[aria-haspopup=true] {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.publist-search-panel .dropdown-caret {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: inline-block;
+    position: relative;
+    margin-left: 10px;
+}
+
+.publist-search-panel .dropdown-caret::before {
+    top: .6rem;
+    position: absolute;
+    width: .75rem;
+    height: .1rem;
+    background-color: var(--btn-default-border-color);
+    display: inline-block;
+    transition: all .2s ease;
+
+    content: '';
+    left: 0;
+    transform: rotate(45deg);
+}
+.publist-search-panel .dropdown-caret::after {
+    top: .6rem;
+    position: absolute;
+    width: .75rem;
+    height: .1rem;
+    background-color: var(--btn-default-border-color);
+    display: inline-block;
+    transition: all .2s ease;
+    
+    content: '';
+    right: 0;
+    transform: rotate(-45deg);
+}
+
+.publist-search-panel details[open] .dropdown-caret::before {
+    transform: rotate(-45deg);
+}
+.publist-search-panel details[open] .dropdown-caret::after {
+    transform: rotate(45deg);
+}

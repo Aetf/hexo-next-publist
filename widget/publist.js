@@ -59,7 +59,7 @@ function publist() {
         });
     });
 
-    // filters
+    // apply filtering according to url hash
     function addClass(elems, ...className) {
         elems.forEach(elem => elem.classList.add(...className));
     }
@@ -109,12 +109,55 @@ function publist() {
         return `#${frag}`;
     }
 
+    function updateSelector(select, ...values) {
+        console.log('updateSelector', select, values);
+        // clear checked on all menu items
+        for (const item of select.querySelectorAll('[role="menuitem"]')) {
+            item.setAttribute('aria-checked', 'false');
+        }
+        // apply checked on matching values
+        for (const value of values) {
+            const item = select.querySelector(`[data-value="${value}"]`);
+            if (item !== null) {
+                item.setAttribute('aria-checked', 'true');
+            }
+        }
+        // if nothing were selected, select all
+        if (select.querySelectorAll('[aria-checked="true"]').length === 0) {
+            const item = select.querySelector(`[data-value="!all"]`);
+            item.setAttribute('aria-checked', 'true');
+        }
+        // update summary based on selected items
+        const selectedItems = select.querySelectorAll('[aria-checked="true"]');
+        const valueTag = select.querySelector('.summary-value');
+        if (selectedItems.length === 1) {
+            valueTag.textContent = selectedItems[0].textContent;
+        } else {
+            valueTag.textContent = 'Multiple';
+        }
+    }
+
     const FILTER_TO_HIDE = 'publist-filter-tohide';
     const FILTER_SELECTED = 'publist-filter-selected';
     function panelDoFilter(searchPanel, filters) {
         const publist = searchPanel.closest('.publist');
         console.log('Do filter', searchPanel, filters);
-        // update panel
+
+        const allSelects = searchPanel.querySelectorAll('details');
+        // for all missing names in searchPanel, fill filters with !all
+        for (const select of allSelects) {
+            const name = select.getAttribute('data-select-for');
+            if (!filters.hasOwnProperty(name)) {
+                filters[name] = ['!all'];
+            }
+        }
+
+        // Update panel: for each select in the panel, if it's not in filters, select all.
+        // Otherwise select according to filters
+        for (const select of allSelects) {
+            const name = select.getAttribute('data-select-for');
+            updateSelector(select, ...filters[name]);
+        }
 
         // update publist
         // step 1: mark all selected li
@@ -159,15 +202,79 @@ function publist() {
         if (frag !== location.hash) {
             console.log(`Replacing hash '${location.hash}' with '${frag}'`);
             history.replaceState(null, '', frag);
-            return;
         }
         console.log(filters);
 
-        document.querySelectorAll('.publist .timeline-search-panel')
+        addClass(document.querySelectorAll('.publist .publist-search-panel .AnimatedEllipsis'), 'd-none');
+        document.querySelectorAll('.publist .publist-search-panel')
             .forEach(panel => panelDoFilter(panel, filters));
     }
     window.addEventListener("popstate", hashChanged);
     hashChanged();
+
+    function filtersFromSelect(panel) {
+        let filters = {};
+        for (const select of panel.querySelectorAll('details')) {
+            const name = select.getAttribute('data-select-for');
+            filters[name] = Array.from(select.querySelectorAll('[aria-checked="true"]'))
+                .map(item => item.getAttribute('data-value'));
+            
+            // clean up filters
+            // step 1: !all covers everything
+            if (filters[name].indexOf('!all') !== -1) {
+                filters[name] = ['!all'];
+            }
+            // step 2: each cat '@xxx' covers items of the same cat
+            if (true) {
+                const covered = new Set(filters[name].filter(e => e.startsWith('@'))
+                    .flatMap(e => Array.from(select.querySelectorAll(`[data-value-cat="${e}"`))
+                        .map(ee => ee.getAttribute('data-value'))
+                    ));
+                filters[name] = filters[name].filter(e => !covered.has(e));
+            }
+            if (filters[name].length === 0) {
+                filters[name].push('!all');
+            }
+        }
+        return filters;
+    }
+
+    function toggleItem(item) {
+        const checked = item.getAttribute('aria-checked') === 'true';
+        if (checked) {
+            item.setAttribute('aria-checked', 'false');
+        } else {
+            item.setAttribute('aria-checked', 'true');
+        }
+    }
+
+    // manipulate url hash via the search panel
+    for (const panel of document.querySelectorAll('.publist .publist-search-panel')) {
+        for (const item of panel.querySelectorAll('[role="menuitem"]')) {
+            const select = item.closest('details');
+            const myValue = item.getAttribute('data-value');
+            const myValueCat = item.getAttribute('data-value-cat');
+            item.addEventListener('click', e => {
+                toggleItem(item);
+                if (myValue.startsWith('!')) {
+                    // all item, pass
+                } else if (myValue.startsWith('@')) {
+                    // a cat item, clear all
+                    select.querySelector('[data-value="!all"]').setAttribute('aria-checked', 'false');
+                } else {
+                    // a normal item, clear all and corresponding header
+                    select.querySelector('[data-value="!all"]').setAttribute('aria-checked', 'false');
+                    select.querySelector(`[data-value="${myValueCat}"]`).setAttribute('aria-checked', 'false');
+                }
+
+                // update frag
+                const filters = filtersFromSelect(panel);
+                const frag = assembleFragment(filters);
+                history.pushState(null, '', frag);
+                hashChanged();
+            })
+        }
+    }
 
     document.querySelectorAll('.publist .timeline-search-panel').forEach(searchPanel => {
         const publist = searchPanel.closest('.publist');
