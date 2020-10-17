@@ -161,98 +161,6 @@
     font-weight: bold;
 }
 
-/* timeline search panel */
-.timeline-search-panel {
-    display: flex;
-    justify-content: left;
-    align-items: center;
-
-    padding: 1em 0em 1em 0em;
-    margin-top: -1em;
-
-    border-bottom: dashed 1px #ccc;
-
-    position: sticky;
-    top: 0px;
-
-    background: white;
-    z-index: 10;
-}
-.timeline-search-panel h4 {
-    margin: 0em 1em 0em .5em;
-    padding: 0px;
-}
-
-/* The select box */
-.select-box {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-.select-box .select-arrow {
-    position: relative;
-    height: 1.5em;
-    width: 0em;
-
-    left: -2em;
-
-    pointer-events: none;
-    z-index: 2;
-    transition: all 250ms cubic-bezier(0.4, 0.25, 0.3, 1);
-    opacity: 0.6;
-}
-.select-box .select-arrow svg {
-    width: 1.5em;
-    height: auto;
-    fill: #a0a0a0;
-}
-.select-box select {
-    /* No default arrow */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none;
-
-    border: 2px solid rgba(.3, .3, .3, .3);
-    background: #fff;
-    padding-left: 1em;
-    padding-right: 2.5em;
-}
-
-/* The checkbox */
-.check-box {
-    margin: 0em 1em 0em 2em;
-    display: flex;
-    align-items: center;
-}
-
-.check-box ~ .check-box {
-    margin: 0em 1em;
-}
-
-.check-box input[type="checkbox"] {
-    margin-right: .2em;
-}
-
-/* Copied tooltip */
-#copied-tooltip .jBox-container {
-    background: #222;
-    color: #eee;
-    line-height: 1;
-    display: flex;
-}
-#copied-tooltip .jBox-pointer::after {
-    background: #222;
-}
-#copied-tooltip .jBox-content {
-    display: inline;
-    padding: 7px 7px;
-    font-size: .8em;
-}
-#copied-tooltip .jBox-pointer {
-    height: 7px;
-}
-
 /* Filter */
 .filter-hide {
     display: none !important;
@@ -264,6 +172,12 @@
     border-radius: 0;
     /* we want the modal width to fit its content */
     width: auto;
+}
+.publist-search-panel .SelectMenu {
+    min-width: 100%;
+}
+.publist-search-panel details {
+    position: relative;
 }
 .publist-search-panel .SelectMenu-list--borderless .SelectMenu-divider:first-child {
     /* Do not show duplicate top border */
@@ -318,6 +232,7 @@
     cursor: pointer;
 }
 
+/* The animated arrow */
 .publist-search-panel .dropdown-caret {
     width: 1.25rem;
     height: 1.25rem;

@@ -6,7 +6,7 @@
 
 [![NPM](https://nodei.co/npm/hexo-next-publist.png)](https://npmjs.org/package/hexo-next-publist)
 
-Show a list of publications anywhere in the markdown post.
+Show a list of publications anywhere in the markdown post. There is also a customizable panel to filter the results.
 
 ## Demo
 
