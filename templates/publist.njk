@@ -18,13 +18,13 @@
                         <button class="SelectMenu-item" role="menuitem" aria-checked="true" data-value="!all">{{ checkmark() }}All</button>
                         {% for venueType, venueNames in venues -%}
                         {%- if venueNames.length > 0 -%}
-                        <div class="SelectMenu-divider" role="menuitem" data-value="@{{ venueType }}">{{ checkmark() }}{{ venueType }}</div>
+                        <div class="SelectMenu-divider" role="menuitem" data-value="@{{ venueType }}">{{ checkmark() }}{{ venueType | replace(' ', '&nbsp') }}</div>
                         {%- for venueName in venueNames %}
                         <button class="SelectMenu-item" role="menuitem"
                             data-value-cat="@{{ venueType }}"
                             data-value="{{ venueName }}"
                         >
-                            {{ checkmark() }}{{ venueName }}
+                            {{ checkmark() }}{{ venueName | replace(' ', '&nbsp') }}
                         </button>
                         {% endfor -%}
                         {%- endif -%}
@@ -33,6 +33,7 @@
                 </div>
             </div>
         </details>
+        <footer>Showing <span class="selected-value">{{pubs.length}}</span>/{{pubs.length}}</footer>
     </div> <!-- publist-search-panel -->
     <div class="pub-list">
     {%- set year = '' -%}
