@@ -40,6 +40,14 @@ The content between the tags defines any conferences the bibtex file will refer.
 {% publist mypubs %}
 pub_dir: assets/pub
 highlight_authors: []
+# extra filters to show, they will filter on the item using given path
+extra_filters:
+  - name: Topic
+    path: meta.topic
+  - name: Tag
+    path: meta.tag
+  - name: Badge
+    path: badges
 venues:
   Conferences:
     # conference short name
@@ -95,6 +103,10 @@ If the link part starts with `/`, then it is intepreted as absolute path.
 
       The common spaces before each line will be stripped.
     }
+    publist_tag = {tagA},
+    publist_tag = {tagB},
+    publist_topic = {Deep Learning},
+    publist_topic = {GPU},
 }
 ```
 

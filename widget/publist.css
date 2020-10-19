@@ -123,11 +123,6 @@
 .pub-block .pub-title {
     font-weight: bold;
 }
-.pub-block .pub-badge {
-    color: red;
-    font-weight: bold;
-    font-size: 0.9em;
-}
 .pub-block .pub-authors,
 .pub-block .pub-conference,
 .pub-block .pub-links {
@@ -230,6 +225,14 @@
     display: flex;
     align-items: center;
     cursor: pointer;
+}
+
+.publist-search-panel [role="menuitem"] {
+    white-space: nowrap;
+}
+
+.publist-search-panel .SelectMenu-item .Counter {
+    margin-left: auto;
 }
 
 /* The animated arrow */

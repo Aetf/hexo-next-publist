@@ -33,6 +33,7 @@ class PublistTag {
             pub_dir: '',
             venues: {},
             highlight_authors: [],
+            extra_filters: [],
             ...yaml.safeLoad(content),
         };
 
@@ -45,22 +46,19 @@ class PublistTag {
         });
         confs = _.fromPairs(confs);
 
-        // venues grouped by cat
-        let venues = _.groupBy(confs, conf => conf.cat);
-        venues = _.mapValues(
-            venues,
-            // from list of conf to unique sorted list of venue
-            subconfs => [... new Set(subconfs.map(conf => conf.venue))].sort()
-        );
-
         // ensure pub_dir has no leading / or tailing /
         const pub_dir = obj.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
+
+        const extra_filters = obj.extra_filters.map(fspec => ({
+            id: fspec.name.toLowerCase().replace(' ', '-'),
+            ...fspec,
+        }));
 
         return {
             pub_dir,
             confs,
-            venues,
-            highlight_authors: new Set(obj.highlight_authors)
+            extra_filters,
+            highlight_authors: new Set(obj.highlight_authors),
         };
     }
 
@@ -86,7 +84,7 @@ class PublistTag {
      */
     _tag = ([dataName], content, context) => {
         const { hexo, opts } = this;
-        const { confs, venues, pub_dir, highlight_authors } = this._loadInstanceOpts(content);
+        const instOpts = this._loadInstanceOpts(content);
         const now = moment();
 
         const hexoData = hexo.locals.get('data');
@@ -108,11 +106,10 @@ class PublistTag {
             pubs = pubs.items;
         }
 
-        hexo.log.info(`Generating ${pubs.length} bib entries`);
-
+        // sort and filter any unpublished items
         pubs = pubs.map(pub => {
             // first try get by cross referencing conference's date,
-            const conf = _.get(confs, pub.confkey);
+            const conf = _.get(instOpts.confs, pub.confkey);
             let date = _.get(conf, 'date');
             if (!date) {
                 // try the bib year and month field
@@ -129,7 +126,7 @@ class PublistTag {
             const links = pub.links.map(({ name, href }) => {
                 return {
                     name,
-                    href: this._maybePrependHref(pub_dir, pub.citekey, href)
+                    href: this._maybePrependHref(instOpts.pub_dir, pub.citekey, href)
                 };
             });
             return {
@@ -143,11 +140,86 @@ class PublistTag {
         .sort((a, b) => b.date.diff(a.date))
         .filter(pub => pub.date.isBefore(now));
 
+        hexo.log.info(`${context.source}: Generating ${pubs.length} bib entries`);
+
+        // prepare filtering
+        // generate an extra object containig every extra attr specified in extra_filters
+        for (const item of pubs) {
+            item.extra = {};
+            for (const fspec of instOpts.extra_filters) {
+                let value = _.get(item, fspec.path, []);
+                if (!Array.isArray(value)) {
+                    // convert everything to array
+                    value = [value];
+                }
+                item.extra[fspec.id] = value;
+            }
+            item.extra_json_escaped = _.escape(JSON.stringify(item.extra));
+        }
+        // generate additional metadata used in the search panel
+        const fspecs = instOpts.extra_filters.map(fspec => {
+            const possibleValues = pubs.flatMap(item => item.extra[fspec.id]);
+            let counts = possibleValues.reduce((counts, x) => {
+                counts[x] = (counts[x] || 0) + 1;
+                return counts;
+            }, {});
+            const choices = Object.entries(counts)
+                .map(([k, v]) => ({ value: k, count: v}))
+                .sort((x, y) => x.value.localeCompare(y.value));
+            // add !others
+            const cntOthers = pubs.filter(item => item.extra[fspec.id].length === 0).length;
+            choices.unshift({display: 'Others', value: '!others', count: cntOthers});
+            // add !all
+            choices.unshift({display: 'All', value: '!all', count: pubs.length});
+            // there is only one level for extra filter
+            return {
+                name: fspec.name,
+                id: fspec.name.toLowerCase().replace(' ', '-'),
+                path: fspec.path,
+                choices: {
+                    '': choices,
+                },
+            };
+        });
+        // add venue to the list of filters
+        // venues grouped by cat
+        let venues = _.mapValues(
+            _.groupBy(instOpts.confs, conf => conf.cat),
+            // from list of conf to unique sorted list of venue
+            subconfs => [... new Set(subconfs.map(conf => conf.venue))].sort()
+        );
+        // count pubs
+        venues = _.mapValues(venues, venueNames => venueNames.map(name => {
+            console.log('Finding ', name);
+            const count = pubs.filter(pub => _.get(pub, 'conf.venue', '') === name).length;
+            return {
+                value: name,
+                count: count,
+            }
+        }));
+        // add !all
+        venues[''] = [
+            {display: 'All', value: '!all', count: pubs.length},
+            {
+                display: 'Others',
+                value: '!others',
+                count: pubs.filter(pub => pub.confkey.length === 0).length,
+            },
+        ];
+
+        fspecs.unshift({
+            name: 'Venue',
+            id: 'venue',
+            choices: venues,
+        });
+
+        hexo.log.info(fspecs);
+
         const locals = this._bindHelpers({
             // directly inject items into the template context
             pubs,
-            venues,
-            highlight_authors,
+            fspecs,
+            instOpts,
             // emulate hexo's own local environment in the rendering
             config: hexo.config,
             theme: Object.assign({}, hexo.config, hexo.theme.config, hexo.config.theme_config),

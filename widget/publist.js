@@ -318,7 +318,7 @@
                     $sel.find('[data-value="!all"]').attr('aria-checked', 'true');
                 }
                 // update summary based on selected items
-                const $selected = $sel.find('[aria-checked="true"]');
+                const $selected = $sel.find('[aria-checked="true"] .display-value');
                 const $valueTag = $sel.find('.summary-value');
                 if ($selected.length > 1) {
                     $valueTag.text('Multiple');
@@ -353,19 +353,30 @@
          */
         _matches = ($li, filters) => {
             // create the selector on all data attrs
-            for (const [name, values] of filters) {
+            for (const [id, values] of filters) {
+                // if any value in values matches the $li, continue
+                // otherwise return false
                 if (values.has('!all')) {
                     continue;
                 }
-                if (name === 'venue') {
+                if (id === 'venue') {
                     // special handling of conference cat
                     const valueCat = $li.attr(`data-pub-cat`);
                     if (values.has(`@${valueCat}`)) {
                         continue;
                     }
-                }
-                const value = $li.attr(`data-pub-${name}`);
-                if (!values.has(value)) {
+                    const value = $li.attr(`data-pub-venue`);
+                    if (!values.has(value)) {
+                        return false;
+                    }
+                } else {
+                    const liValues = JSON.parse($li.attr('data-pub-extra'))[id] || [];
+                    if (values.has('!others') && liValues.length === 0) {
+                        continue;
+                    }
+                    if (liValues.filter(val => values.has(val)).length > 0) {
+                        continue;
+                    }
                     return false;
                 }
             }
@@ -390,14 +401,12 @@
             const myValue = $item.attr('data-value');
             // the following only clears the item's superset
             // but not clearing items they cover. That is done in _filtersFromPanel
-            if (myValue.startsWith('!')) {
-                // all item, pass
-            } else if (myValue.startsWith('@')) {
-                // a cat item, clear !all
+            if (myValue !== '!all') {
+                // everything not !all clears !all
                 $sel.find('[data-value="!all"').attr('aria-checked', 'false');
-            } else {
-                // a normal item, clear all and corresponding header
-                $sel.find('[data-value="!all"').attr('aria-checked', 'false');
+            }
+            if (!myValue.match(/^[!@]/)) {
+                // a normal item also clears its cat
                 $sel.find(`[data-value="${myValueCat}"`).attr('aria-checked', 'false');
             }
 

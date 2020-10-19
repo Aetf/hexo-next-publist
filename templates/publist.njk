@@ -1,13 +1,12 @@
 {%- macro checkmark() -%}
 <svg class="SelectMenu-icon SelectMenu-icon--check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" clip-rule="evenodd" d="M13.78 4.22C13.9204 4.36062 13.9993 4.55125 13.9993 4.75C13.9993 4.94875 13.9204 5.13937 13.78 5.28L6.53 12.53C6.38937 12.6704 6.19875 12.7493 6 12.7493C5.80125 12.7493 5.61062 12.6704 5.47 12.53L2.22 9.28C2.08752 9.13782 2.0154 8.94978 2.01882 8.75547C2.02225 8.56117 2.10096 8.37579 2.23838 8.23837C2.37579 8.10096 2.56118 8.02225 2.75548 8.01882C2.94978 8.01539 3.13782 8.08752 3.28 8.22L6 10.94L12.72 4.22C12.8606 4.07955 13.0512 4.00066 13.25 4.00066C13.4487 4.00066 13.6394 4.07955 13.78 4.22Z"></path></svg>
 {%- endmacro -%}
-<div class="publist">
-    <div class="publist-search-panel">
-        <h4>Filters:</h4>
-        <details class="details-reset details-overlay" data-select-for="venue">
+
+{%- macro genSelect(id, name, choices) -%}
+        <details class="details-reset details-overlay" data-select-for="{{ id }}">
             <summary class="btn" aria-haspopup="true">
                 <span>
-                    Venue:
+                    {{ name }}:
                     <span class="summary-value"></span>
                 </span>
                 <span class="dropdown-caret"></span>
@@ -15,24 +14,38 @@
             <div class="SelectMenu">
                 <div class="SelectMenu-modal">
                     <div class="SelectMenu-list SelectMenu-list--borderless">
-                        <button class="SelectMenu-item" role="menuitem" aria-checked="true" data-value="!all">{{ checkmark() }}All</button>
-                        {% for venueType, venueNames in venues -%}
-                        {%- if venueNames.length > 0 -%}
-                        <div class="SelectMenu-divider" role="menuitem" data-value="@{{ venueType }}">{{ checkmark() }}{{ venueType | replace(' ', '&nbsp') }}</div>
-                        {%- for venueName in venueNames %}
+                        {% for cat, values in choices | dictsort -%}
+                        {%- if values.length > 0 -%}
+                        {%- if cat.length > 0 -%}
+                        <div class="SelectMenu-divider" role="menuitem" data-value="@{{ cat }}">
+                            {{ checkmark() }}
+                            {{ cat }}
+                        </div>
+                        {%- endif %}
+                        {%- for choice in values %}
                         <button class="SelectMenu-item" role="menuitem"
-                            data-value-cat="@{{ venueType }}"
-                            data-value="{{ venueName }}"
+                            data-value-cat="@{{ cat }}"
+                            data-value="{{ choice.value }}"
                         >
-                            {{ checkmark() }}{{ venueName | replace(' ', '&nbsp') }}
+                            {{ checkmark() }}
+                            <span class="display-value">{{ choice.display | default(choice.value) }}</span>
+                            <span class="Counter">{{ choice.count }}</span>
                         </button>
-                        {% endfor -%}
+                        {%- endfor -%}
                         {%- endif -%}
                         {%- endfor %}
                     </div>
                 </div>
             </div>
         </details>
+{%- endmacro -%}
+
+<div class="publist">
+    <div class="publist-search-panel">
+        <h4>Filters:</h4>
+        {% for fspec in fspecs -%}
+        {{ genSelect(fspec.id, fspec.name, fspec.choices) }}
+        {%- endfor %}
         <footer>Showing <span class="selected-value">{{pubs.length}}</span>/{{pubs.length}}</footer>
     </div> <!-- publist-search-panel -->
     <div class="pub-list">
@@ -53,9 +66,7 @@
                 {#- A single block for a paper #}
                 <li data-pub-venue="{{ pub.conf.venue }}"
                     data-pub-cat="{{ pub.conf.cat }}"
-                    {% for name, values in pub.meta -%}
-                    data-pub-{{- name -}}="{{ values.join(' ') }}"
-                    {% endfor -%}
+                    data-pub-extra='{{pub.extra_json_escaped}}'
                 >
                     <div class="pub-block">
                         <div class="pub-title">
@@ -66,20 +77,20 @@
                                 {{ pub.title }}
                             {%- endif %}
                             {% if pub.date.isAfter(moment().subtract(config.publist.new_month, 'months')) -%}
-                                <span class="label primary">New</span>
+                                <span class="Label Label--purple">New</span>
                             {%- endif %}
                         </div>
                         {% if pub.badges.length > 0 -%}
                         <div class="pub-badges">
                             {%- for badge in pub.badges %}
-                            <span class="label default pub-badge">{{ badge }}</span>
+                            <span class="Label Label--red pub-badge">{{ badge }}</span>
                             {%- endfor %}
                         </div>
                         {%- endif %}
                         <div class="pub-authors">
                             {%- set comma = joiner(", ") -%}
                             {%- for author in pub.authors -%}
-                                {%- set hlcls = "pub-highlight" if highlight_authors.has(author) else "" -%}
+                                {%- set hlcls = "pub-highlight" if instOpts.highlight_authors.has(author) else "" -%}
                                 {%- set authorcls = "pub-author-" + author.replace(' ', '-') -%}
                                 {{- comma() -}}
                                 {%- if loop.last and not loop.first %}and {% endif %}
