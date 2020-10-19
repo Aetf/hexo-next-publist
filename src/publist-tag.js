@@ -110,8 +110,8 @@ class PublistTag {
         pubs = pubs.map(pub => {
             // first try get by cross referencing conference's date,
             const conf = _.get(instOpts.confs, pub.confkey);
-            let date = _.get(conf, 'date');
-            if (!date) {
+            let date = _.get(conf, 'date', moment.invalid());
+            if (!date.isValid()) {
                 // try the bib year and month field
                 const mon = _.get(pub.bib.fields, 'month[0]', '1');
                 const monFmt = parseInt(mon) ? 'MM' : 'MMM';
