@@ -197,7 +197,7 @@
     flex-direction: row;
     align-items: flex-start;
 
-    padding: 1em 0em 1em 0em;
+    padding: 1em 0em 0.5em 0em;
     margin-top: -1em;
 
     border-bottom: dashed 1px #ccc;
