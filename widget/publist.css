@@ -194,8 +194,8 @@
 
 .publist-search-panel {
     display: flex;
-    justify-content: left;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
 
     padding: 1em 0em 1em 0em;
     margin-top: -1em;
@@ -209,22 +209,59 @@
     z-index: 11;
 }
 
-.publist-search-panel h4 {
-    margin: 0em 1em 0em .5em;
+.publist-search-panel .publist-filters-header {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1em;
+    margin-left: 0.5em;
+}
+
+.publist-search-panel .publist-filters-header footer {
+    align-self: center;
+    font-size: small;
+}
+
+.publist-filters-header .publist-filters-header-hwrapper {
+    /* same height as a detail, which is summary 1.5rem + border 2px * 2 */
+    height: calc(1.5rem + 4px);
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+}
+
+.publist-filters-header h4 {
+    margin: 0px;
     padding: 0px;
 }
 
-.publist-search-panel details {
-    margin: 0 18px;
+.publist-search-panel .publist-filters-row {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    flex-wrap: wrap;
+    flex: 1;
+
+    /* absorbe deuplicated margin in rows */
+    margin-top: -0.5rem;
+    margin-bottom: -0.5rem;
 }
-.publist-search-panel details:first-of-type {
-    margin-left: 0;
+
+.publist-search-panel details {
+    margin: 0.5rem;
 }
 
 .publist-search-panel details > summary[aria-haspopup=true] {
     display: flex;
     align-items: center;
     cursor: pointer;
+
+    /* control the height, align with filter title header */
+    height: 1.5rem;
+    outline: none;
+}
+
+.publist-search-panel details summary span {
+    white-space: nowrap;
 }
 
 .publist-search-panel [role="menuitem"] {

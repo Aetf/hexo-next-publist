@@ -42,11 +42,17 @@
 
 <div class="publist">
     <div class="publist-search-panel">
-        <h4>Filters:</h4>
-        {% for fspec in fspecs -%}
-        {{ genSelect(fspec.id, fspec.name, fspec.choices) }}
-        {%- endfor %}
-        <footer>Showing <span class="selected-value">{{pubs.length}}</span>/{{pubs.length}}</footer>
+        <div class="publist-filters-header">
+            <div class="publist-filters-header-hwrapper">
+                <h4>Filters:</h4>
+            </div>
+            <footer>(<span class="selected-value">{{pubs.length}}</span>/{{pubs.length}})</footer>
+        </div>
+        <div class="publist-filters-row">
+            {% for fspec in fspecs -%}
+            {{ genSelect(fspec.id, fspec.name, fspec.choices) }}
+            {%- endfor %}
+        </div>
     </div> <!-- publist-search-panel -->
     <div class="pub-list">
     {%- set year = '' -%}
