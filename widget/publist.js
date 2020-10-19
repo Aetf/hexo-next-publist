@@ -361,11 +361,14 @@
                 }
                 if (id === 'venue') {
                     // special handling of conference cat
-                    const valueCat = $li.attr(`data-pub-cat`);
+                    const valueCat = $li.attr('data-pub-cat');
                     if (values.has(`@${valueCat}`)) {
                         continue;
                     }
                     const value = $li.attr(`data-pub-venue`);
+                    if (value === '' && values.has('!others')) {
+                        continue;
+                    }
                     if (!values.has(value)) {
                         return false;
                     }
