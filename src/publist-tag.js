@@ -190,7 +190,6 @@ class PublistTag {
         );
         // count pubs
         venues = _.mapValues(venues, venueNames => venueNames.map(name => {
-            console.log('Finding ', name);
             const count = pubs.filter(pub => _.get(pub, 'conf.venue', '') === name).length;
             return {
                 value: name,
@@ -212,8 +211,6 @@ class PublistTag {
             id: 'venue',
             choices: venues,
         });
-
-        hexo.log.info(fspecs);
 
         const locals = this._bindHelpers({
             // directly inject items into the template context
