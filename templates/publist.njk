@@ -46,7 +46,9 @@
             <div class="publist-filters-header-hwrapper">
                 <h4>Filters:</h4>
             </div>
-            <footer>(<span class="selected-value">{{pubs.length}}</span>/{{pubs.length}})</footer>
+            <footer>(<a title="Reset Filters" href="#">
+                <span class="selected-value">{{pubs.length}}</span>/{{pubs.length}}
+            </a>)</footer>
         </div>
         <div class="publist-filters-row">
             {% for fspec in fspecs -%}
