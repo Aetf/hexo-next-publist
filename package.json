@@ -23,12 +23,12 @@
         "test": "ava"
     },
     "dependencies": {
-        "@babel/core": "^7.12.3",
-        "@babel/preset-env": "^7.12.1",
-        "@retorquere/bibtex-parser": "^3.2.14",
+        "@babel/core": "^7.12.10",
+        "@babel/preset-env": "^7.12.11",
+        "@retorquere/bibtex-parser": "^3.2.29",
         "babelify": "^10.0.0",
         "browserify": "^17.0.0",
-        "core-js": "^3.6.5",
+        "core-js": "^3.8.1",
         "hexo-fs": "^3.1.0",
         "hexo-util": "^2.4.0",
         "lodash": "^4.17.20",
@@ -43,6 +43,6 @@
         "hexo-theme-next": "^8.0.1"
     },
     "devDependencies": {
-        "ava": "^3.13.0"
+        "ava": "^3.14.0"
     }
 }
