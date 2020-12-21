@@ -247,6 +247,7 @@
     margin-bottom: -0.5rem;
 }
 
+/* Margin between each dropdown box */
 .publist-search-panel details {
     margin: 0.5rem;
 }
@@ -269,6 +270,12 @@
     white-space: nowrap;
 }
 
+/* Some space between the text and counter */
+.publist-search-panel .SelectMenu-item .display-value {
+    margin-right: 0.5rem;
+}
+
+/* Right-align the counter in the flex container */
 .publist-search-panel .SelectMenu-item .Counter {
     margin-left: auto;
 }
