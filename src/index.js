@@ -36,7 +36,7 @@ function register(hexo) {
     require('./injector')(hexo);
 
     // the actual tag
-    require('./publist-tag')(hexo, opts);
+    require('./publist-tag').register(hexo, opts);
 }
 
 register(hexo);

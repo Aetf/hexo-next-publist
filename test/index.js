@@ -6,6 +6,11 @@ const path = require('path');
 const fs = require('fs');
 const bibtex = require('@retorquere/bibtex-parser');
 const stripIndent = require('strip-indent');
+const { loadInstanceOpts, PubsResolver } = require('../src/publist-tag');
+
+function normalize(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
 
 const BIBSOURCE =
 `% publist specific settings starts with publist_, they will not show up in the end result
@@ -108,4 +113,58 @@ test('bibtex parsing', t => {
     abs = stripIndent(abs).trim();
 
     t.is(abs, ABSTRACT);
+});
+
+test('Tag Options', t => {
+    const content = fs.readFileSync(path.join(__dirname, 'data/config.yml'));
+    const instOpts = normalize(loadInstanceOpts(content));
+
+    t.like(instOpts, {
+        pub_dir: 'publications/files',
+        confs: {
+            "ATC'20": {
+                venue: 'ATC',
+                name: 'The 2020 USENIX Annual Technical Conference',
+                date: '2020-07-15T00:00:00.000Z',
+                url: 'https://www.usenix.org/conference/atc20',
+                acceptance: '18.68%',
+                cat: 'Conferences'
+            },
+            arXiv: {
+                venue: 'arXiv',
+                name: 'arXiv',
+                url: 'https://arxiv.org',
+                acceptance: '',
+                cat: 'Technical Reports'
+            },
+            'USENIX ;login:': {
+                venue: 'USENIX ;login:',
+                name: 'USENIX ;login: Winter 2017, VOL. 42, NO. 4',
+                date: '2017-12-30T00:00:00.000Z',
+                url: 'https://www.usenix.org/publications/login',
+                acceptance: '',
+                cat: 'Journals'
+            }
+        },
+        extra_filters: [
+            { id: 'topic', name: 'Topic', path: 'meta.topic' },
+            { id: 'tag', name: 'Tag', path: 'meta.tag' },
+            { id: 'badge', name: 'Badge', path: 'badges' }
+        ],
+        auto_confkey: false
+    });
+});
+
+test('MCBib parsing', t => {
+    const content = fs.readFileSync(path.join(__dirname, 'data/config.yml'));
+    const instOpts = loadInstanceOpts(content);
+    const parsedPubs = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/MCPubs.json')));
+
+    const resolver = new PubsResolver(instOpts);
+    const pubs = resolver.processPubs(parsedPubs);
+    const fspecs = resolver.processFspecs(pubs);
+
+    t.is(pubs.length, 32);
+    t.deepEqual(normalize(pubs), JSON.parse(fs.readFileSync(path.join(__dirname, 'data/MCPubs.resolved.json'))))
+    t.deepEqual(normalize(fspecs), JSON.parse(fs.readFileSync(path.join(__dirname, 'data/MCPubs.fspecs.json'))))
 });
