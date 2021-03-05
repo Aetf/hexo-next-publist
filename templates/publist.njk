@@ -117,15 +117,6 @@
                             {%- endif %}
                         </div>
                         {%- endif %}
-                        {% if pub.abstract.length > 0 -%}
-                        <div class="pub-abstract-frame">
-                            <div class="pub-abstract">
-                                <blockquote>
-                                    {{- pub.abstract }}
-                                </blockquote>
-                            </div>
-                        </div>
-                        {%- endif %}
                         <div class="pub-links">
                             {%- for link in pub.links %}
                             <a target="_blank" href="{{ link.href }}">[{{ link.name }}]</a>
@@ -135,6 +126,15 @@
                             <a class="pub-link-abstract">[abstract]</a>
                             {%- endif %}
                         </div>
+                        {% if pub.abstract.length > 0 -%}
+                        <div class="pub-abstract-frame">
+                            <div class="pub-abstract">
+                                <blockquote>
+                                    {{- pub.abstract }}
+                                </blockquote>
+                            </div>
+                        </div>
+                        {%- endif %}
                     </div>
                 </li>
     {%- endfor -%}
