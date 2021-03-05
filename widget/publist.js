@@ -162,7 +162,7 @@
                 this._showTooltip(e.trigger, this._fallbackMessage(e.action));
             });
 
-            $(cssSelector).on('mouseleave', e => this._closeTooltip(e.trigger));
+            $(cssSelector).on('mouseleave', e => this._closeTooltip(e.target));
         }
 
         _fallbackMessage = action => {
