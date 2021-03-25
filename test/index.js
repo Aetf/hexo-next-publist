@@ -151,7 +151,6 @@ test('Tag Options', t => {
             { id: 'tag', name: 'Tag', path: 'meta.tag' },
             { id: 'badge', name: 'Badge', path: 'badges' }
         ],
-        auto_confkey: false
     });
 });
 

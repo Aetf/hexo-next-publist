@@ -174,6 +174,18 @@ class PubsResolver {
  * @param {string} content the yaml string
  */
 function loadInstanceOpts(content) {
+    const loaded = {
+        version: 1,
+        ...yaml.safeLoad(content)
+    };
+    if (loaded.version < 2) {
+        // TODO: warning
+        return processInstanceOptsV1(loaded);
+    }
+    throw new Error(`Config version newer than supported: ${loaded.version}`);
+}
+
+function processInstanceOptsV1(loaded) {
     const defConf = {
         venue: '',
         name: '',
@@ -188,8 +200,7 @@ function loadInstanceOpts(content) {
         venues: {},
         highlight_authors: [],
         extra_filters: [],
-        auto_confkey: false,
-        ...yaml.safeLoad(content),
+        ...loaded,
     };
 
     // flatten the list of conferences
@@ -214,7 +225,6 @@ function loadInstanceOpts(content) {
         confs,
         extra_filters,
         highlight_authors: new Set(obj.highlight_authors),
-        auto_confkey: obj.auto_confkey,
     };
 }
 
@@ -225,34 +235,45 @@ class PublistTag {
     }
 
     /**
-     * @param {*} args Arguments to the tag. An array of string, they are whitespace splited.
+     * @param {String} dataName 
+     * @param {*} context 
+     * @returns An array of raw pub entries
      */
-    _tag = ([dataName], content, context) => {
+    _loadRawPubs = (dataName, context) => {
         const { hexo, opts } = this;
-        const instOpts = loadInstanceOpts(content);
-        const now = moment();
-
         const hexoData = hexo.locals.get('data');
-        let pubs = [];
         if (!_.has(hexoData, dataName)) {
             hexo.log.warn(`Could not find your bibtex file named ${dataName}.bib`);
+            return [];
         } else {
-            pubs = hexoData[dataName];
-            if (pubs.errors.length != 0) {
-                for (const err of pubs.errors) {
-                    hexo.log.error(`Error when parsing ${dataName}.bib: ${err.errorString}`);
-                }
+            const {errors, items: pubs} = hexoData[dataName];
+            for (const err of errors) {
+                hexo.log.error(`Error when parsing ${dataName}.bib: ${err.errorString}`);
+            }
+            if (errors.length != 0) {
                 if (opts.strict) {
                     throw new Error(`Abort generating '${context.source}': '${dataName}'.bib contains errors and strict mode is enabled`);
                 } else {
                     hexo.log.warn(`There were errors when parsing ${dataName}.bib, publist may be incomplete`);
                 }
             }
-            pubs = pubs.items;
+            return pubs;
         }
+    }
+
+    /**
+     * @param {Array} args Arguments to the tag. An array of string, they were whitespace splited
+     * @param {String} content The content between the opening and ending tag
+     * @param {*} context The calling context, contains info about the rendering source
+     */
+    _tag = ([dataName], content, context) => {
+        const { hexo, opts } = this;
+        const instOpts = loadInstanceOpts(content);
+
+        const rawPubs = this._loadRawPubs(dataName, context);
 
         const resolver = new PubsResolver(instOpts);
-        pubs = resolver.processPubs(pubs);
+        const pubs = resolver.processPubs(rawPubs);
         const fspecs = resolver.processFspecs(pubs);
 
         hexo.log.info(`${context.source}: Generating ${pubs.length} bib entries`);
