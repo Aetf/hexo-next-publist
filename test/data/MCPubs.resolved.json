@@ -1,94 +1,92 @@
 [
     {
-        "citekey": "netlock:sigcomm20",
-        "title": "NetLock: Fast, centralized lock management using programmable switches",
+        "citekey": "cellscope:tr16",
+        "title": "Fast and accurate performance analysis of LTE radio access networks",
         "authors": [
-            "Zhuolong Yu",
-            "Yiwen Zhang",
-            "Vladimir Braverman",
+            "Anand Padmanabha Iyer",
+            "Ion Stoica",
             "Mosharaf Chowdhury",
-            "Xin Jin"
+            "Li Erran Li"
         ],
         "badges": [],
-        "confkey": "SIGCOMM'20",
-        "abstract": "<p>Lock managers are widely used by distributed systems. Traditional centralized lock managers can easily support policies between multiple users using global knowledge, but they suffer from low performance. In contrast, emerging decentralized approaches are faster but cannot provide flexible policy support. Furthermore, performance in both cases is limited by the server capability.</p>\n<p>We present NetLock, a new centralized lock manager that co-designs servers and network switches to achieve high performance without sacrificing flexibility in policy support. The key idea of NetLock is to exploit the capability of emerging programmable switches to directly process lock requests in the switch data plane. Due to the limited switch memory, we design a memory management mechanism to seamlessly integrate the switch and server memory. To realize the locking functionality in the switch, we design a custom data plane module that efficiently pools multiple register arrays together to maximize memory utilization We have implemented a NetLock prototype with a Barefoot Tofino switch and a cluster of commodity servers. Evaluation results show that NetLock improves the throughput by 14.0-18.4x, and reduces the average and 99% latency by 4.7-20.3x and 10.4-18.7x over DSLR, a state-of-the-art RDMA-based solution, while providing flexible policy support.</p>\n",
+        "confkey": "arXiv:1605.04652",
+        "abstract": "An increasing amount of analytics is performed on data that is procured in a real-time fashion to make real-time decisions. Such tasks include simple reporting on streams to sophisticated model building. However, the practicality of such analyses are impeded in several domains because they are faced with a fundamental trade-off between data collection latency and analysis accuracy. In this paper, we study this trade-off in the context of a specific domain, Cellular Radio Access Networks (RAN). Our choice of this domain is influenced by its commonalities with several other domains that produce real-time data, our access to a large live dataset, and their real-time nature and dimensionality which makes it a natural fit for a popular analysis technique, machine learning (ML). We find that the latency accuracy trade-off can be resolved using two broad, general techniques: intelligent data grouping and task formulations that leverage domain characteristics. Based on this, we present CellScope, a system that addresses this challenge by applying a domain specific formulation and application of Multi-task Learning (MTL) to RAN performance analysis. It achieves this goal using three techniques: feature engineering to transform raw data into effective features, a PCA inspired similarity metric to group data from geographically nearby base stations sharing performance commonalities, and a hybrid online-offline model for efficient model updates. Our evaluation of CellScope shows that its accuracy improvements over direct application of ML range from 2.5x to 4.4x while reducing the model update overhead by up to 4.8x. We have also used CellScope to analyze a live LTE consisting of over 2 million subscribers for a period of over 10 months, where it uncovered several problems and insights, some of them previously unknown.",
         "links": [
             {
                 "name": "paper",
-                "href": "/publications/files/netlock:sigcomm20/netlock-sigcomm20.pdf"
+                "href": "https://arxiv.org/abs/1605.04652"
             }
         ],
-        "bibStr": "@inproceedings{netlock:sigcomm20,\n    author    = {Zhuolong Yu and Yiwen Zhang and Vladimir Braverman and Mosharaf Chowdhury and Xin Jin},\n    booktitle = {ACM SIGCOMM},\n    title     = {{NetLock}: Fast, Centralized Lock Management Using Programmable Switches},\n    year      = {2020},\n    pages     = {126--138},\n}\n",
+        "bibStr": "@techreport{cellscope:tr16,\n    Title                    = {Fast and Accurate Performance Analysis of {LTE} Radio Access Networks},\n    Author                   = {Anand Padmanabha Iyer and Ion Stoica and Mosharaf Chowdhury and Li Erran Li},\n    Institution              = {CoRR},\n    Year                     = {2016},\n    Month                    = {May},\n    Number                   = {abs/1605.04652},\n    Abstract                 = {An increasing amount of analytics is performed on data that is procured in a real-time fashion to make real-time decisions. Such tasks include simple reporting on streams to sophisticated model building. However, the practicality of such analyses are impeded in several domains because they are faced with a fundamental trade-off between data collection latency and analysis accuracy.\n\nIn this paper, we study this trade-off in the context of a specific domain, Cellular Radio Access Networks (RAN). Our choice of this domain is influenced by its commonalities with several other domains that produce real-time data, our access to a large live dataset, and their real-time nature and dimensionality which makes it a natural fit for a popular analysis technique, machine learning (ML). We find that the latency accuracy trade-off can be resolved using two broad, general techniques: intelligent data grouping and task formulations that leverage domain characteristics. Based on this, we present CellScope, a system that addresses this challenge by applying a domain specific formulation and application of Multi-task Learning (MTL) to RAN performance analysis. It achieves this goal using three techniques: feature engineering to transform raw data into effective features, a PCA inspired similarity metric to group data from geographically nearby base stations sharing performance commonalities, and a hybrid online-offline model for efficient model updates. Our evaluation of CellScope shows that its accuracy improvements over direct application of ML range from 2.5x to 4.4x while reducing the model update overhead by up to 4.8x. We have also used CellScope to analyze a live LTE consisting of over 2 million subscribers for a period of over 10 months, where it uncovered several problems and insights, some of them previously unknown.}\n}\n",
         "meta": {},
         "bib": {
-            "key": "netlock:sigcomm20",
-            "type": "inproceedings",
+            "key": "cellscope:tr16",
+            "type": "techreport",
             "fields": {
+                "abstract": [
+                    "An increasing amount of analytics is performed on data that is procured in a real-time fashion to make real-time decisions. Such tasks include simple reporting on streams to sophisticated model building. However, the practicality of such analyses are impeded in several domains because they are faced with a fundamental trade-off between data collection latency and analysis accuracy. In this paper, we study this trade-off in the context of a specific domain, Cellular Radio Access Networks (RAN). Our choice of this domain is influenced by its commonalities with several other domains that produce real-time data, our access to a large live dataset, and their real-time nature and dimensionality which makes it a natural fit for a popular analysis technique, machine learning (ML). We find that the latency accuracy trade-off can be resolved using two broad, general techniques: intelligent data grouping and task formulations that leverage domain characteristics. Based on this, we present CellScope, a system that addresses this challenge by applying a domain specific formulation and application of Multi-task Learning (MTL) to RAN performance analysis. It achieves this goal using three techniques: feature engineering to transform raw data into effective features, a PCA inspired similarity metric to group data from geographically nearby base stations sharing performance commonalities, and a hybrid online-offline model for efficient model updates. Our evaluation of CellScope shows that its accuracy improvements over direct application of ML range from 2.5x to 4.4x while reducing the model update overhead by up to 4.8x. We have also used CellScope to analyze a live LTE consisting of over 2 million subscribers for a period of over 10 months, where it uncovered several problems and insights, some of them previously unknown."
+                ],
                 "author": [
-                    "Zhuolong Yu",
-                    "Yiwen Zhang",
-                    "Vladimir Braverman",
+                    "Anand Padmanabha Iyer",
+                    "Ion Stoica",
                     "Mosharaf Chowdhury",
-                    "Xin Jin"
+                    "Li Erran Li"
                 ],
-                "booktitle": [
-                    "ACM SIGCOMM"
+                "institution": [
+                    "CoRR"
                 ],
-                "pages": [
-                    "126–138"
+                "month": [
+                    "May"
                 ],
-                "publist_abstract": [
-                    "Lock managers are widely used by distributed systems. Traditional centralized lock managers can easily support policies between multiple users using global knowledge, but they suffer from low performance. In contrast, emerging decentralized approaches are faster but cannot provide flexible policy support. Furthermore, performance in both cases is limited by the server capability.\n\n    We present NetLock, a new centralized lock manager that co-designs servers and network switches to achieve high performance without sacrificing flexibility in policy support. The key idea of NetLock is to exploit the capability of emerging programmable switches to directly process lock requests in the switch data plane. Due to the limited switch memory, we design a memory management mechanism to seamlessly integrate the switch and server memory. To realize the locking functionality in the switch, we design a custom data plane module that efficiently pools multiple register arrays together to maximize memory utilization We have implemented a NetLock prototype with a Barefoot Tofino switch and a cluster of commodity servers. Evaluation results show that NetLock improves the throughput by 14.0-18.4x, and reduces the average and 99% latency by 4.7-20.3x and 10.4-18.7x over DSLR, a state-of-the-art RDMA-based solution, while providing flexible policy support."
+                "number": [
+                    "abs/1605.04652"
                 ],
                 "publist_confkey": [
-                    "SIGCOMM'20"
+                    "arXiv:1605.04652"
                 ],
                 "publist_link": [
-                    "paper || netlock-sigcomm20.pdf"
+                    "paper || https://arxiv.org/abs/1605.04652"
                 ],
                 "title": [
-                    "NetLock: Fast, centralized lock management using programmable switches"
+                    "Fast and accurate performance analysis of LTE radio access networks"
                 ],
                 "year": [
-                    "2020"
+                    "2016"
                 ]
             },
             "creators": {
                 "author": [
                     {
-                        "firstName": "Zhuolong",
-                        "lastName": "Yu"
+                        "firstName": "Anand Padmanabha",
+                        "lastName": "Iyer"
                     },
                     {
-                        "firstName": "Yiwen",
-                        "lastName": "Zhang"
-                    },
-                    {
-                        "firstName": "Vladimir",
-                        "lastName": "Braverman"
+                        "firstName": "Ion",
+                        "lastName": "Stoica"
                     },
                     {
                         "firstName": "Mosharaf",
                         "lastName": "Chowdhury"
                     },
                     {
-                        "firstName": "Xin",
-                        "lastName": "Jin"
+                        "firstName": "Li Erran",
+                        "lastName": "Li"
                     }
                 ]
             },
             "sentenceCased": true
         },
         "conf": {
-            "venue": "SIGCOMM",
-            "name": "The 2020 ACM SIGCOMM Conference",
-            "date": "2020-08-11T00:00:00.000Z",
-            "url": "https://conferences.sigcomm.org/sigcomm/2020/",
-            "acceptance": "21.6%",
-            "cat": "Conferences"
+            "venue": "arXiv",
+            "cat": "Technical Reports",
+            "key": "arXiv-all",
+            "matches": "^arXiv:(.*)$",
+            "name": "arXiv:1605.04652",
+            "url": "https://arxiv.org/abs/1605.04652",
+            "date": "2021-03-26T03:00:22.151Z"
         },
-        "date": "2020-08-11T00:00:00.000Z",
-        "year": "2020",
+        "date": "2021-03-26T03:00:22.151Z",
+        "year": "2021",
         "extra": {
             "topic": [],
             "tag": [],
@@ -97,254 +95,69 @@
         "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
     },
     {
-        "citekey": "leap:atc20",
-        "title": "Effectively prefetching remote memory with Leap",
-        "authors": [
-            "Hasan Al Maruf",
-            "Mosharaf Chowdhury"
-        ],
-        "badges": [
-            "Best Paper Award"
-        ],
-        "confkey": "ATC'20",
-        "abstract": "<p>Memory disaggregation over RDMA can improve the performance of memory-constrained applications by replacing disk swapping with remote memory accesses. However, state-of-the-art memory disaggregation solutions still use data path components designed for slow disks. As a result, applications experience remote memory access latency significantly higher than that of the underlying low-latency network, which itself can be too high for many applications.</p>\n<p>In this paper, we propose Leap, a prefetching solution for remote memory accesses due to memory disaggregation. At its core, Leap employs an online, majority-based prefetching algorithm, which increases the page cache hit rate. We complement it with a lightweight and efficient data path in the kernel that isolates each application’s data path to the disaggregated memory and mitigates latency bottlenecks arising from legacy throughput-optimizing operations. Integration of Leap in the Linux kernel improves the median and tail remote page access latencies of memory-bound applications by up to 104.04× and 22.62×, respectively, over the default data path. This leads to up to 10.16× performance improvements for applications using disaggregated memory in comparison to the state-of-the-art solutions.</p>\n",
-        "links": [
-            {
-                "name": "paper",
-                "href": "/publications/files/leap:atc20/leap-atc20.pdf"
-            },
-            {
-                "name": "slides",
-                "href": "/publications/files/leap:atc20/leap-atc20-slides.pdf"
-            },
-            {
-                "name": "code",
-                "href": "https://github.com/SymbioticLab/Leap"
-            }
-        ],
-        "bibStr": "@inproceedings{leap:atc20,\n    author    = {Hasan Al Maruf and Mosharaf Chowdhury},\n    booktitle = {USENIX ATC},\n    title     = {Effectively Prefetching Remote Memory with {Leap}},\n    year      = {2020},\n    pages     = {843--857},\n}\n",
-        "meta": {},
-        "bib": {
-            "key": "leap:atc20",
-            "type": "inproceedings",
-            "fields": {
-                "author": [
-                    "Hasan Al Maruf",
-                    "Mosharaf Chowdhury"
-                ],
-                "booktitle": [
-                    "USENIX ATC"
-                ],
-                "pages": [
-                    "843–857"
-                ],
-                "publist_abstract": [
-                    "Memory disaggregation over RDMA can improve the performance of memory-constrained applications by replacing disk swapping with remote memory accesses. However, state-of-the-art memory disaggregation solutions still use data path components designed for slow disks. As a result, applications experience remote memory access latency significantly higher than that of the underlying low-latency network, which itself can be too high for many applications.\n\n    In this paper, we propose Leap, a prefetching solution for remote memory accesses due to memory disaggregation. At its core, Leap employs an online, majority-based prefetching algorithm, which increases the page cache hit rate. We complement it with a lightweight and efficient data path in the kernel that isolates each application’s data path to the disaggregated memory and mitigates latency bottlenecks arising from legacy throughput-optimizing operations. Integration of Leap in the Linux kernel improves the median and tail remote page access latencies of memory-bound applications by up to 104.04× and 22.62×, respectively, over the default data path. This leads to up to 10.16× performance improvements for applications using disaggregated memory in comparison to the state-of-the-art solutions."
-                ],
-                "publist_badge": [
-                    "Best Paper Award"
-                ],
-                "publist_confkey": [
-                    "ATC'20"
-                ],
-                "publist_link": [
-                    "paper || leap-atc20.pdf",
-                    "slides || leap-atc20-slides.pdf",
-                    "code || https://github.com/SymbioticLab/Leap"
-                ],
-                "title": [
-                    "Effectively prefetching remote memory with Leap"
-                ],
-                "year": [
-                    "2020"
-                ]
-            },
-            "creators": {
-                "author": [
-                    {
-                        "firstName": "Hasan Al",
-                        "lastName": "Maruf"
-                    },
-                    {
-                        "firstName": "Mosharaf",
-                        "lastName": "Chowdhury"
-                    }
-                ]
-            },
-            "sentenceCased": true
-        },
-        "conf": {
-            "venue": "ATC",
-            "name": "The 2020 USENIX Annual Technical Conference",
-            "date": "2020-07-15T00:00:00.000Z",
-            "url": "https://www.usenix.org/conference/atc20",
-            "acceptance": "18.68%",
-            "cat": "Conferences"
-        },
-        "date": "2020-07-15T00:00:00.000Z",
-        "year": "2020",
-        "extra": {
-            "topic": [],
-            "tag": [],
-            "badge": [
-                "Best Paper Award"
-            ]
-        },
-        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[&quot;Best Paper Award&quot;]}"
-    },
-    {
-        "citekey": "allox:eurosys20",
-        "title": "AlloX: Compute allocation in hybrid clusters",
-        "authors": [
-            "Tan N. Le",
-            "Xiao Sun",
-            "Mosharaf Chowdhury",
-            "Zhenhua Liu"
-        ],
-        "badges": [],
-        "confkey": "EuroSys'20",
-        "abstract": "<p>Modern deep learning frameworks support a variety of hardware, including CPU, GPU, and other accelerators, to perform computation. In this paper, we study how to schedule jobs over such interchangeable resources – each with a different rate of computation – to optimize performance while providing fairness among users in a shared cluster. We demonstrate theoretically and empirically that existing solutions and their straightforward modifications perform poorly in the presence of interchangeable resources, which motivates the design and implementation of AlloX. At its core, AlloX transforms the scheduling problem into a min-cost bipartite matching problem and provides dynamic fair allocation over time. We theoretically prove its optimality in an ideal, offline setting and show empirically that it works well in the online scenario by incorporating with Kubernetes. Evaluations on a small-scale CPU-GPU hybrid cluster and large-scale simulations highlight that AlloX can reduce the average job completion time significantly (by up to 95% when the system load is high) while providing fairness and preventing starvation.</p>\n",
-        "links": [
-            {
-                "name": "paper",
-                "href": "/publications/files/allox:eurosys20/allox-eurosys20.pdf"
-            }
-        ],
-        "bibStr": "@inproceedings{allox:eurosys20,\n    author    = {Tan N. Le and Xiao Sun and Mosharaf Chowdhury and Zhenhua Liu},\n    booktitle = {ACM EuroSys},\n    title     = {{AlloX}: Compute Allocation in Hybrid Clusters},\n    year      = {2020},\n    pages     = {31:1--31:16},\n}\n",
-        "meta": {},
-        "bib": {
-            "key": "allox:eurosys20",
-            "type": "inproceedings",
-            "fields": {
-                "author": [
-                    "Tan N. Le",
-                    "Xiao Sun",
-                    "Mosharaf Chowdhury",
-                    "Zhenhua Liu"
-                ],
-                "booktitle": [
-                    "ACM EuroSys"
-                ],
-                "pages": [
-                    "31:1–31:16"
-                ],
-                "publist_abstract": [
-                    "Modern deep learning frameworks support a variety of hardware, including CPU, GPU, and other accelerators, to perform computation. In this paper, we study how to schedule jobs over such interchangeable resources – each with a different rate of computation – to optimize performance while providing fairness among users in a shared cluster. We demonstrate theoretically and empirically that existing solutions and their straightforward modifications perform poorly in the presence of interchangeable resources, which motivates the design and implementation of AlloX. At its core, AlloX transforms the scheduling problem into a min-cost bipartite matching problem and provides dynamic fair allocation over time. We theoretically prove its optimality in an ideal, offline setting and show empirically that it works well in the online scenario by incorporating with Kubernetes. Evaluations on a small-scale CPU-GPU hybrid cluster and large-scale simulations highlight that AlloX can reduce the average job completion time significantly (by up to 95% when the system load is high) while providing fairness and preventing starvation."
-                ],
-                "publist_confkey": [
-                    "EuroSys'20"
-                ],
-                "publist_link": [
-                    "paper || allox-eurosys20.pdf"
-                ],
-                "title": [
-                    "AlloX: Compute allocation in hybrid clusters"
-                ],
-                "year": [
-                    "2020"
-                ]
-            },
-            "creators": {
-                "author": [
-                    {
-                        "firstName": "Tan N.",
-                        "lastName": "Le"
-                    },
-                    {
-                        "firstName": "Xiao",
-                        "lastName": "Sun"
-                    },
-                    {
-                        "firstName": "Mosharaf",
-                        "lastName": "Chowdhury"
-                    },
-                    {
-                        "firstName": "Zhenhua",
-                        "lastName": "Liu"
-                    }
-                ]
-            },
-            "sentenceCased": true
-        },
-        "conf": {
-            "venue": "EuroSys",
-            "name": "The Fifteenth European Conference on Computer Systems",
-            "date": "2020-04-27T00:00:00.000Z",
-            "url": "https://www.eurosys2020.org/",
-            "acceptance": "18.38%",
-            "cat": "Conferences"
-        },
-        "date": "2020-04-27T00:00:00.000Z",
-        "year": "2020",
-        "extra": {
-            "topic": [],
-            "tag": [],
-            "badge": []
-        },
-        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
-    },
-    {
-        "citekey": "salus:mlsys20",
-        "title": "Fine-grained GPU sharing primitives for deep learning applications",
+        "citekey": "salus:arxiv19",
+        "title": "Salus: Fine-grained GPU sharing primitives for deep learning applications",
         "authors": [
             "Peifeng Yu",
             "Mosharaf Chowdhury"
         ],
-        "badges": [
-            "Artifacts Available",
-            "Artifacts Evaluated Functional",
-            "Artifacts Replicated"
-        ],
-        "confkey": "MLSys'20",
-        "abstract": "<p>Unlike traditional resources such as CPU or the network, modern GPUs do not natively support\nfine-grained sharing primitives.\nConsequently, implementing common policies such as time sharing and preemption are expensive. Worse,\nwhen a deep learning (DL) application cannot completely use a GPU’s resources, the GPU cannot be efficiently shared\nbetween multiple applications, leading to GPU underutilization.</p>\n<p>We present Salus to enable two GPU sharing primitives: <strong>fast job\nswitching</strong> and <strong>memory sharing</strong>, to achieve fine-grained GPU sharing\namong multiple DL applications. Salus is an efficient, consolidated\nexecution service that exposes the GPU to different DL applications, and it\nenforces fine-grained sharing by performing iteration scheduling and\naddressing associated memory management issues. We show that these primitives\ncan then be used to implement flexible sharing policies. Our integration of\nSalus with TensorFlow and evaluation on popular DL jobs shows that Salus\ncan improve the average completion time of DL training jobs by <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>3.19</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">3.19\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">3</span><span class=\"mord\">.</span><span class=\"mord\">1</span><span class=\"mord\">9</span><span class=\"mord\">×</span></span></span></span>, GPU utilization for\nhyper-parameter tuning by <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>2.38</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">2.38\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">2</span><span class=\"mord\">.</span><span class=\"mord\">3</span><span class=\"mord\">8</span><span class=\"mord\">×</span></span></span></span>, and GPU utilization of DL inference applications by <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>42</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">42\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">4</span><span class=\"mord\">2</span><span class=\"mord\">×</span></span></span></span> over not sharing\nthe GPU and <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>6</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">6\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">6</span><span class=\"mord\">×</span></span></span></span> over NVIDIA MPS with small overhead.</p>\n",
+        "badges": [],
+        "confkey": "arXiv:1902.04610",
+        "abstract": "GPU computing is becoming increasingly more popular with the proliferation of deep learning (DL) applications.\nHowever, unlike traditional resources such as CPU or the network, modern GPUs do not natively support fine-grained sharing primitives.\nConsequently, implementing common policies such as time sharing and preemption are expensive.\nWorse, when a DL application cannot completely use a GPU's resources, the GPU cannot be efficiently shared between multiple applications, leading to GPU underutilization.\n\nWe present Salus to enable two GPU sharing primitives: fast job switching and memory sharing, in order to achieve fine-grained GPU sharing among multiple DL applications.\nSalus implements an efficient, consolidated execution service that exposes the GPU to different DL applications, and enforces fine-grained sharing by performing iteration scheduling and addressing associated memory management issues.\nWe show that these primitives can then be used to implement flexible sharing policies such as fairness, prioritization, and packing for various use cases.\nOur integration of Salus with TensorFlow and evaluation on popular DL jobs show that Salus can improve the average completion time of DL training jobs by $3.19\\times$,\nGPU utilization for hyper-parameter tuning by $2.38\\times$,\nand GPU utilization of DL inference applications by $42\\times$ over not sharing the GPU and $7\\times$ over NVIDIA MPS with small overhead.",
         "links": [
             {
                 "name": "paper",
-                "href": "/publications/files/salus:mlsys20/salus-mlsys20.pdf"
-            },
-            {
-                "name": "slides",
-                "href": "/publications/files/salus:mlsys20/salus-mlsys20-talk.pptm"
-            },
-            {
-                "name": "poster",
-                "href": "/publications/files/salus:mlsys20/salus-mlsys20-poster.pdf"
+                "href": "https://arxiv.org/abs/1902.04610"
             }
         ],
-        "bibStr": "@inproceedings{salus:mlsys20,\n    author    = {Peifeng Yu and Mosharaf Chowdhury},\n    booktitle = {MLSys},\n    title     = {Fine-Grained {GPU} Sharing Primitives for Deep Learning Applications},\n    year      = {2020},\n}\n",
+        "bibStr": "@article{salus:arxiv19,\n    author        = {Peifeng Yu and Mosharaf Chowdhury},\n    journal       = {CoRR},\n    title         = {Salus: Fine-Grained {GPU} Sharing Primitives for Deep Learning Applications},\n    year          = {2019},\n    month         = {Feb},\n    volume        = {abs/1902.04610},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1902-04610.bib},\n    eprint        = {1902.04610},\n    url           = {https://arxiv.org/abs/1902.04610},\n}\n",
         "meta": {},
         "bib": {
-            "key": "salus:mlsys20",
-            "type": "inproceedings",
+            "key": "salus:arxiv19",
+            "type": "article",
             "fields": {
+                "archiveprefix": [
+                    "arXiv"
+                ],
                 "author": [
                     "Peifeng Yu",
                     "Mosharaf Chowdhury"
                 ],
-                "booktitle": [
-                    "MLSys"
+                "bibsource": [
+                    "dblp computer science bibliography, https://dblp.org"
+                ],
+                "biburl": [
+                    "https://dblp.org/rec/journals/corr/abs-1902-04610.bib"
+                ],
+                "eprint": [
+                    "1902.04610"
+                ],
+                "journal": [
+                    "CoRR"
+                ],
+                "month": [
+                    "Feb"
                 ],
                 "publist_abstract": [
-                    "Unlike traditional resources such as CPU or the network, modern GPUs do not natively support\n    fine-grained sharing primitives.\n    Consequently, implementing common policies such as time sharing and preemption are expensive. Worse,\n    when a deep learning (DL) application cannot completely use a GPU's resources, the GPU cannot be efficiently shared\n    between multiple applications, leading to GPU underutilization.\n\n    We present Salus to enable two GPU sharing primitives: __fast job\n    switching__ and __memory sharing__, to achieve fine-grained GPU sharing\n    among multiple DL applications. Salus is an efficient, consolidated\n    execution service that exposes the GPU to different DL applications, and it\n    enforces fine-grained sharing by performing iteration scheduling and\n    addressing associated memory management issues. We show that these primitives\n    can then be used to implement flexible sharing policies. Our integration of\n    Salus with TensorFlow and evaluation on popular DL jobs shows that Salus\n    can improve the average completion time of DL training jobs by $3.19\\times$, GPU utilization for\n    hyper-parameter tuning by $2.38\\times$, and GPU utilization of DL inference applications by $42\\times$ over not sharing\n    the GPU and $6\\times$ over NVIDIA MPS with small overhead."
-                ],
-                "publist_badge": [
-                    "Artifacts Available",
-                    "Artifacts Evaluated Functional",
-                    "Artifacts Replicated"
+                    "GPU computing is becoming increasingly more popular with the proliferation of deep learning (DL) applications.\n    However, unlike traditional resources such as CPU or the network, modern GPUs do not natively support fine-grained sharing primitives.\n    Consequently, implementing common policies such as time sharing and preemption are expensive.\n    Worse, when a DL application cannot completely use a GPU's resources, the GPU cannot be efficiently shared between multiple applications, leading to GPU underutilization.\n\n    We present Salus to enable two GPU sharing primitives: fast job switching and memory sharing, in order to achieve fine-grained GPU sharing among multiple DL applications.\n    Salus implements an efficient, consolidated execution service that exposes the GPU to different DL applications, and enforces fine-grained sharing by performing iteration scheduling and addressing associated memory management issues.\n    We show that these primitives can then be used to implement flexible sharing policies such as fairness, prioritization, and packing for various use cases.\n    Our integration of Salus with TensorFlow and evaluation on popular DL jobs show that Salus can improve the average completion time of DL training jobs by $3.19\\times$,\n    GPU utilization for hyper-parameter tuning by $2.38\\times$,\n    and GPU utilization of DL inference applications by $42\\times$ over not sharing the GPU and $7\\times$ over NVIDIA MPS with small overhead."
                 ],
                 "publist_confkey": [
-                    "MLSys'20"
+                    "arXiv:1902.04610"
                 ],
                 "publist_link": [
-                    "paper || salus-mlsys20.pdf",
-                    "slides || salus-mlsys20-talk.pptm",
-                    "poster || salus-mlsys20-poster.pdf"
+                    "paper || https://arxiv.org/abs/1902.04610"
                 ],
                 "title": [
-                    "Fine-grained GPU sharing primitives for deep learning applications"
+                    "Salus: Fine-grained GPU sharing primitives for deep learning applications"
+                ],
+                "url": [
+                    "https://arxiv.org/abs/1902.04610"
+                ],
+                "volume": [
+                    "abs/1902.04610"
                 ],
                 "year": [
-                    "2020"
+                    "2019"
                 ]
             },
             "creators": {
@@ -362,295 +175,84 @@
             "sentenceCased": true
         },
         "conf": {
-            "venue": "MLSys",
-            "name": "The 3rd Conference on Machine Learning and Systems",
-            "date": "2020-03-02T00:00:00.000Z",
-            "url": "https://mlsys.org/Conferences/2020",
-            "acceptance": "19.2%",
-            "cat": "Conferences"
+            "venue": "arXiv",
+            "cat": "Technical Reports",
+            "key": "arXiv-all",
+            "matches": "^arXiv:(.*)$",
+            "name": "arXiv:1605.04652",
+            "url": "https://arxiv.org/abs/1605.04652",
+            "date": "2021-03-26T03:00:22.151Z"
         },
-        "date": "2020-03-02T00:00:00.000Z",
-        "year": "2020",
+        "date": "2021-03-26T03:00:22.151Z",
+        "year": "2021",
         "extra": {
             "topic": [],
             "tag": [],
-            "badge": [
-                "Artifacts Available",
-                "Artifacts Evaluated Functional",
-                "Artifacts Replicated"
-            ]
+            "badge": []
         },
-        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[&quot;Artifacts Available&quot;,&quot;Artifacts Evaluated Functional&quot;,&quot;Artifacts Replicated&quot;]}"
+        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
     },
     {
-        "citekey": "sol:nsdi20",
-        "title": "Sol: Fast distributed computation over slow networks",
+        "citekey": "terra:arxiv19",
+        "title": "Terra: Scalable cross-layer GDA optimizations",
         "authors": [
-            "Fan Lai",
             "Jie You",
-            "Xiangfeng Zhu",
-            "Harsha V. Madhyastha",
             "Mosharaf Chowdhury"
         ],
         "badges": [],
-        "confkey": "NSDI'20",
-        "abstract": "<p>The popularity of big data and AI has led to many optimizations at different layers of distributed computation stacks. Despite – or perhaps, because of – its role as the narrow waist of such software stacks, the design of the execution engine, which is in charge of executing every single task of a job, has mostly remained unchanged. As a result, the execution engines available today are ones primarily designed for low latency and high bandwidth datacenter networks. When either or both of the network assumptions do not hold, CPUs are significantly underutilized.</p>\n<p>In this paper, we take a first-principles approach toward developing an execution engine that can adapt to diverse network conditions. Sol, our federated execution engine architecture, flips the status quo in two respects. First, to mitigate the impact of high latency, Sol proactively assigns tasks, but does so judiciously to be resilient to uncertainties. Second, to improve the overall resource utilization, Sol decouples communication from computation internally instead of committing resources to both aspects of a task simultaneously. Our evaluations on EC2 show that, compared to Apache Spark in resource-constrained networks, Sol improves SQL and machine learning jobs by <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>16.4</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">16.4\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">1</span><span class=\"mord\">6</span><span class=\"mord\">.</span><span class=\"mord\">4</span><span class=\"mord\">×</span></span></span></span> and <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>4.2</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">4.2\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">4</span><span class=\"mord\">.</span><span class=\"mord\">2</span><span class=\"mord\">×</span></span></span></span> on average.</p>\n",
+        "confkey": "arXiv",
+        "abstract": "Geo-distributed analytics (GDA) frameworks transfer large datasets over the wide-area network (WAN). Yet existing frameworks often ignore the WAN topology. This disconnect between WAN-bound applications and the WAN itself results in missed opportunities for cross-layer optimizations. In this paper, we present Terra to bridge this gap. Instead of decoupled WAN routing and GDA transfer scheduling, Terra applies scalable cross-layer optimizations to minimize WAN transfer times for GDA jobs. We present a two-pronged approach: (i) a scalable algorithm for joint routing and scheduling to make fast decisions; and (ii) a scalable, overlay-based enforcement mechanism that avoids expensive switch rule updates in the WAN. Together, they enable Terra to quickly react to WAN uncertainties such as large bandwidth fluctuations and failures in an application-aware manner as well. Integration with the FloodLight SDN controller and Apache YARN, and evaluation on 4 workloads and 3 WAN topologies show that Terra improves the average completion times of GDA jobs by 1.55x-3.43x. GDA jobs running with Terra meets 2.82x-4.29x more deadlines and can quickly react to WAN-level events in an application-aware manner.",
         "links": [
             {
                 "name": "paper",
-                "href": "/publications/files/sol:nsdi20/sol-nsdi20.pdf"
-            },
-            {
-                "name": "slides",
-                "href": "/publications/files/sol:nsdi20/sol-nsdi20-slides.pdf"
-            },
-            {
-                "name": "code",
-                "href": "https://github.com/SymbioticLab/Sol"
+                "href": "https://arxiv.org/abs/1904.08480"
             }
         ],
-        "bibStr": "@inproceedings{sol:nsdi20,\n    author    = {Fan Lai and Jie You and Xiangfeng Zhu and Harsha V. Madhyastha and Mosharaf Chowdhury},\n    booktitle = {USENIX NSDI},\n    title     = {Sol: Fast Distributed Computation Over Slow Networks},\n    year      = {2020},\n    pages     = {273--288},\n}\n",
+        "bibStr": "@article{terra:arxiv19,\n    author        = {Jie You and Mosharaf Chowdhury},\n    journal       = {CoRR},\n    title         = {Terra: Scalable Cross-Layer {GDA} Optimizations},\n    year          = {2019},\n    month         = {Apr},\n    volume        = {abs/1904.08480},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1904-08480.bib},\n    eprint        = {1904.08480},\n    url           = {https://arxiv.org/abs/1904.08480},\n}\n",
         "meta": {},
         "bib": {
-            "key": "sol:nsdi20",
-            "type": "inproceedings",
+            "key": "terra:arxiv19",
+            "type": "article",
             "fields": {
+                "archiveprefix": [
+                    "arXiv"
+                ],
                 "author": [
-                    "Fan Lai",
                     "Jie You",
-                    "Xiangfeng Zhu",
-                    "Harsha V. Madhyastha",
                     "Mosharaf Chowdhury"
                 ],
-                "booktitle": [
-                    "USENIX NSDI"
-                ],
-                "pages": [
-                    "273–288"
-                ],
-                "publist_abstract": [
-                    "The popularity of big data and AI has led to many optimizations at different layers of distributed computation stacks. Despite – or perhaps, because of – its role as the narrow waist of such software stacks, the design of the execution engine, which is in charge of executing every single task of a job, has mostly remained unchanged. As a result, the execution engines available today are ones primarily designed for low latency and high bandwidth datacenter networks. When either or both of the network assumptions do not hold, CPUs are significantly underutilized.\n\n    In this paper, we take a first-principles approach toward developing an execution engine that can adapt to diverse network conditions. Sol, our federated execution engine architecture, flips the status quo in two respects. First, to mitigate the impact of high latency, Sol proactively assigns tasks, but does so judiciously to be resilient to uncertainties. Second, to improve the overall resource utilization, Sol decouples communication from computation internally instead of committing resources to both aspects of a task simultaneously. Our evaluations on EC2 show that, compared to Apache Spark in resource-constrained networks, Sol improves SQL and machine learning jobs by $16.4\\times$ and $4.2\\times$ on average."
-                ],
-                "publist_confkey": [
-                    "NSDI'20"
-                ],
-                "publist_link": [
-                    "paper || sol-nsdi20.pdf",
-                    "slides || sol-nsdi20-slides.pdf",
-                    "code || https://github.com/SymbioticLab/Sol"
-                ],
-                "title": [
-                    "Sol: Fast distributed computation over slow networks"
-                ],
-                "year": [
-                    "2020"
-                ]
-            },
-            "creators": {
-                "author": [
-                    {
-                        "firstName": "Fan",
-                        "lastName": "Lai"
-                    },
-                    {
-                        "firstName": "Jie",
-                        "lastName": "You"
-                    },
-                    {
-                        "firstName": "Xiangfeng",
-                        "lastName": "Zhu"
-                    },
-                    {
-                        "firstName": "Harsha V.",
-                        "lastName": "Madhyastha"
-                    },
-                    {
-                        "firstName": "Mosharaf",
-                        "lastName": "Chowdhury"
-                    }
-                ]
-            },
-            "sentenceCased": true
-        },
-        "conf": {
-            "venue": "NSDI",
-            "name": "The 17th USENIX Symposium on Networked Systems Design and Implementation",
-            "date": "2020-02-25T00:00:00.000Z",
-            "url": "https://www.usenix.org/conference/nsdi20",
-            "acceptance": "18.36%",
-            "cat": "Conferences"
-        },
-        "date": "2020-02-25T00:00:00.000Z",
-        "year": "2020",
-        "extra": {
-            "topic": [],
-            "tag": [],
-            "badge": []
-        },
-        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
-    },
-    {
-        "citekey": "pando:nsdi20",
-        "title": "Near-optimal latency versus cost tradeoffs in geo-distributed storage",
-        "authors": [
-            "Muhammed Uluyol",
-            "Anthony Huang",
-            "Ayush Goel",
-            "Mosharaf Chowdhury",
-            "Harsha V. Madhyastha"
-        ],
-        "badges": [],
-        "confkey": "NSDI'20",
-        "abstract": "<p>By replicating data across sites in multiple geo- graphic regions, web services can maximize availability and minimize latency for their users. However, when sacrificing data consistency is not an option, we show that service providers have to today incur significantly higher cost to meet desired la- tency goals than the lowest cost theoretically feasible. We show that the key to addressing this sub-optimality is to 1) allow for erasure coding, not just replication, of data across data cen- ters, and 2) mitigate the resultant increase in read and write la- tencies by rethinking how to enable consensus across the wide- area network. Our extensive evaluation mimicking web service deployments on the Azure cloud service shows that we enable near-optimal latency versus cost tradeoffs.</p>\n",
-        "links": [
-            {
-                "name": "paper",
-                "href": "/publications/files/pando:nsdi20/pando-nsdi20.pdf"
-            }
-        ],
-        "bibStr": "@inproceedings{pando:nsdi20,\n    author    = {Muhammed Uluyol and Anthony Huang and Ayush Goel and Mosharaf Chowdhury and Harsha V. Madhyastha},\n    booktitle = {USENIX NSDI},\n    title     = {Near-Optimal Latency Versus Cost Tradeoffs in Geo-Distributed Storage},\n    year      = {2020},\n    pages     = {157--180},\n}\n",
-        "meta": {},
-        "bib": {
-            "key": "pando:nsdi20",
-            "type": "inproceedings",
-            "fields": {
-                "author": [
-                    "Muhammed Uluyol",
-                    "Anthony Huang",
-                    "Ayush Goel",
-                    "Mosharaf Chowdhury",
-                    "Harsha V. Madhyastha"
-                ],
-                "booktitle": [
-                    "USENIX NSDI"
-                ],
-                "pages": [
-                    "157–180"
-                ],
-                "publist_abstract": [
-                    "By replicating data across sites in multiple geo- graphic regions, web services can maximize availability and minimize latency for their users. However, when sacrificing data consistency is not an option, we show that service providers have to today incur significantly higher cost to meet desired la- tency goals than the lowest cost theoretically feasible. We show that the key to addressing this sub-optimality is to 1) allow for erasure coding, not just replication, of data across data cen- ters, and 2) mitigate the resultant increase in read and write la- tencies by rethinking how to enable consensus across the wide- area network. Our extensive evaluation mimicking web service deployments on the Azure cloud service shows that we enable near-optimal latency versus cost tradeoffs."
-                ],
-                "publist_confkey": [
-                    "NSDI'20"
-                ],
-                "publist_link": [
-                    "paper || pando-nsdi20.pdf"
-                ],
-                "title": [
-                    "Near-optimal latency versus cost tradeoffs in geo-distributed storage"
-                ],
-                "year": [
-                    "2020"
-                ]
-            },
-            "creators": {
-                "author": [
-                    {
-                        "firstName": "Muhammed",
-                        "lastName": "Uluyol"
-                    },
-                    {
-                        "firstName": "Anthony",
-                        "lastName": "Huang"
-                    },
-                    {
-                        "firstName": "Ayush",
-                        "lastName": "Goel"
-                    },
-                    {
-                        "firstName": "Mosharaf",
-                        "lastName": "Chowdhury"
-                    },
-                    {
-                        "firstName": "Harsha V.",
-                        "lastName": "Madhyastha"
-                    }
-                ]
-            },
-            "sentenceCased": true
-        },
-        "conf": {
-            "venue": "NSDI",
-            "name": "The 17th USENIX Symposium on Networked Systems Design and Implementation",
-            "date": "2020-02-25T00:00:00.000Z",
-            "url": "https://www.usenix.org/conference/nsdi20",
-            "acceptance": "18.36%",
-            "cat": "Conferences"
-        },
-        "date": "2020-02-25T00:00:00.000Z",
-        "year": "2020",
-        "extra": {
-            "topic": [],
-            "tag": [],
-            "badge": []
-        },
-        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
-    },
-    {
-        "citekey": "bopf:arxiv19",
-        "title": "BoPF: Mitigating the burstiness-fairness tradeoff in multi-resource clusters",
-        "authors": [
-            "Tan N. Le",
-            "Xiao Sun",
-            "Mosharaf Chowdhury",
-            "Zhenhua Liu"
-        ],
-        "badges": [],
-        "confkey": "arXiv",
-        "abstract": "<p>Simultaneously supporting latency- and throughout-sensitive workloads in a shared environment is an increasingly more common challenge in big data clusters. Despite many advances, existing cluster schedulers force the same performance goal - fairness in most cases - on all jobs. Latency-sensitive jobs suffer, while throughput-sensitive ones thrive. Using prioritization does the opposite: it opens up a path for latency-sensitive jobs to dominate. In this paper, we tackle the challenges in supporting both short-term performance and long-term fairness simultaneously with high resource utilization by proposing Bounded Priority Fairness (BoPF). BoPF provides short-term resource guarantees to latency-sensitive jobs and maintains long-term fairness for throughput-sensitive jobs. BoPF is the first scheduler that can provide long-term fairness, burst guarantee, and Pareto efficiency in a strategyproof manner for multi-resource scheduling. Deployments and large-scale simulations show that BoPF closely approximates the performance of Strict Priority as well as the fairness characteristics of DRF. In deployments, BoPF speeds up latency-sensitive jobs by 5.38 times compared to DRF, while still maintaining long-term fairness. In the meantime, BoPF improves the average completion times of throughput-sensitive jobs by up to 3.05 times compared to Strict Priority.</p>\n",
-        "links": [
-            {
-                "name": "paper",
-                "href": "https://arxiv.org/abs/1912.03523"
-            }
-        ],
-        "bibStr": "@article{bopf:arxiv19,\n    author        = {Tan N. Le and Xiao Sun and Mosharaf Chowdhury and Zhenhua Liu},\n    journal       = {CoRR},\n    title         = {{BoPF}: Mitigating the Burstiness-Fairness Tradeoff in Multi-Resource Clusters},\n    year          = {2019},\n    month         = {Dec},\n    volume        = {abs/1912.03523},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1912-03523.bib},\n    eprint        = {1912.03523},\n    url           = {https://arxiv.org/abs/1912.03523},\n}\n",
-        "meta": {},
-        "bib": {
-            "key": "bopf:arxiv19",
-            "type": "article",
-            "fields": {
-                "archiveprefix": [
-                    "arXiv"
-                ],
-                "author": [
-                    "Tan N. Le",
-                    "Xiao Sun",
-                    "Mosharaf Chowdhury",
-                    "Zhenhua Liu"
-                ],
                 "bibsource": [
                     "dblp computer science bibliography, https://dblp.org"
                 ],
                 "biburl": [
-                    "https://dblp.org/rec/journals/corr/abs-1912-03523.bib"
+                    "https://dblp.org/rec/journals/corr/abs-1904-08480.bib"
                 ],
                 "eprint": [
-                    "1912.03523"
+                    "1904.08480"
                 ],
                 "journal": [
                     "CoRR"
                 ],
                 "month": [
-                    "Dec"
+                    "Apr"
                 ],
                 "publist_abstract": [
-                    "Simultaneously supporting latency- and throughout-sensitive workloads in a shared environment is an increasingly more common challenge in big data clusters. Despite many advances, existing cluster schedulers force the same performance goal - fairness in most cases - on all jobs. Latency-sensitive jobs suffer, while throughput-sensitive ones thrive. Using prioritization does the opposite: it opens up a path for latency-sensitive jobs to dominate. In this paper, we tackle the challenges in supporting both short-term performance and long-term fairness simultaneously with high resource utilization by proposing Bounded Priority Fairness (BoPF). BoPF provides short-term resource guarantees to latency-sensitive jobs and maintains long-term fairness for throughput-sensitive jobs. BoPF is the first scheduler that can provide long-term fairness, burst guarantee, and Pareto efficiency in a strategyproof manner for multi-resource scheduling. Deployments and large-scale simulations show that BoPF closely approximates the performance of Strict Priority as well as the fairness characteristics of DRF. In deployments, BoPF speeds up latency-sensitive jobs by 5.38 times compared to DRF, while still maintaining long-term fairness. In the meantime, BoPF improves the average completion times of throughput-sensitive jobs by up to 3.05 times compared to Strict Priority."
+                    "Geo-distributed analytics (GDA) frameworks transfer large datasets over the wide-area network (WAN). Yet existing frameworks often ignore the WAN topology. This disconnect between WAN-bound applications and the WAN itself results in missed opportunities for cross-layer optimizations. In this paper, we present Terra to bridge this gap. Instead of decoupled WAN routing and GDA transfer scheduling, Terra applies scalable cross-layer optimizations to minimize WAN transfer times for GDA jobs. We present a two-pronged approach: (i) a scalable algorithm for joint routing and scheduling to make fast decisions; and (ii) a scalable, overlay-based enforcement mechanism that avoids expensive switch rule updates in the WAN. Together, they enable Terra to quickly react to WAN uncertainties such as large bandwidth fluctuations and failures in an application-aware manner as well. Integration with the FloodLight SDN controller and Apache YARN, and evaluation on 4 workloads and 3 WAN topologies show that Terra improves the average completion times of GDA jobs by 1.55x-3.43x. GDA jobs running with Terra meets 2.82x-4.29x more deadlines and can quickly react to WAN-level events in an application-aware manner."
                 ],
                 "publist_confkey": [
                     "arXiv"
                 ],
                 "publist_link": [
-                    "paper || https://arxiv.org/abs/1912.03523"
+                    "paper || https://arxiv.org/abs/1904.08480"
                 ],
                 "title": [
-                    "BoPF: Mitigating the burstiness-fairness tradeoff in multi-resource clusters"
+                    "Terra: Scalable cross-layer GDA optimizations"
                 ],
                 "url": [
-                    "https://arxiv.org/abs/1912.03523"
+                    "https://arxiv.org/abs/1904.08480"
                 ],
                 "volume": [
-                    "abs/1912.03523"
+                    "abs/1904.08480"
                 ],
                 "year": [
                     "2019"
@@ -659,20 +261,12 @@
             "creators": {
                 "author": [
                     {
-                        "firstName": "Tan N.",
-                        "lastName": "Le"
-                    },
-                    {
-                        "firstName": "Xiao",
-                        "lastName": "Sun"
+                        "firstName": "Jie",
+                        "lastName": "You"
                     },
                     {
                         "firstName": "Mosharaf",
                         "lastName": "Chowdhury"
-                    },
-                    {
-                        "firstName": "Zhenhua",
-                        "lastName": "Liu"
                     }
                 ]
             },
@@ -680,14 +274,13 @@
         },
         "conf": {
             "venue": "arXiv",
+            "cat": "Technical Reports",
+            "key": "arXiv",
             "name": "arXiv",
-            "date": null,
-            "url": "https://arxiv.org",
-            "acceptance": "",
-            "cat": "Technical Reports"
+            "date": "2021-03-26T03:00:22.151Z"
         },
-        "date": "2019-12-01T05:00:00.000Z",
-        "year": "2019",
+        "date": "2021-03-26T03:00:22.151Z",
+        "year": "2021",
         "extra": {
             "topic": [],
             "tag": [],
@@ -696,70 +289,70 @@
         "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
     },
     {
-        "citekey": "hydra:arxiv19",
-        "title": "Mitigating the performance-efficiency tradeoff in resilient memory disaggregation",
+        "citekey": "justitia:arxiv19",
+        "title": "RDMA performance isolation with Justitia",
         "authors": [
-            "Youngmoon Lee",
-            "Hasan Al Maruf",
-            "Mosharaf Chowdhury",
-            "Kang G. Shin"
+            "Yiwen Zhang",
+            "Yue Tan",
+            "Brent Stephens",
+            "Mosharaf Chowdhury"
         ],
         "badges": [],
         "confkey": "arXiv",
-        "abstract": "<p>Memory disaggregation has received attention in recent years as a promising idea to reduce the total cost of ownership (TCO) of memory in modern datacenters. However, relying on remote memory expands an application’s failure domain and makes it susceptible to tail latency variations. In attempts to making disaggregated memory resilient, stateof-the-art solutions face the classic tradeoff between performance and efficiency: some double the memory overhead of disaggregation by replicating to remote memory, while many others limit performance by replicating to the local disk.</p>\n<p>We present Hydra, a configurable, erasure-coded resilience mechanism for common memory disaggregation solutions. It can transparently handle uncertainties arising from remote failures, evictions, memory corruptions, and stragglers from network imbalance with a significantly better performanceefficiency tradeoff than the state-of-the-art. We design a finetuned data path to achieve single µs read/write latency to remote memory, develop decentralized algorithms for clusterwide memory management, and analyze how to select parameters to mitigate independent and correlated uncertainties. Our integration of Hydra with two major memory disaggregation systems and evaluation on a 50-machine RDMA cluster demonstrates that it achieves the best of both worlds: it improves the latency and throughput of memory-intensive applications by up to 64.78× and 20.61×, respectively, over the state-of-the-art disk backup-based solution. At the same time, it provides performance similar to that of in-memory replication with 1.6× lower memory overhead.</p>\n",
+        "abstract": "Despite its increasing popularity, most of RDMA’s benefits such as ultra-low latency can be achieved only when running an application in isolation. Using microbenchmarks and real open-source RDMA applications, we identify a series of performance anomalies when multiple applications coexist and show that such anomalies are pervasive across InfiniBand, RoCEv2, and iWARP. They arise due to a fundamental tradeoff between performance isolation and work conservation, which the state-of-the-art RDMA congestion control protocols such as DCQCN cannot resolve.\n\nWe present Justitia to address these performance anomalies. Justitia is a software-only, host-based, and easy-to-deploy solution that maximizes RNIC utilization while guaranteeing performance isolation via shaping, rate limiting, and pacing at senders. Our evaluation of Justitia on multiple RDMA implementations show that Justitia effectively isolates different types of traffic and significantly improves latency (by up to 56.9×) and throughput (by up to 9.7×) of real-world RDMAbased applications without compromising low CPU usage or modifying the applications.",
         "links": [
             {
                 "name": "paper",
-                "href": "https://arxiv.org/abs/1910.09727"
+                "href": "/publications/files/justitia:arxiv19/justitia-arxiv19.pdf"
             }
         ],
-        "bibStr": "@article{hydra:arxiv19,\n    author        = {Youngmoon Lee and Hasan Al Maruf and Mosharaf Chowdhury and Kang G. Shin},\n    journal       = {CoRR},\n    title         = {Mitigating the Performance-Efficiency Tradeoff in Resilient Memory Disaggregation},\n    year          = {2019},\n    month         = {Oct},\n    volume        = {abs/1910.09727},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1910-09727.bib},\n    eprint        = {1910.09727},\n    url           = {https://arxiv.org/abs/1910.09727},\n}\n",
+        "bibStr": "@article{justitia:arxiv19,\n    author        = {Yiwen Zhang and Yue Tan and Brent Stephens and Mosharaf Chowdhury},\n    journal       = {CoRR},\n    title         = {{RDMA} Performance Isolation With {Justitia}},\n    year          = {2019},\n    month         = {May},\n    volume        = {abs/1905.04437},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1905-04437.bib},\n    eprint        = {1905.04437},\n    url           = {https://arxiv.org/abs/1905.04437},\n}\n",
         "meta": {},
         "bib": {
-            "key": "hydra:arxiv19",
+            "key": "justitia:arxiv19",
             "type": "article",
             "fields": {
                 "archiveprefix": [
                     "arXiv"
                 ],
                 "author": [
-                    "Youngmoon Lee",
-                    "Hasan Al Maruf",
-                    "Mosharaf Chowdhury",
-                    "Kang G. Shin"
+                    "Yiwen Zhang",
+                    "Yue Tan",
+                    "Brent Stephens",
+                    "Mosharaf Chowdhury"
                 ],
                 "bibsource": [
                     "dblp computer science bibliography, https://dblp.org"
                 ],
                 "biburl": [
-                    "https://dblp.org/rec/journals/corr/abs-1910-09727.bib"
+                    "https://dblp.org/rec/journals/corr/abs-1905-04437.bib"
                 ],
                 "eprint": [
-                    "1910.09727"
+                    "1905.04437"
                 ],
                 "journal": [
                     "CoRR"
                 ],
                 "month": [
-                    "Oct"
+                    "May"
                 ],
                 "publist_abstract": [
-                    "Memory disaggregation has received attention in recent years as a promising idea to reduce the total cost of ownership (TCO) of memory in modern datacenters. However, relying on remote memory expands an application’s failure domain and makes it susceptible to tail latency variations. In attempts to making disaggregated memory resilient, stateof-the-art solutions face the classic tradeoff between performance and efficiency: some double the memory overhead of disaggregation by replicating to remote memory, while many others limit performance by replicating to the local disk.\n\n    We present Hydra, a configurable, erasure-coded resilience mechanism for common memory disaggregation solutions. It can transparently handle uncertainties arising from remote failures, evictions, memory corruptions, and stragglers from network imbalance with a significantly better performanceefficiency tradeoff than the state-of-the-art. We design a finetuned data path to achieve single µs read/write latency to remote memory, develop decentralized algorithms for clusterwide memory management, and analyze how to select parameters to mitigate independent and correlated uncertainties. Our integration of Hydra with two major memory disaggregation systems and evaluation on a 50-machine RDMA cluster demonstrates that it achieves the best of both worlds: it improves the latency and throughput of memory-intensive applications by up to 64.78× and 20.61×, respectively, over the state-of-the-art disk backup-based solution. At the same time, it provides performance similar to that of in-memory replication with 1.6× lower memory overhead."
+                    "Despite its increasing popularity, most of RDMA’s benefits such as ultra-low latency can be achieved only when running an application in isolation. Using microbenchmarks and real open-source RDMA applications, we identify a series of performance anomalies when multiple applications coexist and show that such anomalies are pervasive across InfiniBand, RoCEv2, and iWARP. They arise due to a fundamental tradeoff between performance isolation and work conservation, which the state-of-the-art RDMA congestion control protocols such as DCQCN cannot resolve.\n\n    We present Justitia to address these performance anomalies. Justitia is a software-only, host-based, and easy-to-deploy solution that maximizes RNIC utilization while guaranteeing performance isolation via shaping, rate limiting, and pacing at senders. Our evaluation of Justitia on multiple RDMA implementations show that Justitia effectively isolates different types of traffic and significantly improves latency (by up to 56.9×) and throughput (by up to 9.7×) of real-world RDMAbased applications without compromising low CPU usage or modifying the applications."
                 ],
                 "publist_confkey": [
                     "arXiv"
                 ],
                 "publist_link": [
-                    "paper || https://arxiv.org/abs/1910.09727"
+                    "paper || justitia-arxiv19.pdf"
                 ],
                 "title": [
-                    "Mitigating the performance-efficiency tradeoff in resilient memory disaggregation"
+                    "RDMA performance isolation with Justitia"
                 ],
                 "url": [
-                    "https://arxiv.org/abs/1910.09727"
+                    "https://arxiv.org/abs/1905.04437"
                 ],
                 "volume": [
-                    "abs/1910.09727"
+                    "abs/1905.04437"
                 ],
                 "year": [
                     "2019"
@@ -768,20 +361,20 @@
             "creators": {
                 "author": [
                     {
-                        "firstName": "Youngmoon",
-                        "lastName": "Lee"
+                        "firstName": "Yiwen",
+                        "lastName": "Zhang"
                     },
                     {
-                        "firstName": "Hasan Al",
-                        "lastName": "Maruf"
+                        "firstName": "Yue",
+                        "lastName": "Tan"
+                    },
+                    {
+                        "firstName": "Brent",
+                        "lastName": "Stephens"
                     },
                     {
                         "firstName": "Mosharaf",
                         "lastName": "Chowdhury"
-                    },
-                    {
-                        "firstName": "Kang G.",
-                        "lastName": "Shin"
                     }
                 ]
             },
@@ -789,111 +382,13 @@
         },
         "conf": {
             "venue": "arXiv",
+            "cat": "Technical Reports",
+            "key": "arXiv",
             "name": "arXiv",
-            "date": null,
-            "url": "https://arxiv.org",
-            "acceptance": "",
-            "cat": "Technical Reports"
+            "date": "2021-03-26T03:00:22.151Z"
         },
-        "date": "2019-10-01T04:00:00.000Z",
-        "year": "2019",
-        "extra": {
-            "topic": [],
-            "tag": [],
-            "badge": []
-        },
-        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
-    },
-    {
-        "citekey": "nocs:spaa19",
-        "title": "Near optimal coflow scheduling in networks",
-        "authors": [
-            "Mosharaf Chowdhury",
-            "Samir Khuller",
-            "Manish Purohit",
-            "Sheng Yang",
-            "Jie You"
-        ],
-        "badges": [],
-        "confkey": "SPAA'19",
-        "abstract": "<p>The coflow scheduling problem has emerged as a popular abstraction in the last few years to study data communication problems within a data center. In this basic framework, each coflow has a set of communication demands and the goal is to schedule many coflows in a manner that minimizes the total weighted completion time. A coflow is said to complete when all its communication needs are met. This problem has been extremely well studied for the case of complete bipartite graphs that model a data center with full bisection bandwidth and several approximation algorithms and effective heuristics have been proposed recently. In this work, we study a slightly different model of coflow scheduling in general graphs (to capture traffic between data centers) and develop practical and efficient approximation algorithms for it. Our main result is a randomized 2 approximation algorithm for the single path and free path model, significantly improving prior work. In addition, we demonstrate via extensive experiments that the algorithm is practical, easy to implement and performs well in practice.</p>\n",
-        "links": [
-            {
-                "name": "paper",
-                "href": "/publications/files/nocs:spaa19/nocs-spaa19.pdf"
-            }
-        ],
-        "bibStr": "@inproceedings{nocs:spaa19,\n    author    = {Mosharaf Chowdhury and Samir Khuller and Manish Purohit and Sheng Yang and Jie You},\n    booktitle = {ACM SPAA},\n    title     = {Near Optimal Coflow Scheduling in Networks},\n    year      = {2019},\n    pages     = {123--134},\n}\n",
-        "meta": {},
-        "bib": {
-            "key": "nocs:spaa19",
-            "type": "inproceedings",
-            "fields": {
-                "author": [
-                    "Mosharaf Chowdhury",
-                    "Samir Khuller",
-                    "Manish Purohit",
-                    "Sheng Yang",
-                    "Jie You"
-                ],
-                "booktitle": [
-                    "ACM SPAA"
-                ],
-                "pages": [
-                    "123–134"
-                ],
-                "publist_abstract": [
-                    "The coflow scheduling problem has emerged as a popular abstraction in the last few years to study data communication problems within a data center. In this basic framework, each coflow has a set of communication demands and the goal is to schedule many coflows in a manner that minimizes the total weighted completion time. A coflow is said to complete when all its communication needs are met. This problem has been extremely well studied for the case of complete bipartite graphs that model a data center with full bisection bandwidth and several approximation algorithms and effective heuristics have been proposed recently. In this work, we study a slightly different model of coflow scheduling in general graphs (to capture traffic between data centers) and develop practical and efficient approximation algorithms for it. Our main result is a randomized 2 approximation algorithm for the single path and free path model, significantly improving prior work. In addition, we demonstrate via extensive experiments that the algorithm is practical, easy to implement and performs well in practice."
-                ],
-                "publist_confkey": [
-                    "SPAA'19"
-                ],
-                "publist_link": [
-                    "paper || nocs-spaa19.pdf"
-                ],
-                "title": [
-                    "Near optimal coflow scheduling in networks"
-                ],
-                "year": [
-                    "2019"
-                ]
-            },
-            "creators": {
-                "author": [
-                    {
-                        "firstName": "Mosharaf",
-                        "lastName": "Chowdhury"
-                    },
-                    {
-                        "firstName": "Samir",
-                        "lastName": "Khuller"
-                    },
-                    {
-                        "firstName": "Manish",
-                        "lastName": "Purohit"
-                    },
-                    {
-                        "firstName": "Sheng",
-                        "lastName": "Yang"
-                    },
-                    {
-                        "firstName": "Jie",
-                        "lastName": "You"
-                    }
-                ]
-            },
-            "sentenceCased": true
-        },
-        "conf": {
-            "venue": "SPAA",
-            "name": "The 31st ACM Symposium on Parallelism in Algorithms and Architectures",
-            "date": "2019-06-22T00:00:00.000Z",
-            "url": "https://spaa.acm.org/2019/",
-            "acceptance": "33%",
-            "cat": "Conferences"
-        },
-        "date": "2019-06-22T00:00:00.000Z",
-        "year": "2019",
+        "date": "2021-03-26T03:00:22.151Z",
+        "year": "2021",
         "extra": {
             "topic": [],
             "tag": [],
@@ -913,7 +408,7 @@
         ],
         "badges": [],
         "confkey": "arXiv",
-        "abstract": "<p>The coflow scheduling problem has emerged as a popular abstraction in the last few years to study data communication problems within a data center. In this basic framework, each coflow has a set of communication demands and the goal is to schedule many coflows in a manner that minimizes the total weighted completion time. A coflow is said to complete when all its communication needs are met. This problem has been extremely well studied for the case of complete bipartite graphs that model a data center with full bisection bandwidth and several approximation algorithms and effective heuristics have been proposed recently.\nIn this work, we study a slightly different model of coflow scheduling in general graphs (to capture traffic between data centers) and develop practical and efficient approximation algorithms for it. Our main result is a randomized 2 approximation algorithm for the single path and free path model, significantly improving prior work. In addition, we demonstrate via extensive experiments that the algorithm is practical, easy to implement and performs well in practice.</p>\n",
+        "abstract": "The coflow scheduling problem has emerged as a popular abstraction in the last few years to study data communication problems within a data center. In this basic framework, each coflow has a set of communication demands and the goal is to schedule many coflows in a manner that minimizes the total weighted completion time. A coflow is said to complete when all its communication needs are met. This problem has been extremely well studied for the case of complete bipartite graphs that model a data center with full bisection bandwidth and several approximation algorithms and effective heuristics have been proposed recently.\nIn this work, we study a slightly different model of coflow scheduling in general graphs (to capture traffic between data centers) and develop practical and efficient approximation algorithms for it. Our main result is a randomized 2 approximation algorithm for the single path and free path model, significantly improving prior work. In addition, we demonstrate via extensive experiments that the algorithm is practical, easy to implement and performs well in practice.",
         "links": [
             {
                 "name": "paper",
@@ -1001,14 +496,13 @@
         },
         "conf": {
             "venue": "arXiv",
+            "cat": "Technical Reports",
+            "key": "arXiv",
             "name": "arXiv",
-            "date": null,
-            "url": "https://arxiv.org",
-            "acceptance": "",
-            "cat": "Technical Reports"
+            "date": "2021-03-26T03:00:22.151Z"
         },
-        "date": "2019-06-01T04:00:00.000Z",
-        "year": "2019",
+        "date": "2021-03-26T03:00:22.151Z",
+        "year": "2021",
         "extra": {
             "topic": [],
             "tag": [],
@@ -1017,70 +511,70 @@
         "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
     },
     {
-        "citekey": "justitia:arxiv19",
-        "title": "RDMA performance isolation with Justitia",
+        "citekey": "hydra:arxiv19",
+        "title": "Mitigating the performance-efficiency tradeoff in resilient memory disaggregation",
         "authors": [
-            "Yiwen Zhang",
-            "Yue Tan",
-            "Brent Stephens",
-            "Mosharaf Chowdhury"
+            "Youngmoon Lee",
+            "Hasan Al Maruf",
+            "Mosharaf Chowdhury",
+            "Kang G. Shin"
         ],
         "badges": [],
         "confkey": "arXiv",
-        "abstract": "<p>Despite its increasing popularity, most of RDMA’s benefits such as ultra-low latency can be achieved only when running an application in isolation. Using microbenchmarks and real open-source RDMA applications, we identify a series of performance anomalies when multiple applications coexist and show that such anomalies are pervasive across InfiniBand, RoCEv2, and iWARP. They arise due to a fundamental tradeoff between performance isolation and work conservation, which the state-of-the-art RDMA congestion control protocols such as DCQCN cannot resolve.</p>\n<p>We present Justitia to address these performance anomalies. Justitia is a software-only, host-based, and easy-to-deploy solution that maximizes RNIC utilization while guaranteeing performance isolation via shaping, rate limiting, and pacing at senders. Our evaluation of Justitia on multiple RDMA implementations show that Justitia effectively isolates different types of traffic and significantly improves latency (by up to 56.9×) and throughput (by up to 9.7×) of real-world RDMAbased applications without compromising low CPU usage or modifying the applications.</p>\n",
+        "abstract": "Memory disaggregation has received attention in recent years as a promising idea to reduce the total cost of ownership (TCO) of memory in modern datacenters. However, relying on remote memory expands an application’s failure domain and makes it susceptible to tail latency variations. In attempts to making disaggregated memory resilient, stateof-the-art solutions face the classic tradeoff between performance and efficiency: some double the memory overhead of disaggregation by replicating to remote memory, while many others limit performance by replicating to the local disk.\n\nWe present Hydra, a configurable, erasure-coded resilience mechanism for common memory disaggregation solutions. It can transparently handle uncertainties arising from remote failures, evictions, memory corruptions, and stragglers from network imbalance with a significantly better performanceefficiency tradeoff than the state-of-the-art. We design a finetuned data path to achieve single µs read/write latency to remote memory, develop decentralized algorithms for clusterwide memory management, and analyze how to select parameters to mitigate independent and correlated uncertainties. Our integration of Hydra with two major memory disaggregation systems and evaluation on a 50-machine RDMA cluster demonstrates that it achieves the best of both worlds: it improves the latency and throughput of memory-intensive applications by up to 64.78× and 20.61×, respectively, over the state-of-the-art disk backup-based solution. At the same time, it provides performance similar to that of in-memory replication with 1.6× lower memory overhead.",
         "links": [
             {
                 "name": "paper",
-                "href": "/publications/files/justitia:arxiv19/justitia-arxiv19.pdf"
+                "href": "https://arxiv.org/abs/1910.09727"
             }
         ],
-        "bibStr": "@article{justitia:arxiv19,\n    author        = {Yiwen Zhang and Yue Tan and Brent Stephens and Mosharaf Chowdhury},\n    journal       = {CoRR},\n    title         = {{RDMA} Performance Isolation With {Justitia}},\n    year          = {2019},\n    month         = {May},\n    volume        = {abs/1905.04437},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1905-04437.bib},\n    eprint        = {1905.04437},\n    url           = {https://arxiv.org/abs/1905.04437},\n}\n",
+        "bibStr": "@article{hydra:arxiv19,\n    author        = {Youngmoon Lee and Hasan Al Maruf and Mosharaf Chowdhury and Kang G. Shin},\n    journal       = {CoRR},\n    title         = {Mitigating the Performance-Efficiency Tradeoff in Resilient Memory Disaggregation},\n    year          = {2019},\n    month         = {Oct},\n    volume        = {abs/1910.09727},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1910-09727.bib},\n    eprint        = {1910.09727},\n    url           = {https://arxiv.org/abs/1910.09727},\n}\n",
         "meta": {},
         "bib": {
-            "key": "justitia:arxiv19",
+            "key": "hydra:arxiv19",
             "type": "article",
             "fields": {
                 "archiveprefix": [
                     "arXiv"
                 ],
                 "author": [
-                    "Yiwen Zhang",
-                    "Yue Tan",
-                    "Brent Stephens",
-                    "Mosharaf Chowdhury"
+                    "Youngmoon Lee",
+                    "Hasan Al Maruf",
+                    "Mosharaf Chowdhury",
+                    "Kang G. Shin"
                 ],
                 "bibsource": [
                     "dblp computer science bibliography, https://dblp.org"
                 ],
                 "biburl": [
-                    "https://dblp.org/rec/journals/corr/abs-1905-04437.bib"
+                    "https://dblp.org/rec/journals/corr/abs-1910-09727.bib"
                 ],
                 "eprint": [
-                    "1905.04437"
+                    "1910.09727"
                 ],
                 "journal": [
                     "CoRR"
                 ],
                 "month": [
-                    "May"
+                    "Oct"
                 ],
                 "publist_abstract": [
-                    "Despite its increasing popularity, most of RDMA’s benefits such as ultra-low latency can be achieved only when running an application in isolation. Using microbenchmarks and real open-source RDMA applications, we identify a series of performance anomalies when multiple applications coexist and show that such anomalies are pervasive across InfiniBand, RoCEv2, and iWARP. They arise due to a fundamental tradeoff between performance isolation and work conservation, which the state-of-the-art RDMA congestion control protocols such as DCQCN cannot resolve.\n\n    We present Justitia to address these performance anomalies. Justitia is a software-only, host-based, and easy-to-deploy solution that maximizes RNIC utilization while guaranteeing performance isolation via shaping, rate limiting, and pacing at senders. Our evaluation of Justitia on multiple RDMA implementations show that Justitia effectively isolates different types of traffic and significantly improves latency (by up to 56.9×) and throughput (by up to 9.7×) of real-world RDMAbased applications without compromising low CPU usage or modifying the applications."
+                    "Memory disaggregation has received attention in recent years as a promising idea to reduce the total cost of ownership (TCO) of memory in modern datacenters. However, relying on remote memory expands an application’s failure domain and makes it susceptible to tail latency variations. In attempts to making disaggregated memory resilient, stateof-the-art solutions face the classic tradeoff between performance and efficiency: some double the memory overhead of disaggregation by replicating to remote memory, while many others limit performance by replicating to the local disk.\n\n    We present Hydra, a configurable, erasure-coded resilience mechanism for common memory disaggregation solutions. It can transparently handle uncertainties arising from remote failures, evictions, memory corruptions, and stragglers from network imbalance with a significantly better performanceefficiency tradeoff than the state-of-the-art. We design a finetuned data path to achieve single µs read/write latency to remote memory, develop decentralized algorithms for clusterwide memory management, and analyze how to select parameters to mitigate independent and correlated uncertainties. Our integration of Hydra with two major memory disaggregation systems and evaluation on a 50-machine RDMA cluster demonstrates that it achieves the best of both worlds: it improves the latency and throughput of memory-intensive applications by up to 64.78× and 20.61×, respectively, over the state-of-the-art disk backup-based solution. At the same time, it provides performance similar to that of in-memory replication with 1.6× lower memory overhead."
                 ],
                 "publist_confkey": [
                     "arXiv"
                 ],
                 "publist_link": [
-                    "paper || justitia-arxiv19.pdf"
+                    "paper || https://arxiv.org/abs/1910.09727"
                 ],
                 "title": [
-                    "RDMA performance isolation with Justitia"
+                    "Mitigating the performance-efficiency tradeoff in resilient memory disaggregation"
                 ],
                 "url": [
-                    "https://arxiv.org/abs/1905.04437"
+                    "https://arxiv.org/abs/1910.09727"
                 ],
                 "volume": [
-                    "abs/1905.04437"
+                    "abs/1910.09727"
                 ],
                 "year": [
                     "2019"
@@ -1088,36 +582,241 @@
             },
             "creators": {
                 "author": [
+                    {
+                        "firstName": "Youngmoon",
+                        "lastName": "Lee"
+                    },
+                    {
+                        "firstName": "Hasan Al",
+                        "lastName": "Maruf"
+                    },
+                    {
+                        "firstName": "Mosharaf",
+                        "lastName": "Chowdhury"
+                    },
+                    {
+                        "firstName": "Kang G.",
+                        "lastName": "Shin"
+                    }
+                ]
+            },
+            "sentenceCased": true
+        },
+        "conf": {
+            "venue": "arXiv",
+            "cat": "Technical Reports",
+            "key": "arXiv",
+            "name": "arXiv",
+            "date": "2021-03-26T03:00:22.151Z"
+        },
+        "date": "2021-03-26T03:00:22.151Z",
+        "year": "2021",
+        "extra": {
+            "topic": [],
+            "tag": [],
+            "badge": []
+        },
+        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
+    },
+    {
+        "citekey": "bopf:arxiv19",
+        "title": "BoPF: Mitigating the burstiness-fairness tradeoff in multi-resource clusters",
+        "authors": [
+            "Tan N. Le",
+            "Xiao Sun",
+            "Mosharaf Chowdhury",
+            "Zhenhua Liu"
+        ],
+        "badges": [],
+        "confkey": "arXiv",
+        "abstract": "Simultaneously supporting latency- and throughout-sensitive workloads in a shared environment is an increasingly more common challenge in big data clusters. Despite many advances, existing cluster schedulers force the same performance goal - fairness in most cases - on all jobs. Latency-sensitive jobs suffer, while throughput-sensitive ones thrive. Using prioritization does the opposite: it opens up a path for latency-sensitive jobs to dominate. In this paper, we tackle the challenges in supporting both short-term performance and long-term fairness simultaneously with high resource utilization by proposing Bounded Priority Fairness (BoPF). BoPF provides short-term resource guarantees to latency-sensitive jobs and maintains long-term fairness for throughput-sensitive jobs. BoPF is the first scheduler that can provide long-term fairness, burst guarantee, and Pareto efficiency in a strategyproof manner for multi-resource scheduling. Deployments and large-scale simulations show that BoPF closely approximates the performance of Strict Priority as well as the fairness characteristics of DRF. In deployments, BoPF speeds up latency-sensitive jobs by 5.38 times compared to DRF, while still maintaining long-term fairness. In the meantime, BoPF improves the average completion times of throughput-sensitive jobs by up to 3.05 times compared to Strict Priority.",
+        "links": [
+            {
+                "name": "paper",
+                "href": "https://arxiv.org/abs/1912.03523"
+            }
+        ],
+        "bibStr": "@article{bopf:arxiv19,\n    author        = {Tan N. Le and Xiao Sun and Mosharaf Chowdhury and Zhenhua Liu},\n    journal       = {CoRR},\n    title         = {{BoPF}: Mitigating the Burstiness-Fairness Tradeoff in Multi-Resource Clusters},\n    year          = {2019},\n    month         = {Dec},\n    volume        = {abs/1912.03523},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1912-03523.bib},\n    eprint        = {1912.03523},\n    url           = {https://arxiv.org/abs/1912.03523},\n}\n",
+        "meta": {},
+        "bib": {
+            "key": "bopf:arxiv19",
+            "type": "article",
+            "fields": {
+                "archiveprefix": [
+                    "arXiv"
+                ],
+                "author": [
+                    "Tan N. Le",
+                    "Xiao Sun",
+                    "Mosharaf Chowdhury",
+                    "Zhenhua Liu"
+                ],
+                "bibsource": [
+                    "dblp computer science bibliography, https://dblp.org"
+                ],
+                "biburl": [
+                    "https://dblp.org/rec/journals/corr/abs-1912-03523.bib"
+                ],
+                "eprint": [
+                    "1912.03523"
+                ],
+                "journal": [
+                    "CoRR"
+                ],
+                "month": [
+                    "Dec"
+                ],
+                "publist_abstract": [
+                    "Simultaneously supporting latency- and throughout-sensitive workloads in a shared environment is an increasingly more common challenge in big data clusters. Despite many advances, existing cluster schedulers force the same performance goal - fairness in most cases - on all jobs. Latency-sensitive jobs suffer, while throughput-sensitive ones thrive. Using prioritization does the opposite: it opens up a path for latency-sensitive jobs to dominate. In this paper, we tackle the challenges in supporting both short-term performance and long-term fairness simultaneously with high resource utilization by proposing Bounded Priority Fairness (BoPF). BoPF provides short-term resource guarantees to latency-sensitive jobs and maintains long-term fairness for throughput-sensitive jobs. BoPF is the first scheduler that can provide long-term fairness, burst guarantee, and Pareto efficiency in a strategyproof manner for multi-resource scheduling. Deployments and large-scale simulations show that BoPF closely approximates the performance of Strict Priority as well as the fairness characteristics of DRF. In deployments, BoPF speeds up latency-sensitive jobs by 5.38 times compared to DRF, while still maintaining long-term fairness. In the meantime, BoPF improves the average completion times of throughput-sensitive jobs by up to 3.05 times compared to Strict Priority."
+                ],
+                "publist_confkey": [
+                    "arXiv"
+                ],
+                "publist_link": [
+                    "paper || https://arxiv.org/abs/1912.03523"
+                ],
+                "title": [
+                    "BoPF: Mitigating the burstiness-fairness tradeoff in multi-resource clusters"
+                ],
+                "url": [
+                    "https://arxiv.org/abs/1912.03523"
+                ],
+                "volume": [
+                    "abs/1912.03523"
+                ],
+                "year": [
+                    "2019"
+                ]
+            },
+            "creators": {
+                "author": [
+                    {
+                        "firstName": "Tan N.",
+                        "lastName": "Le"
+                    },
+                    {
+                        "firstName": "Xiao",
+                        "lastName": "Sun"
+                    },
+                    {
+                        "firstName": "Mosharaf",
+                        "lastName": "Chowdhury"
+                    },
+                    {
+                        "firstName": "Zhenhua",
+                        "lastName": "Liu"
+                    }
+                ]
+            },
+            "sentenceCased": true
+        },
+        "conf": {
+            "venue": "arXiv",
+            "cat": "Technical Reports",
+            "key": "arXiv",
+            "name": "arXiv",
+            "date": "2021-03-26T03:00:22.151Z"
+        },
+        "date": "2021-03-26T03:00:22.151Z",
+        "year": "2021",
+        "extra": {
+            "topic": [],
+            "tag": [],
+            "badge": []
+        },
+        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
+    },
+    {
+        "citekey": "netlock:sigcomm20",
+        "title": "NetLock: Fast, centralized lock management using programmable switches",
+        "authors": [
+            "Zhuolong Yu",
+            "Yiwen Zhang",
+            "Vladimir Braverman",
+            "Mosharaf Chowdhury",
+            "Xin Jin"
+        ],
+        "badges": [],
+        "confkey": "SIGCOMM'20",
+        "abstract": "Lock managers are widely used by distributed systems. Traditional centralized lock managers can easily support policies between multiple users using global knowledge, but they suffer from low performance. In contrast, emerging decentralized approaches are faster but cannot provide flexible policy support. Furthermore, performance in both cases is limited by the server capability.\n\nWe present NetLock, a new centralized lock manager that co-designs servers and network switches to achieve high performance without sacrificing flexibility in policy support. The key idea of NetLock is to exploit the capability of emerging programmable switches to directly process lock requests in the switch data plane. Due to the limited switch memory, we design a memory management mechanism to seamlessly integrate the switch and server memory. To realize the locking functionality in the switch, we design a custom data plane module that efficiently pools multiple register arrays together to maximize memory utilization We have implemented a NetLock prototype with a Barefoot Tofino switch and a cluster of commodity servers. Evaluation results show that NetLock improves the throughput by 14.0-18.4x, and reduces the average and 99% latency by 4.7-20.3x and 10.4-18.7x over DSLR, a state-of-the-art RDMA-based solution, while providing flexible policy support.",
+        "links": [
+            {
+                "name": "paper",
+                "href": "/publications/files/netlock:sigcomm20/netlock-sigcomm20.pdf"
+            }
+        ],
+        "bibStr": "@inproceedings{netlock:sigcomm20,\n    author    = {Zhuolong Yu and Yiwen Zhang and Vladimir Braverman and Mosharaf Chowdhury and Xin Jin},\n    booktitle = {ACM SIGCOMM},\n    title     = {{NetLock}: Fast, Centralized Lock Management Using Programmable Switches},\n    year      = {2020},\n    pages     = {126--138},\n}\n",
+        "meta": {},
+        "bib": {
+            "key": "netlock:sigcomm20",
+            "type": "inproceedings",
+            "fields": {
+                "author": [
+                    "Zhuolong Yu",
+                    "Yiwen Zhang",
+                    "Vladimir Braverman",
+                    "Mosharaf Chowdhury",
+                    "Xin Jin"
+                ],
+                "booktitle": [
+                    "ACM SIGCOMM"
+                ],
+                "pages": [
+                    "126–138"
+                ],
+                "publist_abstract": [
+                    "Lock managers are widely used by distributed systems. Traditional centralized lock managers can easily support policies between multiple users using global knowledge, but they suffer from low performance. In contrast, emerging decentralized approaches are faster but cannot provide flexible policy support. Furthermore, performance in both cases is limited by the server capability.\n\n    We present NetLock, a new centralized lock manager that co-designs servers and network switches to achieve high performance without sacrificing flexibility in policy support. The key idea of NetLock is to exploit the capability of emerging programmable switches to directly process lock requests in the switch data plane. Due to the limited switch memory, we design a memory management mechanism to seamlessly integrate the switch and server memory. To realize the locking functionality in the switch, we design a custom data plane module that efficiently pools multiple register arrays together to maximize memory utilization We have implemented a NetLock prototype with a Barefoot Tofino switch and a cluster of commodity servers. Evaluation results show that NetLock improves the throughput by 14.0-18.4x, and reduces the average and 99% latency by 4.7-20.3x and 10.4-18.7x over DSLR, a state-of-the-art RDMA-based solution, while providing flexible policy support."
+                ],
+                "publist_confkey": [
+                    "SIGCOMM'20"
+                ],
+                "publist_link": [
+                    "paper || netlock-sigcomm20.pdf"
+                ],
+                "title": [
+                    "NetLock: Fast, centralized lock management using programmable switches"
+                ],
+                "year": [
+                    "2020"
+                ]
+            },
+            "creators": {
+                "author": [
+                    {
+                        "firstName": "Zhuolong",
+                        "lastName": "Yu"
+                    },
                     {
                         "firstName": "Yiwen",
                         "lastName": "Zhang"
                     },
                     {
-                        "firstName": "Yue",
-                        "lastName": "Tan"
-                    },
-                    {
-                        "firstName": "Brent",
-                        "lastName": "Stephens"
+                        "firstName": "Vladimir",
+                        "lastName": "Braverman"
                     },
                     {
                         "firstName": "Mosharaf",
                         "lastName": "Chowdhury"
+                    },
+                    {
+                        "firstName": "Xin",
+                        "lastName": "Jin"
                     }
                 ]
             },
             "sentenceCased": true
         },
         "conf": {
-            "venue": "arXiv",
-            "name": "arXiv",
-            "date": null,
-            "url": "https://arxiv.org",
-            "acceptance": "",
-            "cat": "Technical Reports"
+            "venue": "SIGCOMM",
+            "cat": "Conferences",
+            "key": "SIGCOMM'20",
+            "name": "The 2020 ACM SIGCOMM Conference",
+            "date": "2020-08-11T00:00:00.000Z",
+            "url": "https://conferences.sigcomm.org/sigcomm/2020/",
+            "acceptance": "21.6%"
         },
-        "date": "2019-05-01T04:00:00.000Z",
-        "year": "2019",
+        "date": "2020-08-11T00:00:00.000Z",
+        "year": "2020",
         "extra": {
             "topic": [],
             "tag": [],
@@ -1126,76 +825,73 @@
         "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
     },
     {
-        "citekey": "terra:arxiv19",
-        "title": "Terra: Scalable cross-layer GDA optimizations",
+        "citekey": "leap:atc20",
+        "title": "Effectively prefetching remote memory with Leap",
         "authors": [
-            "Jie You",
+            "Hasan Al Maruf",
             "Mosharaf Chowdhury"
         ],
-        "badges": [],
-        "confkey": "arXiv",
-        "abstract": "<p>Geo-distributed analytics (GDA) frameworks transfer large datasets over the wide-area network (WAN). Yet existing frameworks often ignore the WAN topology. This disconnect between WAN-bound applications and the WAN itself results in missed opportunities for cross-layer optimizations. In this paper, we present Terra to bridge this gap. Instead of decoupled WAN routing and GDA transfer scheduling, Terra applies scalable cross-layer optimizations to minimize WAN transfer times for GDA jobs. We present a two-pronged approach: (i) a scalable algorithm for joint routing and scheduling to make fast decisions; and (ii) a scalable, overlay-based enforcement mechanism that avoids expensive switch rule updates in the WAN. Together, they enable Terra to quickly react to WAN uncertainties such as large bandwidth fluctuations and failures in an application-aware manner as well. Integration with the FloodLight SDN controller and Apache YARN, and evaluation on 4 workloads and 3 WAN topologies show that Terra improves the average completion times of GDA jobs by 1.55x-3.43x. GDA jobs running with Terra meets 2.82x-4.29x more deadlines and can quickly react to WAN-level events in an application-aware manner.</p>\n",
+        "badges": [
+            "Best Paper Award"
+        ],
+        "confkey": "ATC'20",
+        "abstract": "Memory disaggregation over RDMA can improve the performance of memory-constrained applications by replacing disk swapping with remote memory accesses. However, state-of-the-art memory disaggregation solutions still use data path components designed for slow disks. As a result, applications experience remote memory access latency significantly higher than that of the underlying low-latency network, which itself can be too high for many applications.\n\nIn this paper, we propose Leap, a prefetching solution for remote memory accesses due to memory disaggregation. At its core, Leap employs an online, majority-based prefetching algorithm, which increases the page cache hit rate. We complement it with a lightweight and efficient data path in the kernel that isolates each application’s data path to the disaggregated memory and mitigates latency bottlenecks arising from legacy throughput-optimizing operations. Integration of Leap in the Linux kernel improves the median and tail remote page access latencies of memory-bound applications by up to 104.04× and 22.62×, respectively, over the default data path. This leads to up to 10.16× performance improvements for applications using disaggregated memory in comparison to the state-of-the-art solutions.",
         "links": [
             {
                 "name": "paper",
-                "href": "https://arxiv.org/abs/1904.08480"
+                "href": "/publications/files/leap:atc20/leap-atc20.pdf"
+            },
+            {
+                "name": "slides",
+                "href": "/publications/files/leap:atc20/leap-atc20-slides.pdf"
+            },
+            {
+                "name": "code",
+                "href": "https://github.com/SymbioticLab/Leap"
             }
         ],
-        "bibStr": "@article{terra:arxiv19,\n    author        = {Jie You and Mosharaf Chowdhury},\n    journal       = {CoRR},\n    title         = {Terra: Scalable Cross-Layer {GDA} Optimizations},\n    year          = {2019},\n    month         = {Apr},\n    volume        = {abs/1904.08480},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1904-08480.bib},\n    eprint        = {1904.08480},\n    url           = {https://arxiv.org/abs/1904.08480},\n}\n",
+        "bibStr": "@inproceedings{leap:atc20,\n    author    = {Hasan Al Maruf and Mosharaf Chowdhury},\n    booktitle = {USENIX ATC},\n    title     = {Effectively Prefetching Remote Memory with {Leap}},\n    year      = {2020},\n    pages     = {843--857},\n}\n",
         "meta": {},
         "bib": {
-            "key": "terra:arxiv19",
-            "type": "article",
+            "key": "leap:atc20",
+            "type": "inproceedings",
             "fields": {
-                "archiveprefix": [
-                    "arXiv"
-                ],
                 "author": [
-                    "Jie You",
+                    "Hasan Al Maruf",
                     "Mosharaf Chowdhury"
                 ],
-                "bibsource": [
-                    "dblp computer science bibliography, https://dblp.org"
+                "booktitle": [
+                    "USENIX ATC"
                 ],
-                "biburl": [
-                    "https://dblp.org/rec/journals/corr/abs-1904-08480.bib"
-                ],
-                "eprint": [
-                    "1904.08480"
-                ],
-                "journal": [
-                    "CoRR"
-                ],
-                "month": [
-                    "Apr"
+                "pages": [
+                    "843–857"
                 ],
                 "publist_abstract": [
-                    "Geo-distributed analytics (GDA) frameworks transfer large datasets over the wide-area network (WAN). Yet existing frameworks often ignore the WAN topology. This disconnect between WAN-bound applications and the WAN itself results in missed opportunities for cross-layer optimizations. In this paper, we present Terra to bridge this gap. Instead of decoupled WAN routing and GDA transfer scheduling, Terra applies scalable cross-layer optimizations to minimize WAN transfer times for GDA jobs. We present a two-pronged approach: (i) a scalable algorithm for joint routing and scheduling to make fast decisions; and (ii) a scalable, overlay-based enforcement mechanism that avoids expensive switch rule updates in the WAN. Together, they enable Terra to quickly react to WAN uncertainties such as large bandwidth fluctuations and failures in an application-aware manner as well. Integration with the FloodLight SDN controller and Apache YARN, and evaluation on 4 workloads and 3 WAN topologies show that Terra improves the average completion times of GDA jobs by 1.55x-3.43x. GDA jobs running with Terra meets 2.82x-4.29x more deadlines and can quickly react to WAN-level events in an application-aware manner."
+                    "Memory disaggregation over RDMA can improve the performance of memory-constrained applications by replacing disk swapping with remote memory accesses. However, state-of-the-art memory disaggregation solutions still use data path components designed for slow disks. As a result, applications experience remote memory access latency significantly higher than that of the underlying low-latency network, which itself can be too high for many applications.\n\n    In this paper, we propose Leap, a prefetching solution for remote memory accesses due to memory disaggregation. At its core, Leap employs an online, majority-based prefetching algorithm, which increases the page cache hit rate. We complement it with a lightweight and efficient data path in the kernel that isolates each application’s data path to the disaggregated memory and mitigates latency bottlenecks arising from legacy throughput-optimizing operations. Integration of Leap in the Linux kernel improves the median and tail remote page access latencies of memory-bound applications by up to 104.04× and 22.62×, respectively, over the default data path. This leads to up to 10.16× performance improvements for applications using disaggregated memory in comparison to the state-of-the-art solutions."
+                ],
+                "publist_badge": [
+                    "Best Paper Award"
                 ],
                 "publist_confkey": [
-                    "arXiv"
+                    "ATC'20"
                 ],
                 "publist_link": [
-                    "paper || https://arxiv.org/abs/1904.08480"
+                    "paper || leap-atc20.pdf",
+                    "slides || leap-atc20-slides.pdf",
+                    "code || https://github.com/SymbioticLab/Leap"
                 ],
                 "title": [
-                    "Terra: Scalable cross-layer GDA optimizations"
-                ],
-                "url": [
-                    "https://arxiv.org/abs/1904.08480"
-                ],
-                "volume": [
-                    "abs/1904.08480"
+                    "Effectively prefetching remote memory with Leap"
                 ],
                 "year": [
-                    "2019"
+                    "2020"
                 ]
             },
             "creators": {
                 "author": [
                     {
-                        "firstName": "Jie",
-                        "lastName": "You"
+                        "firstName": "Hasan Al",
+                        "lastName": "Maruf"
                     },
                     {
                         "firstName": "Mosharaf",
@@ -1206,14 +902,513 @@
             "sentenceCased": true
         },
         "conf": {
-            "venue": "arXiv",
-            "name": "arXiv",
-            "date": null,
-            "url": "https://arxiv.org",
-            "acceptance": "",
-            "cat": "Technical Reports"
+            "venue": "ATC",
+            "cat": "Conferences",
+            "key": "ATC'20",
+            "name": "The 2020 USENIX Annual Technical Conference",
+            "date": "2020-07-15T00:00:00.000Z",
+            "url": "https://www.usenix.org/conference/atc20",
+            "acceptance": "18.68%"
         },
-        "date": "2019-04-01T04:00:00.000Z",
+        "date": "2020-07-15T00:00:00.000Z",
+        "year": "2020",
+        "extra": {
+            "topic": [],
+            "tag": [],
+            "badge": [
+                "Best Paper Award"
+            ]
+        },
+        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[&quot;Best Paper Award&quot;]}"
+    },
+    {
+        "citekey": "allox:eurosys20",
+        "title": "AlloX: Compute allocation in hybrid clusters",
+        "authors": [
+            "Tan N. Le",
+            "Xiao Sun",
+            "Mosharaf Chowdhury",
+            "Zhenhua Liu"
+        ],
+        "badges": [],
+        "confkey": "EuroSys'20",
+        "abstract": "Modern deep learning frameworks support a variety of hardware, including CPU, GPU, and other accelerators, to perform computation. In this paper, we study how to schedule jobs over such interchangeable resources – each with a different rate of computation – to optimize performance while providing fairness among users in a shared cluster. We demonstrate theoretically and empirically that existing solutions and their straightforward modifications perform poorly in the presence of interchangeable resources, which motivates the design and implementation of AlloX. At its core, AlloX transforms the scheduling problem into a min-cost bipartite matching problem and provides dynamic fair allocation over time. We theoretically prove its optimality in an ideal, offline setting and show empirically that it works well in the online scenario by incorporating with Kubernetes. Evaluations on a small-scale CPU-GPU hybrid cluster and large-scale simulations highlight that AlloX can reduce the average job completion time significantly (by up to 95% when the system load is high) while providing fairness and preventing starvation.",
+        "links": [
+            {
+                "name": "paper",
+                "href": "/publications/files/allox:eurosys20/allox-eurosys20.pdf"
+            }
+        ],
+        "bibStr": "@inproceedings{allox:eurosys20,\n    author    = {Tan N. Le and Xiao Sun and Mosharaf Chowdhury and Zhenhua Liu},\n    booktitle = {ACM EuroSys},\n    title     = {{AlloX}: Compute Allocation in Hybrid Clusters},\n    year      = {2020},\n    pages     = {31:1--31:16},\n}\n",
+        "meta": {},
+        "bib": {
+            "key": "allox:eurosys20",
+            "type": "inproceedings",
+            "fields": {
+                "author": [
+                    "Tan N. Le",
+                    "Xiao Sun",
+                    "Mosharaf Chowdhury",
+                    "Zhenhua Liu"
+                ],
+                "booktitle": [
+                    "ACM EuroSys"
+                ],
+                "pages": [
+                    "31:1–31:16"
+                ],
+                "publist_abstract": [
+                    "Modern deep learning frameworks support a variety of hardware, including CPU, GPU, and other accelerators, to perform computation. In this paper, we study how to schedule jobs over such interchangeable resources – each with a different rate of computation – to optimize performance while providing fairness among users in a shared cluster. We demonstrate theoretically and empirically that existing solutions and their straightforward modifications perform poorly in the presence of interchangeable resources, which motivates the design and implementation of AlloX. At its core, AlloX transforms the scheduling problem into a min-cost bipartite matching problem and provides dynamic fair allocation over time. We theoretically prove its optimality in an ideal, offline setting and show empirically that it works well in the online scenario by incorporating with Kubernetes. Evaluations on a small-scale CPU-GPU hybrid cluster and large-scale simulations highlight that AlloX can reduce the average job completion time significantly (by up to 95% when the system load is high) while providing fairness and preventing starvation."
+                ],
+                "publist_confkey": [
+                    "EuroSys'20"
+                ],
+                "publist_link": [
+                    "paper || allox-eurosys20.pdf"
+                ],
+                "title": [
+                    "AlloX: Compute allocation in hybrid clusters"
+                ],
+                "year": [
+                    "2020"
+                ]
+            },
+            "creators": {
+                "author": [
+                    {
+                        "firstName": "Tan N.",
+                        "lastName": "Le"
+                    },
+                    {
+                        "firstName": "Xiao",
+                        "lastName": "Sun"
+                    },
+                    {
+                        "firstName": "Mosharaf",
+                        "lastName": "Chowdhury"
+                    },
+                    {
+                        "firstName": "Zhenhua",
+                        "lastName": "Liu"
+                    }
+                ]
+            },
+            "sentenceCased": true
+        },
+        "conf": {
+            "venue": "EuroSys",
+            "cat": "Conferences",
+            "key": "EuroSys'20",
+            "name": "The Fifteenth European Conference on Computer Systems",
+            "date": "2020-04-27T00:00:00.000Z",
+            "url": "https://www.eurosys2020.org/",
+            "acceptance": "18.38%"
+        },
+        "date": "2020-04-27T00:00:00.000Z",
+        "year": "2020",
+        "extra": {
+            "topic": [],
+            "tag": [],
+            "badge": []
+        },
+        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
+    },
+    {
+        "citekey": "salus:mlsys20",
+        "title": "Fine-grained GPU sharing primitives for deep learning applications",
+        "authors": [
+            "Peifeng Yu",
+            "Mosharaf Chowdhury"
+        ],
+        "badges": [
+            "Artifacts Available",
+            "Artifacts Evaluated Functional",
+            "Artifacts Replicated"
+        ],
+        "confkey": "MLSys'20",
+        "abstract": "Unlike traditional resources such as CPU or the network, modern GPUs do not natively support\nfine-grained sharing primitives.\nConsequently, implementing common policies such as time sharing and preemption are expensive. Worse,\nwhen a deep learning (DL) application cannot completely use a GPU's resources, the GPU cannot be efficiently shared\nbetween multiple applications, leading to GPU underutilization.\n\nWe present Salus to enable two GPU sharing primitives: __fast job\nswitching__ and __memory sharing__, to achieve fine-grained GPU sharing\namong multiple DL applications. Salus is an efficient, consolidated\nexecution service that exposes the GPU to different DL applications, and it\nenforces fine-grained sharing by performing iteration scheduling and\naddressing associated memory management issues. We show that these primitives\ncan then be used to implement flexible sharing policies. Our integration of\nSalus with TensorFlow and evaluation on popular DL jobs shows that Salus\ncan improve the average completion time of DL training jobs by $3.19\\times$, GPU utilization for\nhyper-parameter tuning by $2.38\\times$, and GPU utilization of DL inference applications by $42\\times$ over not sharing\nthe GPU and $6\\times$ over NVIDIA MPS with small overhead.",
+        "links": [
+            {
+                "name": "paper",
+                "href": "/publications/files/salus:mlsys20/salus-mlsys20.pdf"
+            },
+            {
+                "name": "slides",
+                "href": "/publications/files/salus:mlsys20/salus-mlsys20-talk.pptm"
+            },
+            {
+                "name": "poster",
+                "href": "/publications/files/salus:mlsys20/salus-mlsys20-poster.pdf"
+            }
+        ],
+        "bibStr": "@inproceedings{salus:mlsys20,\n    author    = {Peifeng Yu and Mosharaf Chowdhury},\n    booktitle = {MLSys},\n    title     = {Fine-Grained {GPU} Sharing Primitives for Deep Learning Applications},\n    year      = {2020},\n}\n",
+        "meta": {},
+        "bib": {
+            "key": "salus:mlsys20",
+            "type": "inproceedings",
+            "fields": {
+                "author": [
+                    "Peifeng Yu",
+                    "Mosharaf Chowdhury"
+                ],
+                "booktitle": [
+                    "MLSys"
+                ],
+                "publist_abstract": [
+                    "Unlike traditional resources such as CPU or the network, modern GPUs do not natively support\n    fine-grained sharing primitives.\n    Consequently, implementing common policies such as time sharing and preemption are expensive. Worse,\n    when a deep learning (DL) application cannot completely use a GPU's resources, the GPU cannot be efficiently shared\n    between multiple applications, leading to GPU underutilization.\n\n    We present Salus to enable two GPU sharing primitives: __fast job\n    switching__ and __memory sharing__, to achieve fine-grained GPU sharing\n    among multiple DL applications. Salus is an efficient, consolidated\n    execution service that exposes the GPU to different DL applications, and it\n    enforces fine-grained sharing by performing iteration scheduling and\n    addressing associated memory management issues. We show that these primitives\n    can then be used to implement flexible sharing policies. Our integration of\n    Salus with TensorFlow and evaluation on popular DL jobs shows that Salus\n    can improve the average completion time of DL training jobs by $3.19\\times$, GPU utilization for\n    hyper-parameter tuning by $2.38\\times$, and GPU utilization of DL inference applications by $42\\times$ over not sharing\n    the GPU and $6\\times$ over NVIDIA MPS with small overhead."
+                ],
+                "publist_badge": [
+                    "Artifacts Available",
+                    "Artifacts Evaluated Functional",
+                    "Artifacts Replicated"
+                ],
+                "publist_confkey": [
+                    "MLSys'20"
+                ],
+                "publist_link": [
+                    "paper || salus-mlsys20.pdf",
+                    "slides || salus-mlsys20-talk.pptm",
+                    "poster || salus-mlsys20-poster.pdf"
+                ],
+                "title": [
+                    "Fine-grained GPU sharing primitives for deep learning applications"
+                ],
+                "year": [
+                    "2020"
+                ]
+            },
+            "creators": {
+                "author": [
+                    {
+                        "firstName": "Peifeng",
+                        "lastName": "Yu"
+                    },
+                    {
+                        "firstName": "Mosharaf",
+                        "lastName": "Chowdhury"
+                    }
+                ]
+            },
+            "sentenceCased": true
+        },
+        "conf": {
+            "venue": "MLSys",
+            "cat": "Conferences",
+            "key": "MLSys'20",
+            "name": "The 3rd Conference on Machine Learning and Systems",
+            "date": "2020-03-02T00:00:00.000Z",
+            "url": "https://mlsys.org/Conferences/2020",
+            "acceptance": "19.2%"
+        },
+        "date": "2020-03-02T00:00:00.000Z",
+        "year": "2020",
+        "extra": {
+            "topic": [],
+            "tag": [],
+            "badge": [
+                "Artifacts Available",
+                "Artifacts Evaluated Functional",
+                "Artifacts Replicated"
+            ]
+        },
+        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[&quot;Artifacts Available&quot;,&quot;Artifacts Evaluated Functional&quot;,&quot;Artifacts Replicated&quot;]}"
+    },
+    {
+        "citekey": "sol:nsdi20",
+        "title": "Sol: Fast distributed computation over slow networks",
+        "authors": [
+            "Fan Lai",
+            "Jie You",
+            "Xiangfeng Zhu",
+            "Harsha V. Madhyastha",
+            "Mosharaf Chowdhury"
+        ],
+        "badges": [],
+        "confkey": "NSDI'20",
+        "abstract": "The popularity of big data and AI has led to many optimizations at different layers of distributed computation stacks. Despite – or perhaps, because of – its role as the narrow waist of such software stacks, the design of the execution engine, which is in charge of executing every single task of a job, has mostly remained unchanged. As a result, the execution engines available today are ones primarily designed for low latency and high bandwidth datacenter networks. When either or both of the network assumptions do not hold, CPUs are significantly underutilized.\n\nIn this paper, we take a first-principles approach toward developing an execution engine that can adapt to diverse network conditions. Sol, our federated execution engine architecture, flips the status quo in two respects. First, to mitigate the impact of high latency, Sol proactively assigns tasks, but does so judiciously to be resilient to uncertainties. Second, to improve the overall resource utilization, Sol decouples communication from computation internally instead of committing resources to both aspects of a task simultaneously. Our evaluations on EC2 show that, compared to Apache Spark in resource-constrained networks, Sol improves SQL and machine learning jobs by $16.4\\times$ and $4.2\\times$ on average.",
+        "links": [
+            {
+                "name": "paper",
+                "href": "/publications/files/sol:nsdi20/sol-nsdi20.pdf"
+            },
+            {
+                "name": "slides",
+                "href": "/publications/files/sol:nsdi20/sol-nsdi20-slides.pdf"
+            },
+            {
+                "name": "code",
+                "href": "https://github.com/SymbioticLab/Sol"
+            }
+        ],
+        "bibStr": "@inproceedings{sol:nsdi20,\n    author    = {Fan Lai and Jie You and Xiangfeng Zhu and Harsha V. Madhyastha and Mosharaf Chowdhury},\n    booktitle = {USENIX NSDI},\n    title     = {Sol: Fast Distributed Computation Over Slow Networks},\n    year      = {2020},\n    pages     = {273--288},\n}\n",
+        "meta": {},
+        "bib": {
+            "key": "sol:nsdi20",
+            "type": "inproceedings",
+            "fields": {
+                "author": [
+                    "Fan Lai",
+                    "Jie You",
+                    "Xiangfeng Zhu",
+                    "Harsha V. Madhyastha",
+                    "Mosharaf Chowdhury"
+                ],
+                "booktitle": [
+                    "USENIX NSDI"
+                ],
+                "pages": [
+                    "273–288"
+                ],
+                "publist_abstract": [
+                    "The popularity of big data and AI has led to many optimizations at different layers of distributed computation stacks. Despite – or perhaps, because of – its role as the narrow waist of such software stacks, the design of the execution engine, which is in charge of executing every single task of a job, has mostly remained unchanged. As a result, the execution engines available today are ones primarily designed for low latency and high bandwidth datacenter networks. When either or both of the network assumptions do not hold, CPUs are significantly underutilized.\n\n    In this paper, we take a first-principles approach toward developing an execution engine that can adapt to diverse network conditions. Sol, our federated execution engine architecture, flips the status quo in two respects. First, to mitigate the impact of high latency, Sol proactively assigns tasks, but does so judiciously to be resilient to uncertainties. Second, to improve the overall resource utilization, Sol decouples communication from computation internally instead of committing resources to both aspects of a task simultaneously. Our evaluations on EC2 show that, compared to Apache Spark in resource-constrained networks, Sol improves SQL and machine learning jobs by $16.4\\times$ and $4.2\\times$ on average."
+                ],
+                "publist_confkey": [
+                    "NSDI'20"
+                ],
+                "publist_link": [
+                    "paper || sol-nsdi20.pdf",
+                    "slides || sol-nsdi20-slides.pdf",
+                    "code || https://github.com/SymbioticLab/Sol"
+                ],
+                "title": [
+                    "Sol: Fast distributed computation over slow networks"
+                ],
+                "year": [
+                    "2020"
+                ]
+            },
+            "creators": {
+                "author": [
+                    {
+                        "firstName": "Fan",
+                        "lastName": "Lai"
+                    },
+                    {
+                        "firstName": "Jie",
+                        "lastName": "You"
+                    },
+                    {
+                        "firstName": "Xiangfeng",
+                        "lastName": "Zhu"
+                    },
+                    {
+                        "firstName": "Harsha V.",
+                        "lastName": "Madhyastha"
+                    },
+                    {
+                        "firstName": "Mosharaf",
+                        "lastName": "Chowdhury"
+                    }
+                ]
+            },
+            "sentenceCased": true
+        },
+        "conf": {
+            "venue": "NSDI",
+            "cat": "Conferences",
+            "key": "NSDI'20",
+            "name": "The 17th USENIX Symposium on Networked Systems Design and Implementation",
+            "date": "2020-02-25T00:00:00.000Z",
+            "url": "https://www.usenix.org/conference/nsdi20",
+            "acceptance": "18.36%"
+        },
+        "date": "2020-02-25T00:00:00.000Z",
+        "year": "2020",
+        "extra": {
+            "topic": [],
+            "tag": [],
+            "badge": []
+        },
+        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
+    },
+    {
+        "citekey": "pando:nsdi20",
+        "title": "Near-optimal latency versus cost tradeoffs in geo-distributed storage",
+        "authors": [
+            "Muhammed Uluyol",
+            "Anthony Huang",
+            "Ayush Goel",
+            "Mosharaf Chowdhury",
+            "Harsha V. Madhyastha"
+        ],
+        "badges": [],
+        "confkey": "NSDI'20",
+        "abstract": "By replicating data across sites in multiple geo- graphic regions, web services can maximize availability and minimize latency for their users. However, when sacrificing data consistency is not an option, we show that service providers have to today incur significantly higher cost to meet desired la- tency goals than the lowest cost theoretically feasible. We show that the key to addressing this sub-optimality is to 1) allow for erasure coding, not just replication, of data across data cen- ters, and 2) mitigate the resultant increase in read and write la- tencies by rethinking how to enable consensus across the wide- area network. Our extensive evaluation mimicking web service deployments on the Azure cloud service shows that we enable near-optimal latency versus cost tradeoffs.",
+        "links": [
+            {
+                "name": "paper",
+                "href": "/publications/files/pando:nsdi20/pando-nsdi20.pdf"
+            }
+        ],
+        "bibStr": "@inproceedings{pando:nsdi20,\n    author    = {Muhammed Uluyol and Anthony Huang and Ayush Goel and Mosharaf Chowdhury and Harsha V. Madhyastha},\n    booktitle = {USENIX NSDI},\n    title     = {Near-Optimal Latency Versus Cost Tradeoffs in Geo-Distributed Storage},\n    year      = {2020},\n    pages     = {157--180},\n}\n",
+        "meta": {},
+        "bib": {
+            "key": "pando:nsdi20",
+            "type": "inproceedings",
+            "fields": {
+                "author": [
+                    "Muhammed Uluyol",
+                    "Anthony Huang",
+                    "Ayush Goel",
+                    "Mosharaf Chowdhury",
+                    "Harsha V. Madhyastha"
+                ],
+                "booktitle": [
+                    "USENIX NSDI"
+                ],
+                "pages": [
+                    "157–180"
+                ],
+                "publist_abstract": [
+                    "By replicating data across sites in multiple geo- graphic regions, web services can maximize availability and minimize latency for their users. However, when sacrificing data consistency is not an option, we show that service providers have to today incur significantly higher cost to meet desired la- tency goals than the lowest cost theoretically feasible. We show that the key to addressing this sub-optimality is to 1) allow for erasure coding, not just replication, of data across data cen- ters, and 2) mitigate the resultant increase in read and write la- tencies by rethinking how to enable consensus across the wide- area network. Our extensive evaluation mimicking web service deployments on the Azure cloud service shows that we enable near-optimal latency versus cost tradeoffs."
+                ],
+                "publist_confkey": [
+                    "NSDI'20"
+                ],
+                "publist_link": [
+                    "paper || pando-nsdi20.pdf"
+                ],
+                "title": [
+                    "Near-optimal latency versus cost tradeoffs in geo-distributed storage"
+                ],
+                "year": [
+                    "2020"
+                ]
+            },
+            "creators": {
+                "author": [
+                    {
+                        "firstName": "Muhammed",
+                        "lastName": "Uluyol"
+                    },
+                    {
+                        "firstName": "Anthony",
+                        "lastName": "Huang"
+                    },
+                    {
+                        "firstName": "Ayush",
+                        "lastName": "Goel"
+                    },
+                    {
+                        "firstName": "Mosharaf",
+                        "lastName": "Chowdhury"
+                    },
+                    {
+                        "firstName": "Harsha V.",
+                        "lastName": "Madhyastha"
+                    }
+                ]
+            },
+            "sentenceCased": true
+        },
+        "conf": {
+            "venue": "NSDI",
+            "cat": "Conferences",
+            "key": "NSDI'20",
+            "name": "The 17th USENIX Symposium on Networked Systems Design and Implementation",
+            "date": "2020-02-25T00:00:00.000Z",
+            "url": "https://www.usenix.org/conference/nsdi20",
+            "acceptance": "18.36%"
+        },
+        "date": "2020-02-25T00:00:00.000Z",
+        "year": "2020",
+        "extra": {
+            "topic": [],
+            "tag": [],
+            "badge": []
+        },
+        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
+    },
+    {
+        "citekey": "nocs:spaa19",
+        "title": "Near optimal coflow scheduling in networks",
+        "authors": [
+            "Mosharaf Chowdhury",
+            "Samir Khuller",
+            "Manish Purohit",
+            "Sheng Yang",
+            "Jie You"
+        ],
+        "badges": [],
+        "confkey": "SPAA'19",
+        "abstract": "The coflow scheduling problem has emerged as a popular abstraction in the last few years to study data communication problems within a data center. In this basic framework, each coflow has a set of communication demands and the goal is to schedule many coflows in a manner that minimizes the total weighted completion time. A coflow is said to complete when all its communication needs are met. This problem has been extremely well studied for the case of complete bipartite graphs that model a data center with full bisection bandwidth and several approximation algorithms and effective heuristics have been proposed recently. In this work, we study a slightly different model of coflow scheduling in general graphs (to capture traffic between data centers) and develop practical and efficient approximation algorithms for it. Our main result is a randomized 2 approximation algorithm for the single path and free path model, significantly improving prior work. In addition, we demonstrate via extensive experiments that the algorithm is practical, easy to implement and performs well in practice.",
+        "links": [
+            {
+                "name": "paper",
+                "href": "/publications/files/nocs:spaa19/nocs-spaa19.pdf"
+            }
+        ],
+        "bibStr": "@inproceedings{nocs:spaa19,\n    author    = {Mosharaf Chowdhury and Samir Khuller and Manish Purohit and Sheng Yang and Jie You},\n    booktitle = {ACM SPAA},\n    title     = {Near Optimal Coflow Scheduling in Networks},\n    year      = {2019},\n    pages     = {123--134},\n}\n",
+        "meta": {},
+        "bib": {
+            "key": "nocs:spaa19",
+            "type": "inproceedings",
+            "fields": {
+                "author": [
+                    "Mosharaf Chowdhury",
+                    "Samir Khuller",
+                    "Manish Purohit",
+                    "Sheng Yang",
+                    "Jie You"
+                ],
+                "booktitle": [
+                    "ACM SPAA"
+                ],
+                "pages": [
+                    "123–134"
+                ],
+                "publist_abstract": [
+                    "The coflow scheduling problem has emerged as a popular abstraction in the last few years to study data communication problems within a data center. In this basic framework, each coflow has a set of communication demands and the goal is to schedule many coflows in a manner that minimizes the total weighted completion time. A coflow is said to complete when all its communication needs are met. This problem has been extremely well studied for the case of complete bipartite graphs that model a data center with full bisection bandwidth and several approximation algorithms and effective heuristics have been proposed recently. In this work, we study a slightly different model of coflow scheduling in general graphs (to capture traffic between data centers) and develop practical and efficient approximation algorithms for it. Our main result is a randomized 2 approximation algorithm for the single path and free path model, significantly improving prior work. In addition, we demonstrate via extensive experiments that the algorithm is practical, easy to implement and performs well in practice."
+                ],
+                "publist_confkey": [
+                    "SPAA'19"
+                ],
+                "publist_link": [
+                    "paper || nocs-spaa19.pdf"
+                ],
+                "title": [
+                    "Near optimal coflow scheduling in networks"
+                ],
+                "year": [
+                    "2019"
+                ]
+            },
+            "creators": {
+                "author": [
+                    {
+                        "firstName": "Mosharaf",
+                        "lastName": "Chowdhury"
+                    },
+                    {
+                        "firstName": "Samir",
+                        "lastName": "Khuller"
+                    },
+                    {
+                        "firstName": "Manish",
+                        "lastName": "Purohit"
+                    },
+                    {
+                        "firstName": "Sheng",
+                        "lastName": "Yang"
+                    },
+                    {
+                        "firstName": "Jie",
+                        "lastName": "You"
+                    }
+                ]
+            },
+            "sentenceCased": true
+        },
+        "conf": {
+            "venue": "SPAA",
+            "cat": "Conferences",
+            "key": "SPAA'19",
+            "name": "The 31st ACM Symposium on Parallelism in Algorithms and Architectures",
+            "date": "2019-06-22T00:00:00.000Z",
+            "url": "https://spaa.acm.org/2019/",
+            "acceptance": "33%"
+        },
+        "date": "2019-06-22T00:00:00.000Z",
         "year": "2019",
         "extra": {
             "topic": [],
@@ -1237,7 +1432,7 @@
         ],
         "badges": [],
         "confkey": "NSDI'19",
-        "abstract": "<p>Deep learning (DL) training jobs bring some unique challenges to existing cluster managers, such as unpredictable training times, an all-or-nothing execution model, and inflexibility in GPU sharing. Our analysis of a large GPU cluster in production shows that existing big data schedulers cause long queueing delays and low overall performance.</p>\n<p>We present Tiresias, a GPU cluster manager tailored for distributed DL training jobs, which efficiently schedules and places DL jobs to reduce their job completion times (JCTs). Given that a DL job’s execution time is often unpredictable, we propose two scheduling algorithms – Discretized Two-Dimensional Gittins index relies on partial information and Discretized Two-Dimensional LAS is information-agnostic – that aim to minimize the average JCT. Additionally, we describe when the consolidated placement constraint can be relaxed, and present a placement algorithm to leverage these observations without any user input. Experiments on the Michigan ConFlux cluster with 60 P100 GPUs and large-scale trace-driven simulations show that Tiresias improves the average JCT by up to 5.5× over an Apache YARN-based resource manager used in production. More importantly, Tiresias’s performance is comparable to that of solutions assuming perfect knowledge.</p>\n",
+        "abstract": "Deep learning (DL) training jobs bring some unique challenges to existing cluster managers, such as unpredictable training times, an all-or-nothing execution model, and inflexibility in GPU sharing. Our analysis of a large GPU cluster in production shows that existing big data schedulers cause long queueing delays and low overall performance.\n\nWe present Tiresias, a GPU cluster manager tailored for distributed DL training jobs, which efficiently schedules and places DL jobs to reduce their job completion times (JCTs). Given that a DL job’s execution time is often unpredictable, we propose two scheduling algorithms – Discretized Two-Dimensional Gittins index relies on partial information and Discretized Two-Dimensional LAS is information-agnostic – that aim to minimize the average JCT. Additionally, we describe when the consolidated placement constraint can be relaxed, and present a placement algorithm to leverage these observations without any user input. Experiments on the Michigan ConFlux cluster with 60 P100 GPUs and large-scale trace-driven simulations show that Tiresias improves the average JCT by up to 5.5× over an Apache YARN-based resource manager used in production. More importantly, Tiresias’s performance is comparable to that of solutions assuming perfect knowledge.",
         "links": [
             {
                 "name": "paper",
@@ -1337,110 +1532,14 @@
         },
         "conf": {
             "venue": "NSDI",
+            "cat": "Conferences",
+            "key": "NSDI'19",
             "name": "The 16th USENIX Symposium on Networked Systems Design and Implementation",
             "date": "2019-02-26T00:00:00.000Z",
             "url": "https://www.usenix.org/conference/nsdi19",
-            "acceptance": "14.76%",
-            "cat": "Conferences"
+            "acceptance": "14.76%"
         },
         "date": "2019-02-26T00:00:00.000Z",
-        "year": "2019",
-        "extra": {
-            "topic": [],
-            "tag": [],
-            "badge": []
-        },
-        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
-    },
-    {
-        "citekey": "salus:arxiv19",
-        "title": "Salus: Fine-grained GPU sharing primitives for deep learning applications",
-        "authors": [
-            "Peifeng Yu",
-            "Mosharaf Chowdhury"
-        ],
-        "badges": [],
-        "confkey": "arXiv",
-        "abstract": "<p>GPU computing is becoming increasingly more popular with the proliferation of deep learning (DL) applications.\nHowever, unlike traditional resources such as CPU or the network, modern GPUs do not natively support fine-grained sharing primitives.\nConsequently, implementing common policies such as time sharing and preemption are expensive.\nWorse, when a DL application cannot completely use a GPU’s resources, the GPU cannot be efficiently shared between multiple applications, leading to GPU underutilization.</p>\n<p>We present Salus to enable two GPU sharing primitives: fast job switching and memory sharing, in order to achieve fine-grained GPU sharing among multiple DL applications.\nSalus implements an efficient, consolidated execution service that exposes the GPU to different DL applications, and enforces fine-grained sharing by performing iteration scheduling and addressing associated memory management issues.\nWe show that these primitives can then be used to implement flexible sharing policies such as fairness, prioritization, and packing for various use cases.\nOur integration of Salus with TensorFlow and evaluation on popular DL jobs show that Salus can improve the average completion time of DL training jobs by <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>3.19</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">3.19\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">3</span><span class=\"mord\">.</span><span class=\"mord\">1</span><span class=\"mord\">9</span><span class=\"mord\">×</span></span></span></span>,\nGPU utilization for hyper-parameter tuning by <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>2.38</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">2.38\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">2</span><span class=\"mord\">.</span><span class=\"mord\">3</span><span class=\"mord\">8</span><span class=\"mord\">×</span></span></span></span>,\nand GPU utilization of DL inference applications by <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>42</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">42\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">4</span><span class=\"mord\">2</span><span class=\"mord\">×</span></span></span></span> over not sharing the GPU and <span class=\"katex\"><span class=\"katex-mathml\"><math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mn>7</mn><mo>×</mo></mrow><annotation encoding=\"application/x-tex\">7\\times</annotation></semantics></math></span><span class=\"katex-html\" aria-hidden=\"true\"><span class=\"base\"><span class=\"strut\" style=\"height:0.72777em;vertical-align:-0.08333em;\"></span><span class=\"mord\">7</span><span class=\"mord\">×</span></span></span></span> over NVIDIA MPS with small overhead.</p>\n",
-        "links": [
-            {
-                "name": "paper",
-                "href": "https://arxiv.org/abs/1902.04610"
-            }
-        ],
-        "bibStr": "@article{salus:arxiv19,\n    author        = {Peifeng Yu and Mosharaf Chowdhury},\n    journal       = {CoRR},\n    title         = {Salus: Fine-Grained {GPU} Sharing Primitives for Deep Learning Applications},\n    year          = {2019},\n    month         = {Feb},\n    volume        = {abs/1902.04610},\n    archiveprefix = {arXiv},\n    bibsource     = {dblp computer science bibliography, https://dblp.org},\n    biburl        = {https://dblp.org/rec/journals/corr/abs-1902-04610.bib},\n    eprint        = {1902.04610},\n    url           = {https://arxiv.org/abs/1902.04610},\n}\n",
-        "meta": {},
-        "bib": {
-            "key": "salus:arxiv19",
-            "type": "article",
-            "fields": {
-                "archiveprefix": [
-                    "arXiv"
-                ],
-                "author": [
-                    "Peifeng Yu",
-                    "Mosharaf Chowdhury"
-                ],
-                "bibsource": [
-                    "dblp computer science bibliography, https://dblp.org"
-                ],
-                "biburl": [
-                    "https://dblp.org/rec/journals/corr/abs-1902-04610.bib"
-                ],
-                "eprint": [
-                    "1902.04610"
-                ],
-                "journal": [
-                    "CoRR"
-                ],
-                "month": [
-                    "Feb"
-                ],
-                "publist_abstract": [
-                    "GPU computing is becoming increasingly more popular with the proliferation of deep learning (DL) applications.\n    However, unlike traditional resources such as CPU or the network, modern GPUs do not natively support fine-grained sharing primitives.\n    Consequently, implementing common policies such as time sharing and preemption are expensive.\n    Worse, when a DL application cannot completely use a GPU's resources, the GPU cannot be efficiently shared between multiple applications, leading to GPU underutilization.\n\n    We present Salus to enable two GPU sharing primitives: fast job switching and memory sharing, in order to achieve fine-grained GPU sharing among multiple DL applications.\n    Salus implements an efficient, consolidated execution service that exposes the GPU to different DL applications, and enforces fine-grained sharing by performing iteration scheduling and addressing associated memory management issues.\n    We show that these primitives can then be used to implement flexible sharing policies such as fairness, prioritization, and packing for various use cases.\n    Our integration of Salus with TensorFlow and evaluation on popular DL jobs show that Salus can improve the average completion time of DL training jobs by $3.19\\times$,\n    GPU utilization for hyper-parameter tuning by $2.38\\times$,\n    and GPU utilization of DL inference applications by $42\\times$ over not sharing the GPU and $7\\times$ over NVIDIA MPS with small overhead."
-                ],
-                "publist_confkey": [
-                    "arXiv"
-                ],
-                "publist_link": [
-                    "paper || https://arxiv.org/abs/1902.04610"
-                ],
-                "title": [
-                    "Salus: Fine-grained GPU sharing primitives for deep learning applications"
-                ],
-                "url": [
-                    "https://arxiv.org/abs/1902.04610"
-                ],
-                "volume": [
-                    "abs/1902.04610"
-                ],
-                "year": [
-                    "2019"
-                ]
-            },
-            "creators": {
-                "author": [
-                    {
-                        "firstName": "Peifeng",
-                        "lastName": "Yu"
-                    },
-                    {
-                        "firstName": "Mosharaf",
-                        "lastName": "Chowdhury"
-                    }
-                ]
-            },
-            "sentenceCased": true
-        },
-        "conf": {
-            "venue": "arXiv",
-            "name": "arXiv",
-            "date": null,
-            "url": "https://arxiv.org",
-            "acceptance": "",
-            "cat": "Technical Reports"
-        },
-        "date": "2019-02-01T05:00:00.000Z",
         "year": "2019",
         "extra": {
             "topic": [],
@@ -1525,11 +1624,12 @@
         },
         "conf": {
             "venue": "MobiCom",
+            "cat": "Conferences",
+            "key": "MobiCom'18",
             "name": "The 24th Annual International Conference on Mobile Computing and Networking",
             "date": "2018-10-29T00:00:00.000Z",
             "url": "https://sigmobile.org/mobicom/2018/",
-            "acceptance": "22.46%",
-            "cat": "Conferences"
+            "acceptance": "22.46%"
         },
         "date": "2018-10-29T00:00:00.000Z",
         "year": "2018",
@@ -1616,11 +1716,12 @@
         },
         "conf": {
             "venue": "OSDI",
+            "cat": "Conferences",
+            "key": "OSDI'18",
             "name": "The 13th USENIX Symposium on Operating Systems Design and Implementation",
             "date": "2018-10-08T00:00:00.000Z",
             "url": "https://www.usenix.org/conference/osdi18",
-            "acceptance": "18.29%",
-            "cat": "Conferences"
+            "acceptance": "18.29%"
         },
         "date": "2018-10-08T00:00:00.000Z",
         "year": "2018",
@@ -1700,11 +1801,11 @@
         },
         "conf": {
             "venue": "APNet",
+            "cat": "Workshops",
+            "key": "APNet'18",
             "name": "The 2nd Asia-Pacific Workshop on Networking",
             "date": "2018-08-02T00:00:00.000Z",
-            "url": "https://conferences.sigcomm.org/events/apnet2018/index.html",
-            "acceptance": "",
-            "cat": "Workshops"
+            "url": "https://conferences.sigcomm.org/events/apnet2018/index.html"
         },
         "date": "2018-08-02T00:00:00.000Z",
         "year": "2018",
@@ -1800,11 +1901,11 @@
         },
         "conf": {
             "venue": "HotCloud",
+            "cat": "Workshops",
+            "key": "HotCloud'18",
             "name": "The 10th USENIX Workshop on Hot Topics in Cloud Computing",
             "date": "2018-07-09T00:00:00.000Z",
-            "url": "https://www.usenix.org/conference/hotcloud18",
-            "acceptance": "",
-            "cat": "Workshops"
+            "url": "https://www.usenix.org/conference/hotcloud18"
         },
         "date": "2018-07-09T00:00:00.000Z",
         "year": "2018",
@@ -1887,11 +1988,11 @@
         },
         "conf": {
             "venue": "HotCloud",
+            "cat": "Workshops",
+            "key": "HotCloud'18",
             "name": "The 10th USENIX Workshop on Hot Topics in Cloud Computing",
             "date": "2018-07-09T00:00:00.000Z",
-            "url": "https://www.usenix.org/conference/hotcloud18",
-            "acceptance": "",
-            "cat": "Workshops"
+            "url": "https://www.usenix.org/conference/hotcloud18"
         },
         "date": "2018-07-09T00:00:00.000Z",
         "year": "2018",
@@ -1975,11 +2076,11 @@
         },
         "conf": {
             "venue": "MAMA",
+            "cat": "Workshops",
+            "key": "MAMA'18",
             "name": "The 20th Workshop on MAthematical performance Modeling and Analysis (MAMA)",
             "date": "2018-06-18T00:00:00.000Z",
-            "url": "http://www.sigmetrics.org/mama/2018/",
-            "acceptance": "",
-            "cat": "Workshops"
+            "url": "http://www.sigmetrics.org/mama/2018/"
         },
         "date": "2018-06-18T00:00:00.000Z",
         "year": "2018",
@@ -2086,11 +2187,11 @@
         },
         "conf": {
             "venue": "GRADES-NDA",
+            "cat": "Workshops",
+            "key": "GRADES-NDA'18",
             "name": "The 1st Joint International Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA)",
             "date": "2018-06-10T00:00:00.000Z",
-            "url": "https://sites.google.com/site/gradesnda2018/",
-            "acceptance": "",
-            "cat": "Workshops"
+            "url": "https://sites.google.com/site/gradesnda2018/"
         },
         "date": "2018-06-10T00:00:00.000Z",
         "year": "2018",
@@ -2173,11 +2274,12 @@
         },
         "conf": {
             "venue": "SIGMOD",
+            "cat": "Conferences",
+            "key": "SIGMOD'18",
             "name": "The 2018 ACM SIGMOD/PODS Conference",
             "date": "2018-06-10T00:00:00.000Z",
             "url": "http://sigmod2018.org/",
-            "acceptance": "19.52%",
-            "cat": "Conferences"
+            "acceptance": "19.52%"
         },
         "date": "2018-06-10T00:00:00.000Z",
         "year": "2018",
@@ -2199,7 +2301,7 @@
             "Kang G. Shin"
         ],
         "badges": [],
-        "confkey": "USENIX ;login:",
+        "confkey": "USENIX ;login: Winter 2017",
         "abstract": "Memory disaggregation can expose remote memory across a cluster to local applications. However, existing proposals call for new architectures and/or new programming models, making them infeasible. We have developed a practical memory disaggregation solution, Infiniswap, which is a remote memory paging system for clusters with lowlatency, kernel-bypass networks such as RDMA. Infiniswap opportunistically harvests and transparently exposes unused memory across the cluster to unmodified applications by dividing the swap space of each machine into many chunks and distributing them to unused memory of many remote machines. For scalability, it leverages the power of many choices to perform decentralized memory chunk placements and evictions. Applications using Infiniswap receive large performance boosts when their working sets are larger than their physical memory allocations.",
         "links": [
             {
@@ -2236,7 +2338,7 @@
                     "42–48"
                 ],
                 "publist_confkey": [
-                    "USENIX ;login:"
+                    "USENIX ;login: Winter 2017"
                 ],
                 "publist_link": [
                     "paper || infiniswap-login17.pdf"
@@ -2279,11 +2381,11 @@
         },
         "conf": {
             "venue": "USENIX ;login:",
+            "cat": "Journals",
+            "key": "USENIX ;login: Winter 2017",
             "name": "USENIX ;login: Winter 2017, VOL. 42, NO. 4",
             "date": "2017-12-30T00:00:00.000Z",
-            "url": "https://www.usenix.org/publications/login",
-            "acceptance": "",
-            "cat": "Journals"
+            "url": "https://www.usenix.org/publications/login"
         },
         "date": "2017-12-30T00:00:00.000Z",
         "year": "2017",
@@ -2376,11 +2478,12 @@
         },
         "conf": {
             "venue": "SIGCOMM",
+            "cat": "Conferences",
+            "key": "SIGCOMM'17",
             "name": "The 2017 ACM SIGCOMM Conference",
             "date": "2017-08-22T00:00:00.000Z",
             "url": "http://conferences.sigcomm.org/sigcomm/2017/",
-            "acceptance": "14.4%",
-            "cat": "Conferences"
+            "acceptance": "14.4%"
         },
         "date": "2017-08-22T00:00:00.000Z",
         "year": "2017",
@@ -2478,11 +2581,11 @@
         },
         "conf": {
             "venue": "KBNets",
+            "cat": "Workshops",
+            "key": "KBNets'17",
             "name": "ACM SIGCOMM 2017 Workshop on Kernel-Bypass Networks",
             "date": "2017-08-21T00:00:00.000Z",
-            "url": "https://conferences.sigcomm.org/sigcomm/2017/workshop-kbnets.html",
-            "acceptance": "",
-            "cat": "Workshops"
+            "url": "https://conferences.sigcomm.org/sigcomm/2017/workshop-kbnets.html"
         },
         "date": "2017-08-21T00:00:00.000Z",
         "year": "2017",
@@ -2503,7 +2606,7 @@
         ],
         "badges": [],
         "confkey": "HotOS'17",
-        "abstract": "<p>In recent years, deep learning has pervaded many areas of computing due to the confluence of an explosive growth of large-scale computing capabilities, availability of datasets, and advances in learning techniques.\nWhile this rapid growth has resulted in diverse deep learning frameworks, it has also led to inefficiencies for both the users and developers of these frameworks.\nSpecifically, adopting useful techniques across frameworks – both to perform learning tasks and to optimize performance – involves significant repetitions and reinventions.</p>\n<p>In this paper, we observe that despite their diverse origins, many of these frameworks share architectural similarities.\nWe argue that by introducing a common representation of learning tasks and a hardware abstraction model to capture compute heterogeneity, we might be able to relieve machine learning researchers from dealing with low-level systems issues and systems researchers from being tied to any specific framework.\nWe expect this decoupling to accelerate progress in both domains.</p>\n",
+        "abstract": "In recent years, deep learning has pervaded many areas of computing due to the confluence of an explosive growth of large-scale computing capabilities, availability of datasets, and advances in learning techniques.\nWhile this rapid growth has resulted in diverse deep learning frameworks, it has also led to inefficiencies for both the users and developers of these frameworks.\nSpecifically, adopting useful techniques across frameworks -- both to perform learning tasks and to optimize performance -- involves significant repetitions and reinventions.\n\nIn this paper, we observe that despite their diverse origins, many of these frameworks share architectural similarities.\nWe argue that by introducing a common representation of learning tasks and a hardware abstraction model to capture compute heterogeneity, we might be able to relieve machine learning researchers from dealing with low-level systems issues and systems researchers from being tied to any specific framework.\nWe expect this decoupling to accelerate progress in both domains.",
         "links": [
             {
                 "name": "paper",
@@ -2563,11 +2666,11 @@
         },
         "conf": {
             "venue": "HotOS",
+            "cat": "Workshops",
+            "key": "HotOS'17",
             "name": "The 16th Workshop on Hot Topics in Operating Systems",
             "date": "2017-05-07T00:00:00.000Z",
-            "url": "https://www.sigops.org/s/conferences/hotos/2017",
-            "acceptance": "",
-            "cat": "Workshops"
+            "url": "https://www.sigops.org/s/conferences/hotos/2017"
         },
         "date": "2017-05-07T00:00:00.000Z",
         "year": "2017",
@@ -2590,7 +2693,7 @@
         ],
         "badges": [],
         "confkey": "NSDI'17",
-        "abstract": "<p>Memory-intensive applications suffer large performance loss when their working sets do not fully fit in memory. Yet, they cannot leverage otherwise unused remote memory when paging out to disks even in the presence of large imbalance in memory utilizations across a cluster. Existing proposals for memory disaggregation call for new architectures, new hardware designs, and/or new programming models, making them infeasible.\nThis paper describes the design and implementation of Infiniswap, a remote memory paging system designed specifically for an RDMA network. Infiniswap opportunistically harvests and transparently exposes unused memory to unmodified applications by dividing the swap space of each machine into many slabs and distributing them across many machines’ remote memory. Because one-sided RDMA operations bypass remote CPUs, Infiniswap leverages the power of many choices to perform decentralized slab placements and evictions.\nWe have implemented and deployed Infiniswap on an RDMA cluster without any modifications to user applications or the OS and evaluated its effectiveness using multiple workloads running on unmodified VoltDB, Memcached, PowerGraph, GraphX, and Apache Spark. Using Infiniswap, throughputs of these applications improve between 4X (0.94X) to 15.4X (7.8X) over disk (Mellanox nbdX), and median and tail latencies between 5.4X (2X) and 61X (2.3X). Infiniswap achieves these with negligible remote CPU usage, whereas nbdX becomes CPU-bound. Infiniswap increases the overall memory utilization of a cluster and works well at scale.</p>\n",
+        "abstract": "Memory-intensive applications suffer large performance loss when their working sets do not fully fit in memory. Yet, they cannot leverage otherwise unused remote memory when paging out to disks even in the presence of large imbalance in memory utilizations across a cluster. Existing proposals for memory disaggregation call for new architectures, new hardware designs, and/or new programming models, making them infeasible.\nThis paper describes the design and implementation of Infiniswap, a remote memory paging system designed specifically for an RDMA network. Infiniswap opportunistically harvests and transparently exposes unused memory to unmodified applications by dividing the swap space of each machine into many slabs and distributing them across many machines' remote memory. Because one-sided RDMA operations bypass remote CPUs, Infiniswap leverages the power of many choices to perform decentralized slab placements and evictions.\nWe have implemented and deployed Infiniswap on an RDMA cluster without any modifications to user applications or the OS and evaluated its effectiveness using multiple workloads running on unmodified VoltDB, Memcached, PowerGraph, GraphX, and Apache Spark. Using Infiniswap, throughputs of these applications improve between 4X (0.94X) to 15.4X (7.8X) over disk (Mellanox nbdX), and median and tail latencies between 5.4X (2X) and 61X (2.3X). Infiniswap achieves these with negligible remote CPU usage, whereas nbdX becomes CPU-bound. Infiniswap increases the overall memory utilization of a cluster and works well at scale.",
         "links": [
             {
                 "name": "paper",
@@ -2680,11 +2783,12 @@
         },
         "conf": {
             "venue": "NSDI",
+            "cat": "Conferences",
+            "key": "NSDI'17",
             "name": "The 14th USENIX Symposium on Networked Systems Design and Implementation",
             "date": "2017-03-27T00:00:00.000Z",
             "url": "https://www.usenix.org/conference/nsdi17",
-            "acceptance": "18.04%",
-            "cat": "Conferences"
+            "acceptance": "18.04%"
         },
         "date": "2017-03-27T00:00:00.000Z",
         "year": "2017",
@@ -2771,11 +2875,12 @@
         },
         "conf": {
             "venue": "OSDI",
+            "cat": "Conferences",
+            "key": "OSDI'16",
             "name": "The 12th USENIX Symposium on Operating Systems Design and Implementation",
             "date": "2016-11-02T00:00:00.000Z",
             "url": "https://www.usenix.org/conference/osdi16",
-            "acceptance": "18.08%",
-            "cat": "Conferences"
+            "acceptance": "18.08%"
         },
         "date": "2016-11-02T00:00:00.000Z",
         "year": "2016",
@@ -2868,11 +2973,12 @@
         },
         "conf": {
             "venue": "OSDI",
+            "cat": "Conferences",
+            "key": "OSDI'16",
             "name": "The 12th USENIX Symposium on Operating Systems Design and Implementation",
             "date": "2016-11-02T00:00:00.000Z",
             "url": "https://www.usenix.org/conference/osdi16",
-            "acceptance": "18.08%",
-            "cat": "Conferences"
+            "acceptance": "18.08%"
         },
         "date": "2016-11-02T00:00:00.000Z",
         "year": "2016",
@@ -2971,107 +3077,14 @@
         },
         "conf": {
             "venue": "SIGCOMM",
+            "cat": "Conferences",
+            "key": "SIGCOMM'16",
             "name": "The 2016 ACM SIGCOMM Conference",
             "date": "2016-08-23T00:00:00.000Z",
             "url": "http://conferences.sigcomm.org/sigcomm/2016/",
-            "acceptance": "17.33%",
-            "cat": "Conferences"
+            "acceptance": "17.33%"
         },
         "date": "2016-08-23T00:00:00.000Z",
-        "year": "2016",
-        "extra": {
-            "topic": [],
-            "tag": [],
-            "badge": []
-        },
-        "extra_json_escaped": "{&quot;topic&quot;:[],&quot;tag&quot;:[],&quot;badge&quot;:[]}"
-    },
-    {
-        "citekey": "cellscope:tr16",
-        "title": "Fast and accurate performance analysis of LTE radio access networks",
-        "authors": [
-            "Anand Padmanabha Iyer",
-            "Ion Stoica",
-            "Mosharaf Chowdhury",
-            "Li Erran Li"
-        ],
-        "badges": [],
-        "confkey": "arXiv",
-        "abstract": "An increasing amount of analytics is performed on data that is procured in a real-time fashion to make real-time decisions. Such tasks include simple reporting on streams to sophisticated model building. However, the practicality of such analyses are impeded in several domains because they are faced with a fundamental trade-off between data collection latency and analysis accuracy. In this paper, we study this trade-off in the context of a specific domain, Cellular Radio Access Networks (RAN). Our choice of this domain is influenced by its commonalities with several other domains that produce real-time data, our access to a large live dataset, and their real-time nature and dimensionality which makes it a natural fit for a popular analysis technique, machine learning (ML). We find that the latency accuracy trade-off can be resolved using two broad, general techniques: intelligent data grouping and task formulations that leverage domain characteristics. Based on this, we present CellScope, a system that addresses this challenge by applying a domain specific formulation and application of Multi-task Learning (MTL) to RAN performance analysis. It achieves this goal using three techniques: feature engineering to transform raw data into effective features, a PCA inspired similarity metric to group data from geographically nearby base stations sharing performance commonalities, and a hybrid online-offline model for efficient model updates. Our evaluation of CellScope shows that its accuracy improvements over direct application of ML range from 2.5x to 4.4x while reducing the model update overhead by up to 4.8x. We have also used CellScope to analyze a live LTE consisting of over 2 million subscribers for a period of over 10 months, where it uncovered several problems and insights, some of them previously unknown.",
-        "links": [
-            {
-                "name": "paper",
-                "href": "https://arxiv.org/abs/1605.04652"
-            }
-        ],
-        "bibStr": "@techreport{cellscope:tr16,\n    Title                    = {Fast and Accurate Performance Analysis of {LTE} Radio Access Networks},\n    Author                   = {Anand Padmanabha Iyer and Ion Stoica and Mosharaf Chowdhury and Li Erran Li},\n    Institution              = {CoRR},\n    Year                     = {2016},\n    Month                    = {May},\n    Number                   = {abs/1605.04652},\n    Abstract                 = {An increasing amount of analytics is performed on data that is procured in a real-time fashion to make real-time decisions. Such tasks include simple reporting on streams to sophisticated model building. However, the practicality of such analyses are impeded in several domains because they are faced with a fundamental trade-off between data collection latency and analysis accuracy.\n\nIn this paper, we study this trade-off in the context of a specific domain, Cellular Radio Access Networks (RAN). Our choice of this domain is influenced by its commonalities with several other domains that produce real-time data, our access to a large live dataset, and their real-time nature and dimensionality which makes it a natural fit for a popular analysis technique, machine learning (ML). We find that the latency accuracy trade-off can be resolved using two broad, general techniques: intelligent data grouping and task formulations that leverage domain characteristics. Based on this, we present CellScope, a system that addresses this challenge by applying a domain specific formulation and application of Multi-task Learning (MTL) to RAN performance analysis. It achieves this goal using three techniques: feature engineering to transform raw data into effective features, a PCA inspired similarity metric to group data from geographically nearby base stations sharing performance commonalities, and a hybrid online-offline model for efficient model updates. Our evaluation of CellScope shows that its accuracy improvements over direct application of ML range from 2.5x to 4.4x while reducing the model update overhead by up to 4.8x. We have also used CellScope to analyze a live LTE consisting of over 2 million subscribers for a period of over 10 months, where it uncovered several problems and insights, some of them previously unknown.}\n}\n",
-        "meta": {},
-        "bib": {
-            "key": "cellscope:tr16",
-            "type": "techreport",
-            "fields": {
-                "abstract": [
-                    "An increasing amount of analytics is performed on data that is procured in a real-time fashion to make real-time decisions. Such tasks include simple reporting on streams to sophisticated model building. However, the practicality of such analyses are impeded in several domains because they are faced with a fundamental trade-off between data collection latency and analysis accuracy. In this paper, we study this trade-off in the context of a specific domain, Cellular Radio Access Networks (RAN). Our choice of this domain is influenced by its commonalities with several other domains that produce real-time data, our access to a large live dataset, and their real-time nature and dimensionality which makes it a natural fit for a popular analysis technique, machine learning (ML). We find that the latency accuracy trade-off can be resolved using two broad, general techniques: intelligent data grouping and task formulations that leverage domain characteristics. Based on this, we present CellScope, a system that addresses this challenge by applying a domain specific formulation and application of Multi-task Learning (MTL) to RAN performance analysis. It achieves this goal using three techniques: feature engineering to transform raw data into effective features, a PCA inspired similarity metric to group data from geographically nearby base stations sharing performance commonalities, and a hybrid online-offline model for efficient model updates. Our evaluation of CellScope shows that its accuracy improvements over direct application of ML range from 2.5x to 4.4x while reducing the model update overhead by up to 4.8x. We have also used CellScope to analyze a live LTE consisting of over 2 million subscribers for a period of over 10 months, where it uncovered several problems and insights, some of them previously unknown."
-                ],
-                "author": [
-                    "Anand Padmanabha Iyer",
-                    "Ion Stoica",
-                    "Mosharaf Chowdhury",
-                    "Li Erran Li"
-                ],
-                "institution": [
-                    "CoRR"
-                ],
-                "month": [
-                    "May"
-                ],
-                "number": [
-                    "abs/1605.04652"
-                ],
-                "publist_confkey": [
-                    "arXiv"
-                ],
-                "publist_link": [
-                    "paper || https://arxiv.org/abs/1605.04652"
-                ],
-                "title": [
-                    "Fast and accurate performance analysis of LTE radio access networks"
-                ],
-                "year": [
-                    "2016"
-                ]
-            },
-            "creators": {
-                "author": [
-                    {
-                        "firstName": "Anand Padmanabha",
-                        "lastName": "Iyer"
-                    },
-                    {
-                        "firstName": "Ion",
-                        "lastName": "Stoica"
-                    },
-                    {
-                        "firstName": "Mosharaf",
-                        "lastName": "Chowdhury"
-                    },
-                    {
-                        "firstName": "Li Erran",
-                        "lastName": "Li"
-                    }
-                ]
-            },
-            "sentenceCased": true
-        },
-        "conf": {
-            "venue": "arXiv",
-            "name": "arXiv",
-            "date": null,
-            "url": "https://arxiv.org",
-            "acceptance": "",
-            "cat": "Technical Reports"
-        },
-        "date": "2016-05-01T04:00:00.000Z",
         "year": "2016",
         "extra": {
             "topic": [],
@@ -3156,11 +3169,12 @@
         },
         "conf": {
             "venue": "NSDI",
+            "cat": "Conferences",
+            "key": "NSDI'16",
             "name": "The 13th USENIX Symposium on Networked Systems Design and Implementation",
             "date": "2016-03-13T00:00:00.000Z",
             "url": "https://www.usenix.org/conference/nsdi16",
-            "acceptance": "19.74%",
-            "cat": "Conferences"
+            "acceptance": "19.74%"
         },
         "date": "2016-03-13T00:00:00.000Z",
         "year": "2016",

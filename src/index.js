@@ -23,7 +23,7 @@ function register(hexo) {
     const opts = processOptions(hexo);
 
     // register renderer bib in _data, which is inside the source box
-    require('./bib-renderer')(hexo, opts);
+    require('./bib-renderer').register(hexo, opts);
 
     // widget_dir must be from the hexo.base_dir/node_modules
     // which may be a symlink. So we can not directly use WIDGET_DIR

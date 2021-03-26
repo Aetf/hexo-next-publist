@@ -16,15 +16,17 @@ venues:
   arXiv:
     category: Technical Reports
     occurances:
+    - key: arXiv
+      name: arXiv
     - key: arXiv-all
       # instead of using key to match confkey in literal,
       # use the regex given in matching.
       # the key still have to be unique globally
-      matches: arXiv:(.*)
+      matches: ^arXiv:(.*)$
       # then the name can refer to capture groups
-      name: 'arXiv$1'
+      name: 'arXiv:$1'
       # url can also include capture groups
-      url: 'https://arxiv.org/$1'
+      url: 'https://arxiv.org/abs/$1'
   'USENIX ;login:':
     category: Journals
     # url can also be set at the parent level

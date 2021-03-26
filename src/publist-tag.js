@@ -14,6 +14,23 @@ const { TEMPLATE_DIR, DEFAULT_INSTOPTS } = require('./consts');
 const ajv = new Ajv({ strict: true });
 const instOptsValidator = ajv.compile(schema_instopts);
 
+function maybePrependHref(pub_dir, citekey, href) {
+    if (/^[a-z][a-z0-9+.-]*:/.test(href)) {
+        // full href, do nothing
+        return href;
+    } else if (href.startsWith('/')) {
+        // absolute path, do nothing
+        return href;
+    } else {
+        // append base
+        if (pub_dir) {
+            return `/${pub_dir}/${citekey}/${href}`;
+        } else {
+            return `/${citekey}/${href}`;
+        }
+    }
+}
+
 class PubsResolver {
     constructor(instOpts, now) {
         this.instOpts = instOpts;
@@ -24,12 +41,12 @@ class PubsResolver {
         const { now, instOpts } = this;
 
         // resolve fields
-        pubs = pubs.map(pub => this._pubResolveConf(pub, instOpts))
-        .map(this._pubResolveDate)
-        .map(this._pubResolveHref);
+        pubs = pubs.map(this._pubResolveConf)
+            .map(this._pubResolveDate)
+            .map(this._pubResolveHref);
         // sort and filter any unpublished items
         pubs = pubs.sort((a, b) => b.date.diff(a.date))
-        .filter(pub => pub.date.isBefore(now));
+            .filter(pub => pub.date.isBefore(now));
 
         // prepare filtering
         // generate an extra object containig every extra attr specified in extra_filters
@@ -109,31 +126,12 @@ class PubsResolver {
         return fspecs;
     }
 
-    _maybePrependHref = (citekey, href) => {
-        const { pub_dir } = this.instOpts;
-
-        if (/^[a-z][a-z0-9+.-]*:/.test(href)) {
-            // full href, do nothing
-            return href;
-        } else if (href.startsWith('/')) {
-            // absolute path, do nothing
-            return href;
-        } else {
-            // append base
-            if (pub_dir) {
-                return `/${pub_dir}/${citekey}/${href}`;
-            } else {
-                return `/${citekey}/${href}`;
-            }
-        }
-    }
-
     _pubResolveHref = pub => {
-        // also treat the link href.
+        const { pub_dir } = this.instOpts;
         const links = pub.links.map(({ name, href }) => {
             return {
                 name,
-                href: this._maybePrependHref(pub.citekey, href)
+                href: maybePrependHref(pub_dir, pub.citekey, href)
             };
         });
         return {
@@ -143,11 +141,22 @@ class PubsResolver {
     }
 
     _pubResolveConf = pub => {
-        const { confs } = this.instOpts;
-        const conf = _.get(confs, pub.confkey);
+        const { confs, confs_fuzzy } = this.instOpts;
+        // if we can get it directly from confs, use it
+        let conf = _.get(confs, pub.confkey);
+        if (_.isUndefined(conf)) {
+            // try get it from a regex match
+            const found = _.find(confs_fuzzy, ({regex}) => regex.test(pub.confkey))
+            if (!_.isUndefined(found)) {
+                conf = found.conf;
+                // resolve fields that may depends on the match
+                conf.url = pub.confkey.replace(found.regex, conf.url);
+                conf.name = pub.confkey.replace(found.regex, conf.name);
+            }
+        }
         return {
             ...pub,
-            conf,
+            conf
         };
     }
 
@@ -237,6 +246,7 @@ function processInstanceOptsV1(loaded) {
         confs,
         extra_filters,
         highlight_authors: new Set(obj.highlight_authors),
+        confs_fuzzy: []
     };
 }
 
@@ -278,8 +288,11 @@ function processInstanceOptsV2(loaded) {
     // also take note of confs need regex matching
     const confs_fuzzy = _.chain(confs)
         .values()
-        .map(conf => _.pick(conf, ['key', 'matches']))
-        .filter(elem => !_.isUndefined(elem.matches))
+        .filter(conf => !_.isUndefined(conf.matches))
+        .map(conf => ({ 
+            regex: new RegExp(conf.matches),
+            conf
+         }))
         .value();
 
     return {

@@ -5,12 +5,6 @@ const moment = require('moment');
 const stripIndent = require('strip-indent');
 const bibtex = require('@retorquere/bibtex-parser');
 
-module.exports = (ctx, opts) => {
-    ctx.extend.renderer.register('bib', 'json', function(data, options) {
-        return bibRenderer(ctx, {...opts, ...options}, data);
-    });
-};
-
 async function bibRenderer(ctx, opts, { text }) {
     // parse content as bibtex
     const { entries, errors } = await parseBibEntries(ctx, opts, text);
@@ -157,3 +151,10 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
 
     return item;
 }
+
+module.exports.bibRenderer = bibRenderer;
+module.exports.register = (ctx, opts) => {
+    ctx.extend.renderer.register('bib', 'json', function(data, options) {
+        return bibRenderer(ctx, {...opts, ...options}, data);
+    });
+};

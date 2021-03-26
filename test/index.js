@@ -7,6 +7,7 @@ const fs = require('fs');
 const bibtex = require('@retorquere/bibtex-parser');
 const stripIndent = require('strip-indent');
 const { loadInstanceOpts, PubsResolver } = require('../src/publist-tag');
+const { bibRenderer } = require('../src/bib-renderer');
 
 function normalize(obj) {
     return JSON.parse(JSON.stringify(obj));
@@ -115,6 +116,22 @@ test('bibtex parsing', t => {
     t.is(abs, ABSTRACT);
 });
 
+test('MCPub parsing', async t => {
+    const mockCtx = {
+        log: {
+            w: console.log,
+        },
+        render: {
+            render: async ({ text }) => text
+        }
+    };
+    const content = await fs.readFileSync(path.join(__dirname, 'data/MCPubs.bib'), 'utf-8');
+    const expected = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/MCPubs.json')));
+
+    const { items: rawPubs } = await bibRenderer(mockCtx, {}, { text: content });
+    t.deepEqual(rawPubs, expected);
+});
+
 test('Tag Options V1', t => {
     const content = fs.readFileSync(path.join(__dirname, 'data/config.yml'));
     const instOpts = normalize(loadInstanceOpts(content));
@@ -159,16 +176,11 @@ test('Tag Options V2', t => {
     const content = fs.readFileSync(path.join(__dirname, 'data/config.v2.yml'));
     const instOpts = normalize(loadInstanceOpts(content));
 
+    t.is(instOpts.confs_fuzzy.length, 1);
     t.like(instOpts, {
         version: 2,
         pub_dir: 'publications/files',
         highlight_authors: {},
-        confs_fuzzy: [
-            {
-                key: 'arXiv-all',
-                matches: 'arXiv:(.*)',
-            }
-        ],
         confs: {
             "NSDI'20": {
                 key: "NSDI'20",
@@ -191,9 +203,9 @@ test('Tag Options V2', t => {
             'arXiv-all': {
                 key: 'arXiv-all',
                 venue: 'arXiv',
-                name: 'arXiv$1',
-                matches: 'arXiv:(.*)',
-                url: 'https://arxiv.org/$1',
+                name: 'arXiv:$1',
+                matches: '^arXiv:(.*)$',
+                url: 'https://arxiv.org/abs/$1',
                 cat: 'Technical Reports'
             },
             'USENIX ;login: Winter 2017': {
@@ -213,8 +225,8 @@ test('Tag Options V2', t => {
     });
 });
 
-test('MCBib parsing', t => {
-    const content = fs.readFileSync(path.join(__dirname, 'data/config.yml'));
+test('MCBib resolving', t => {
+    const content = fs.readFileSync(path.join(__dirname, 'data/config.v2.yml'));
     const instOpts = loadInstanceOpts(content);
     const parsedPubs = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/MCPubs.json')));
 

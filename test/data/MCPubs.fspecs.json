@@ -3,6 +3,18 @@
         "name": "Venue",
         "id": "venue",
         "choices": {
+            "Technical Reports": [
+                {
+                    "value": "arXiv",
+                    "count": 7
+                }
+            ],
+            "Journals": [
+                {
+                    "value": "USENIX ;login:",
+                    "count": 1
+                }
+            ],
             "Conferences": [
                 {
                     "value": "ATC",
@@ -64,18 +76,6 @@
                 },
                 {
                     "value": "MAMA",
-                    "count": 1
-                }
-            ],
-            "Technical Reports": [
-                {
-                    "value": "arXiv",
-                    "count": 7
-                }
-            ],
-            "Journals": [
-                {
-                    "value": "USENIX ;login:",
                     "count": 1
                 }
             ],
