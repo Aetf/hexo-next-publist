@@ -24,6 +24,12 @@ Follow the instruction printed when running the previous command to install the 
 
 ## Usage
 
+There are three pieces need to be defined:
+
+1. The actual tag, which also defines the set of conferences
+2. The bib source file, which defines the list of publications
+3. The publication assets directory, which contains the (optional) downloadable files
+
 ### Tag usage
 
 First of all, you need to add
@@ -33,57 +39,45 @@ publist: true
 to the front-matter of the post/page that you wish to use the publist tag.
 For performance reasons, publist will not inject supplimentary js and css unless told to do so.
 
-To insert publist, use the following in the post markdown source.
-The content between the tags defines any conferences the bibtex file will refer.
+To insert publist, use the `publist` tag in the post markdown source.
+The only argument in the opening tag is the name of bib file.
 
-```
+The content between the tags defines any conferences the bibtex file will refer. [More examples](#instance-options-between-the-tags).
+
+```yaml
 {% publist mypubs %}
+version: 2
 pub_dir: assets/pub
 highlight_authors: []
 # extra filters to show, they will filter on the item using given path
-extra_filters:
-  - name: Topic
-    path: meta.topic
-  - name: Tag
-    path: meta.tag
-  - name: Badge
-    path: badges
+extra_filters: []
 venues:
-  Conferences:
-    # conference short name
-    MLSys'20:
-      # conference id
-      venue: MLSys
+  MLSys:
+    category: Conferences
+    occurances:
+    # key is used in publist_confkey, must be unique across conferences
+    - key: MLSys'20
       # conference full name
       name: The 3rd Conference on Machine Learning and Systems
-      # date for sorting (optional. If this is missing, the year and month in bib entry will be used)
+      # conference date for sorting (optional)
       date: 2020-03-02
       # conference website (optional)
       url: https://mlsys.org/Conferences/2020
       # conference acceptance rate (optional)
-      acceptance: "19.2%"
-  Workshops: {}
-  Posters: {}
-  Demos: {}
-  Journals: {}
+      acceptance: 19.2%
 {% endpublist %}
 ```
 
-The only argument is the name of bib file, in `source/_data` folder.
 
-You'll need to add some publist specific fields, but they will be striped out when display.
+### Bib source file
+Bib source files are treated as data sources, so they need to be placed in the `source/_data` folder. You can then refer to them via the file name when using the `publist` tag.
 
-- `publist_link`, `publist_badge`, and `publist_abstract` are optional.
-- `publist_link` and `publist_badge` can be specified multiple times.
-- The content in `publist_abstract` will be rendered as markdown with support for latex math. If this
-field does not present, the normal `abstract` field will be used. However, in this case, the content
-will be used verbatim.
-- Other fields like `publist_xxx` can be added to attach metadata fields to the entry.
+You'll need to add some [publist specific fields](#extra-fields-in-bib-source) in the bib file to control the handling, and they will be striped out when shown in the UI.
 
-One subfolder following the entry key per entry, containing bibtex, abstract, pdf, and any additional files.
-If the link part starts with `/`, then it is intepreted as absolute path.
+<details>
+  <summary>Example bib file</summary>
+  <p>
 
-`source/_data/mypub.bib`
 ```bibtex
 @inproceedings{yu20mlsys,
     title = {{Salus}: Find-grained {GPU} Sharing primitives for Deep Learning Applications},
@@ -109,8 +103,85 @@ If the link part starts with `/`, then it is intepreted as absolute path.
     publist_topic = {GPU},
 }
 ```
+  </p>
+</details>
+
+### Publication Assets Directory
+Set by `pub_dir` in the instance options.
+
+The `publist_link` field in the bib source refers to files in this directory.
+
+One subfolder following the entry key per entry, containing slides, pdf, or any additional files.
+
+If the link part starts with `/`, then it is intepreted as an absolute path.
+
+If the link starts with `http`, then it is used as is.
 
 ### Configuration
+
+#### Instance options between the tags
+
+The full spec of this content is defined as a [JSON schema](blob/master/src/schema_instopts.json).
+
+<details>
+  <summary>Example config with comments</summary>
+  <p>
+
+```yaml
+{% publist mypubs %}
+# the version of the config
+version: 2
+pub_dir: assets/pub
+highlight_authors: []
+# extra filters to show, they will filter on the item using given path
+extra_filters:
+  - name: Topic
+    path: meta.topic
+  - name: Badge
+    path: badges
+venues:
+  MLSys:
+    category: Conferences
+    occurances:
+    # key is used in publist_confkey, must be unique across conferences
+    - key: MLSys'20
+      # conference full name
+      name: The 3rd Conference on Machine Learning and Systems
+      # conference date for sorting (optional. If this is missing, the year and month in bib entry will be used)
+      date: 2020-03-02
+      # conference website (optional. Will use an url from the parent level if there's one)
+      url: https://mlsys.org/Conferences/2020
+      # conference acceptance rate (optional)
+      acceptance: 19.2%
+  arXiv:
+    category: Technical Reports
+    # url can also be set on the whole (optional)
+    url: https://arxiv.org
+    occurances:
+    - key: arXiv-all
+      # instead of using key to match confkey in literal,
+      # use the regex given here.
+      # the key still have to be unique globally
+      matches: arXiv:(.*)
+      # then the name can refer to capture groups
+      name: 'arXiv$1'
+      # link, optional, makes the name a url when shown in the UI, can contain capture groups
+      link: 'https://arxiv.org/$1'
+      # url, optional, can contain capture groups
+      url: 'https://arxiv.org/$1'
+{% endpublist %}
+```
+  </p>
+</details>
+
+#### Extra fields in bib source
+
+- `publist_link`, `publist_badge`, and `publist_abstract` are optional.
+- `publist_link` and `publist_badge` can be specified multiple times.
+- The content in `publist_abstract` will be rendered as markdown with support for latex math. If this
+field does not present, the normal `abstract` field will be used. However, in this case, the content
+will be used verbatim.
+- Other fields like `publist_xxx` can be added to attach metadata fields to the entry.
 
 #### Global options in `_config.yml`
 

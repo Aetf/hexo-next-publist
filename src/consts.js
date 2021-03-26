@@ -10,3 +10,11 @@ module.exports.DEFAULT_OPTIONS = {
     new_months: 3,
     strict: false,
 };
+
+module.exports.DEFAULT_INSTOPTS = {
+    version: 2,
+    pub_dir: 'assets',
+    highlight_authors: [],
+    extra_filters: [],
+    venues: {},
+}

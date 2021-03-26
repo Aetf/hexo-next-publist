@@ -1,0 +1,183 @@
+version: 2
+# directory used for relative links in publication items
+pub_dir: publications/files
+# which author name to highlight
+highlight_authors: []
+# extra filters to be present in the UI
+extra_filters:
+- name: Topic
+  path: meta.topic
+- name: Tag
+  path: meta.tag
+- name: Badge
+  path: badges
+# mapping from general conference name to details
+venues:
+  arXiv:
+    category: Technical Reports
+    occurances:
+    - key: arXiv-all
+      # instead of using key to match confkey in literal,
+      # use the regex given in matching.
+      # the key still have to be unique globally
+      matches: arXiv:(.*)
+      # then the name can refer to capture groups
+      name: 'arXiv$1'
+      # url can also include capture groups
+      url: 'https://arxiv.org/$1'
+  'USENIX ;login:':
+    category: Journals
+    # url can also be set at the parent level
+    url: https://www.usenix.org/publications/login
+    occurances:
+    - key: 'USENIX ;login: Winter 2017'
+      name: 'USENIX ;login: Winter 2017, VOL. 42, NO. 4'
+      date: 2017-12-30
+  ATC:
+    category: Conferences
+    occurances:
+    # key is used in publist_confkey
+    - key: ATC'20
+      name: The 2020 USENIX Annual Technical Conference
+      # conference date
+      date: 2020-07-15
+      # url (optional)
+      url: https://www.usenix.org/conference/atc20
+      # optional
+      acceptance: 18.68%
+  EuroSys:
+    category: Conferences
+    occurances:
+    - key: EuroSys'20
+      name: The Fifteenth European Conference on Computer Systems
+      date: 2020-04-27
+      url: https://www.eurosys2020.org/
+      acceptance: 18.38%
+  MLSys:
+    category: Conferences
+    occurances:
+    - key: MLSys'20
+      name: The 3rd Conference on Machine Learning and Systems
+      date: 2020-03-02
+      url: https://mlsys.org/Conferences/2020
+      acceptance: 19.2%
+  NSDI:
+    category: Conferences
+    occurances:
+    - key: NSDI'20
+      name: The 17th USENIX Symposium on Networked Systems Design and Implementation
+      date: 2020-02-25
+      url: https://www.usenix.org/conference/nsdi20
+      acceptance: 18.36%
+    - key: NSDI'19
+      name: The 16th USENIX Symposium on Networked Systems Design and Implementation
+      date: 2019-02-26
+      url: https://www.usenix.org/conference/nsdi19
+      acceptance: 14.76%
+    - key: NSDI'17
+      name: The 14th USENIX Symposium on Networked Systems Design and Implementation
+      date: 2017-03-27
+      url: https://www.usenix.org/conference/nsdi17
+      acceptance: 18.04%
+    - key: NSDI'16
+      name: The 13th USENIX Symposium on Networked Systems Design and Implementation
+      date: 2016-03-13
+      url: https://www.usenix.org/conference/nsdi16
+      acceptance: 19.74%
+  SIGCOMM:
+    category: Conferences
+    occurances:
+    - key: SIGCOMM'20
+      name: The 2020 ACM SIGCOMM Conference
+      date: 2020-08-11
+      url: https://conferences.sigcomm.org/sigcomm/2020/
+      acceptance: 21.6%
+    - key: SIGCOMM'17
+      name: The 2017 ACM SIGCOMM Conference
+      date: 2017-08-22
+      url: http://conferences.sigcomm.org/sigcomm/2017/
+      acceptance: 14.4%
+    - key: SIGCOMM'16
+      name: The 2016 ACM SIGCOMM Conference
+      date: 2016-08-23
+      url: http://conferences.sigcomm.org/sigcomm/2016/
+      acceptance: 17.33%
+  SPAA:
+    category: Conferences
+    occurances:
+    - key: SPAA'19
+      name: The 31st ACM Symposium on Parallelism in Algorithms and Architectures
+      date: 2019-06-22
+      url: https://spaa.acm.org/2019/
+      acceptance: 33%
+  MobiCom:
+    category: Conferences
+    occurances:
+    - key: MobiCom'18
+      name: The 24th Annual International Conference on Mobile Computing and Networking
+      date: 2018-10-29
+      url: https://sigmobile.org/mobicom/2018/
+      acceptance: 22.46%
+  OSDI:
+    category: Conferences
+    occurances:
+    - key: OSDI'18
+      name: The 13th USENIX Symposium on Operating Systems Design and Implementation
+      date: 2018-10-08
+      url: https://www.usenix.org/conference/osdi18
+      acceptance: 18.29%
+    - key: OSDI'16
+      name: The 12th USENIX Symposium on Operating Systems Design and Implementation
+      date: 2016-11-02
+      url: https://www.usenix.org/conference/osdi16
+      acceptance: 18.08%
+  SIGMOD:
+    category: Conferences
+    occurances:
+    - key: SIGMOD'18
+      name: The 2018 ACM SIGMOD/PODS Conference
+      date: 2018-06-10
+      url: http://sigmod2018.org/
+      acceptance: 19.52%
+  APNet:
+    category: Workshops
+    occurances:
+    - key: APNet'18
+      name: The 2nd Asia-Pacific Workshop on Networking
+      date: 2018-08-02
+      url: https://conferences.sigcomm.org/events/apnet2018/index.html
+  HotCloud:
+    category: Workshops
+    occurances:
+    - key: HotCloud'18
+      name: The 10th USENIX Workshop on Hot Topics in Cloud Computing
+      date: 2018-07-09
+      url: https://www.usenix.org/conference/hotcloud18
+  MAMA:
+    category: Workshops
+    occurances:
+    - key: MAMA'18
+      name: The 20th Workshop on MAthematical performance Modeling and Analysis (MAMA)
+      date: 2018-06-18
+      url: http://www.sigmetrics.org/mama/2018/
+  GRADES-NDA:
+    category: Workshops
+    occurances:
+    - key: GRADES-NDA'18
+      name: The 1st Joint International Workshop on Graph Data Management Experiences & Systems (GRADES) and Network Data Analytics (NDA)
+      date: 2018-06-10
+      url: https://sites.google.com/site/gradesnda2018/
+  HotOS:
+    category: Workshops
+    occurances:
+    - key: HotOS'17
+      name: The 16th Workshop on Hot Topics in Operating Systems
+      date: 2017-05-07
+      url: https://www.sigops.org/s/conferences/hotos/2017
+  KBNets:
+    category: Workshops
+    occurances:
+    - key: KBNets'17
+      name: ACM SIGCOMM 2017 Workshop on Kernel-Bypass Networks
+      date: 2017-08-21
+      url: https://conferences.sigcomm.org/sigcomm/2017/workshop-kbnets.html

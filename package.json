@@ -26,11 +26,14 @@
         "@babel/core": "^7.12.10",
         "@babel/preset-env": "^7.12.11",
         "@retorquere/bibtex-parser": "^3.2.29",
+        "@sidvind/better-ajv-errors": "^0.8.0",
+        "ajv": "^7.2.3",
         "babelify": "^10.0.0",
         "browserify": "^17.0.0",
         "core-js": "^3.8.1",
         "hexo-fs": "^3.1.0",
         "hexo-util": "^2.4.0",
+        "js-yaml": "^4.0.0",
         "lodash": "^4.17.20",
         "moment": "^2.29.1",
         "parent-require": "^1.0.0",
@@ -43,6 +46,7 @@
         "hexo-theme-next": "^8.0.1"
     },
     "devDependencies": {
+        "ajv-cli": "^4.2.0",
         "ava": "^3.14.0"
     }
 }

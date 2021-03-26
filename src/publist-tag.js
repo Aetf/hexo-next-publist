@@ -5,8 +5,14 @@ const pathFn = require('path');
 const _ = require('lodash');
 const moment = require('moment');
 const yaml = require('js-yaml');
+const Ajv = require('ajv').default;
+const betterAjvErrors = require('@sidvind/better-ajv-errors').default;
 
-const { TEMPLATE_DIR } = require('./consts');
+const schema_instopts = require('./schema_instopts.json');
+const { TEMPLATE_DIR, DEFAULT_INSTOPTS } = require('./consts');
+
+const ajv = new Ajv({ strict: true });
+const instOptsValidator = ajv.compile(schema_instopts);
 
 class PubsResolver {
     constructor(instOpts, now) {
@@ -168,23 +174,28 @@ class PubsResolver {
     }
 }
 
-/**
- * The content is expected to be the yaml string representing an object
- * Each key is the category, values are conference name => conference data
- * @param {string} content the yaml string
- */
 function loadInstanceOpts(content) {
     const loaded = {
         version: 1,
-        ...yaml.safeLoad(content)
+        ...yaml.load(content, {
+            schema: yaml.CORE_SCHEMA
+        })
     };
     if (loaded.version < 2) {
         // TODO: warning
         return processInstanceOptsV1(loaded);
     }
+    if (loaded.version < 3) {
+        return processInstanceOptsV2(loaded);
+    }
     throw new Error(`Config version newer than supported: ${loaded.version}`);
 }
 
+/**
+ * The content is expected to be the yaml string representing an object
+ * Each key is the category, values are conference name => conference data
+ * @param {String} content the yaml string
+ */
 function processInstanceOptsV1(loaded) {
     const defConf = {
         venue: '',
@@ -208,7 +219,7 @@ function processInstanceOptsV1(loaded) {
     confs = confs.flatMap(([cat, val]) => {
         return Object.entries(val)
             .map(([confKey, confVal]) => [confKey, {...defConf, ...confVal, cat}])
-            .map(([confKey, confVal]) => [confKey, {...confVal, date: moment(confVal.date)}]);
+            .map(([confKey, confVal]) => [confKey, {...confVal, date: moment.utc(confVal.date)}]);
     });
     confs = _.fromPairs(confs);
 
@@ -221,11 +232,64 @@ function processInstanceOptsV1(loaded) {
     }));
 
     return {
+        version: 1,
         pub_dir,
         confs,
         extra_filters,
         highlight_authors: new Set(obj.highlight_authors),
     };
+}
+
+function processInstanceOptsV2(loaded) {
+    const instOpts = {...DEFAULT_INSTOPTS, ...loaded};
+
+    if (!instOptsValidator(instOpts)) {
+        const output = betterAjvErrors(schema_instopts, instOpts, instOptsValidator.errors);
+        console.log(output);
+        throw new Error("Invalid inst options");
+    }
+
+    // ensure pub_dir has no leading / or tailing /
+    const pub_dir = instOpts.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
+
+    // add an id for each fspec
+    const extra_filters = instOpts.extra_filters.map(fspec => ({
+        id: fspec.name.toLowerCase().replace(' ', '-'),
+        ...fspec,
+    }));
+
+    // highlight authors should be a unique set
+    const highlight_authors = new Set(instOpts.highlight_authors);
+
+    // flatten the list of conferences to confkey => conf details
+    const confs = _.chain(instOpts.venues)
+        .flatMap((venue, venueId) => {
+            return venue.occurances.map(conf => [
+                conf.key,
+                _.defaults(
+                    {venue: venueId, cat: venue.category},
+                    _.update(conf, 'date', moment.utc),
+                    {url: venue.url}
+                ),
+            ]);
+        })
+        .fromPairs()
+        .value();
+    // also take note of confs need regex matching
+    const confs_fuzzy = _.chain(confs)
+        .values()
+        .map(conf => _.pick(conf, ['key', 'matches']))
+        .filter(elem => !_.isUndefined(elem.matches))
+        .value();
+
+    return {
+        version: instOpts.version,
+        pub_dir,
+        extra_filters,
+        highlight_authors,
+        confs,
+        confs_fuzzy,
+    }
 }
 
 class PublistTag {

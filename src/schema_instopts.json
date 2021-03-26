@@ -1,0 +1,105 @@
+{
+    "$id": "https://github.com/Aetf/hexo-next-publist/blob/master/src/schema_instopts.json",
+    "title": "Instance Options",
+    "description": "Schema for publist tag options",
+    "type": "object",
+    "properties": {
+        "version": {
+            "description": "Config file version",
+            "type": "integer"
+        },
+        "pub_dir": {
+            "description": "directory used for relative links in publication items. Itself is relative to `source`.",
+            "type": "string"
+        },
+        "highlight_authors": {
+            "description": "which author name to highlight",
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "extra_filters": {
+            "description": "extra filters to be presented in the UI",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "Name of the filter",
+                        "type": "string"
+                    },
+                    "path": {
+                        "description": "Attribute path to be filtered on",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name",
+                    "path"
+                ],
+                "additionalProperties": false
+            }
+        },
+        "venues": {
+            "description": "mapping from general conference name to details",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "category": {
+                        "description": "The category of the conference",
+                        "type": "string"
+                    },
+                    "url": {
+                        "description": "the url of the conference, can be override by individual occurances",
+                        "type": "string"
+                    },
+                    "occurances": {
+                        "description": "list of occurances of the conference",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [ "key", "name"],
+                            "properties": {
+                                "key": {
+                                    "description": "the confkey, must be unique",
+                                    "type": "string"
+                                },
+                                "matches": {
+                                    "description": "instead of using `key` to match confkey in literal, use the regex given here. The key still have to be unique.",
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "description": "full name of the conference, may include capture groups if there's a `matches` field",
+                                    "type": "string"
+                                },
+                                "date": {
+                                    "description": "the date when the conference is held. Also used in sorting. When missing, the year and month from the bib entry is used.",
+                                    "type": "string"
+                                },
+                                "url": {
+                                    "description": "URL to the conference. May include capture groups if there's a `matches` field",
+                                    "type": "string"
+                                },
+                                "acceptance": {
+                                    "description": "acceptance rate",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "required": [ "category", "occurances" ],
+                "additionalProperties": false
+            }
+        }
+    },
+    "required": [
+        "version",
+        "pub_dir"
+    ],
+    "additionalProperties": false
+}

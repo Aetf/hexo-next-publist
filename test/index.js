@@ -115,11 +115,12 @@ test('bibtex parsing', t => {
     t.is(abs, ABSTRACT);
 });
 
-test('Tag Options', t => {
+test('Tag Options V1', t => {
     const content = fs.readFileSync(path.join(__dirname, 'data/config.yml'));
     const instOpts = normalize(loadInstanceOpts(content));
 
     t.like(instOpts, {
+        version: 1,
         pub_dir: 'publications/files',
         confs: {
             "ATC'20": {
@@ -143,6 +144,64 @@ test('Tag Options', t => {
                 date: '2017-12-30T00:00:00.000Z',
                 url: 'https://www.usenix.org/publications/login',
                 acceptance: '',
+                cat: 'Journals'
+            }
+        },
+        extra_filters: [
+            { id: 'topic', name: 'Topic', path: 'meta.topic' },
+            { id: 'tag', name: 'Tag', path: 'meta.tag' },
+            { id: 'badge', name: 'Badge', path: 'badges' }
+        ],
+    });
+});
+
+test('Tag Options V2', t => {
+    const content = fs.readFileSync(path.join(__dirname, 'data/config.v2.yml'));
+    const instOpts = normalize(loadInstanceOpts(content));
+
+    t.like(instOpts, {
+        version: 2,
+        pub_dir: 'publications/files',
+        highlight_authors: {},
+        confs_fuzzy: [
+            {
+                key: 'arXiv-all',
+                matches: 'arXiv:(.*)',
+            }
+        ],
+        confs: {
+            "NSDI'20": {
+                key: "NSDI'20",
+                venue: 'NSDI',
+                name: 'The 17th USENIX Symposium on Networked Systems Design and Implementation',
+                date: '2020-02-25T00:00:00.000Z',
+                url: 'https://www.usenix.org/conference/nsdi20',
+                acceptance: '18.36%',
+                cat: 'Conferences'
+            },
+            "NSDI'17": {
+                key: "NSDI'17",
+                venue: 'NSDI',
+                name: 'The 14th USENIX Symposium on Networked Systems Design and Implementation',
+                date: '2017-03-27T00:00:00.000Z',
+                url: 'https://www.usenix.org/conference/nsdi17',
+                acceptance: '18.04%',
+                cat: 'Conferences'
+            },
+            'arXiv-all': {
+                key: 'arXiv-all',
+                venue: 'arXiv',
+                name: 'arXiv$1',
+                matches: 'arXiv:(.*)',
+                url: 'https://arxiv.org/$1',
+                cat: 'Technical Reports'
+            },
+            'USENIX ;login: Winter 2017': {
+                key: "USENIX ;login: Winter 2017",
+                venue: 'USENIX ;login:',
+                name: 'USENIX ;login: Winter 2017, VOL. 42, NO. 4',
+                date: '2017-12-30T00:00:00.000Z',
+                url: 'https://www.usenix.org/publications/login',
                 cat: 'Journals'
             }
         },
