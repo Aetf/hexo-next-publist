@@ -40,7 +40,11 @@
         </details>
 {%- endmacro -%}
 
-<div class="publist">
+<style type="text/css">
+    .fouc-fix { display:none; }
+</style>
+<link href="{{ config.publist.assets_prefix }}main.css" rel="stylesheet" />
+<div class="publist fouc-fix">
     <div class="publist-search-panel">
         <div class="publist-filters-header">
             <div class="publist-filters-header-hwrapper">
@@ -85,13 +89,13 @@
                                 {{ pub.title }}
                             {%- endif %}
                             {% if pub.date.isAfter(moment().subtract(config.publist.new_month, 'months')) -%}
-                                <span class="Label Label--purple">New</span>
+                                <span class="Label Label--info">New</span>
                             {%- endif %}
                         </div>
                         {% if pub.badges.length > 0 -%}
                         <div class="pub-badges">
                             {%- for badge in pub.badges %}
-                            <span class="Label Label--red pub-badge">{{ badge }}</span>
+                            <span class="Label Label--danger pub-badge">{{ badge }}</span>
                             {%- endfor %}
                         </div>
                         {%- endif %}
@@ -145,3 +149,5 @@
     {%- endif %}
     </div> <!-- pub-list -->
 </div> <!-- publist -->
+
+<script data-pjax src="{{ config.publist.assets_prefix }}main.js"></script>

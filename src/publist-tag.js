@@ -353,7 +353,7 @@ class PublistTag {
         const pubs = resolver.processPubs(rawPubs);
         const fspecs = resolver.processFspecs(pubs);
 
-        hexo.log.info(`${context.source}: Generating ${pubs.length} bib entries`);
+        hexo.log.info(`${context.source}: Created publist with ${pubs.length} bib entries`);
         const locals = this._bindHelpers({
             // directly inject items into the template context
             pubs,

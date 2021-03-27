@@ -5,7 +5,7 @@
 const _ = require('lodash');
 const pathFn = require('path');
 
-const { DEFAULT_OPTIONS } = require('./consts');
+const { DEFAULT_OPTIONS, WIDGET_DIR, SELF } = require('./consts');
 
 function processOptions (hexo) {
     let opts = _.defaults({}, hexo.config.publist, DEFAULT_OPTIONS);
@@ -27,13 +27,29 @@ function register(hexo) {
 
     // widget_dir must be from the hexo.base_dir/node_modules
     // which may be a symlink. So we can not directly use WIDGET_DIR
-    const widget_dir = pathFn.join(hexo.base_dir, 'node_modules', 'hexo-next-publist', 'widget');
-    require('./widget')(hexo, 'publist', widget_dir, {
-        baseUrl: opts.assets_prefix,
-    });
+    //const widget_dir = pathFn.join(hexo.base_dir, 'node_modules', 'hexo-next-publist', 'widget');
+    console.log('widget dir is ', WIDGET_DIR);
+    const debug = pathFn.resolve(hexo.base_dir) === SELF;
+    const selfNodeModules = pathFn.join(SELF, 'node_modules');
 
-    // inject static served from the widget into necessary pages
-    require('./injector')(hexo);
+    require('./widget')(hexo, 'publist', WIDGET_DIR, {
+        prefixUrl: opts.assets_prefix,
+        // additional resolve paths for self's node_modules
+        webpackConfig: {
+            resolve: {
+                modules: [selfNodeModules]
+            },
+            resolveLoader: {
+                modules: [selfNodeModules]
+            },
+        },
+        webpackConfigPath: 'webpack.config.js',
+        debug: debug ? {
+            snapshot: {
+                managedPaths: [selfNodeModules]
+            }
+        } : undefined,
+    });
 
     // the actual tag
     require('./publist-tag').register(hexo, opts);

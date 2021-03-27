@@ -23,21 +23,28 @@
         "test": "ava"
     },
     "dependencies": {
-        "@babel/core": "^7.12.10",
-        "@babel/preset-env": "^7.12.11",
-        "@retorquere/bibtex-parser": "^3.2.29",
+        "@babel/core": "^7.13.13",
+        "@babel/preset-env": "^7.13.12",
+        "@primer/css": "^16.0.2",
+        "@retorquere/bibtex-parser": "^3.2.35",
         "@sidvind/better-ajv-errors": "^0.8.0",
-        "ajv": "^7.2.3",
-        "babelify": "^10.0.0",
-        "browserify": "^17.0.0",
-        "core-js": "^3.8.1",
+        "ajv": "^7.2.4",
+        "babel-loader": "^8.2.2",
+        "clipboard": "^2.0.8",
+        "core-js": "^3.9.1",
+        "css-loader": "^5.2.0",
         "hexo-fs": "^3.1.0",
-        "hexo-util": "^2.4.0",
         "js-yaml": "^4.0.0",
-        "lodash": "^4.17.20",
+        "lodash": "^4.17.21",
+        "memfs": "^3.2.0",
+        "mini-css-extract-plugin": "^1.4.0",
         "moment": "^2.29.1",
+        "node-sass": "^5.0.0",
         "parent-require": "^1.0.0",
-        "strip-indent": "^3.0.0"
+        "sass-loader": "^11.0.1",
+        "strip-indent": "^3.0.0",
+        "style-loader": "^2.0.0",
+        "webpack": "^5.28.0"
     },
     "peerDependencies": {
         "hexo": "^5.2.0",
@@ -47,6 +54,6 @@
     },
     "devDependencies": {
         "ajv-cli": "^4.2.0",
-        "ava": "^3.14.0"
+        "ava": "^3.15.0"
     }
 }

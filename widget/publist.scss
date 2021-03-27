@@ -1,3 +1,14 @@
+/* Color */
+@import "@primer/css/base/modes.scss";
+/* Tooltipped */
+@import "@primer/css/tooltips/index.scss";
+/* SelectMenu */
+@import "@primer/css/select-menu/index.scss";
+/* Label and Counter */
+@import "@primer/css/labels/index.scss";
+/* details-reset */
+@import "@primer/css/utilities/details.scss";
+
 /* Clear some padding and margin on the page */
 .post-header .post-meta {
     display: none;
@@ -22,24 +33,34 @@
 }
 
 /* The vertical line */
-.pub-list section.year ul li {
-    position: relative;
-}
-.pub-list section.year ul li::before {
-    content: ' ';
+.pub-list section.year ul {
+    li {
+        position: relative;
+    }
+    li::before {
+        content: ' ';
 
-    background: rgba(.3, .3, .3, .3);
-    z-index: -1;
+        background: rgba(.3, .3, .3, .3);
+        z-index: -1;
 
-    position: absolute;
-    left: calc(-2em + -2px);
-    width: 2px;
-    top: -1px;
-    bottom: 0px;
+        position: absolute;
+        left: calc(-2em + -2px);
+        width: 2px;
+        top: -1px;
+        bottom: 0px;
+    }
+    // set all currently shown li to have vertical line with top: -1px
+    // except the first one
+    // See: https://stackoverflow.com/a/8539107/2441376
+    li:not(.filter-hide)::before {
+        top: calc(-1em + -1px);
+    }
+    li:not(.filter-hide) ~ li:not(.filter-hide)::before {
+        top: -1px;
+    }
 }
-.pub-list section.year ul li:first-child::before {
-    top: calc(-1em + -1px);
-}
+// ideally, this should be last-of-class
+// but there's no easy way to implement this.
 .pub-list section.year:last-child ul li:last-child::before {
     background: linear-gradient(to bottom, rgba(.3, .3, .3, .3) 60%, rgba(.3, .3, .3, 0));
 }
