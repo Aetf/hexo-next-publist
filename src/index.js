@@ -6,6 +6,7 @@ const _ = require('lodash');
 const pathFn = require('path');
 
 const { DEFAULT_OPTIONS, WIDGET_DIR, SELF } = require('./consts');
+const { Widget } = require('./widget');
 
 function processOptions (hexo) {
     let opts = _.defaults({}, hexo.config.publist, DEFAULT_OPTIONS);
@@ -32,7 +33,7 @@ function register(hexo) {
     const debug = pathFn.resolve(hexo.base_dir) === SELF;
     const selfNodeModules = pathFn.join(SELF, 'node_modules');
 
-    require('./widget')(hexo, 'publist', WIDGET_DIR, {
+    new Widget(hexo, 'publist', WIDGET_DIR, {
         prefixUrl: opts.assets_prefix,
         // additional resolve paths for self's node_modules
         webpackConfig: {
@@ -49,7 +50,7 @@ function register(hexo) {
                 managedPaths: [selfNodeModules]
             }
         } : undefined,
-    });
+    }).register();
 
     // the actual tag
     require('./publist-tag').register(hexo, opts);

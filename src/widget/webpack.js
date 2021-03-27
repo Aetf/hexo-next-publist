@@ -1,3 +1,5 @@
+const _ = require('lodash');
+const pathFn = require('path');
 const { promisify } = require('util');
 const webpack = require('webpack');
 const { pDebounce } = require('./pDebounce.js');
@@ -19,10 +21,11 @@ class MemFsPlugin {
 }
 
 class WebpackProcessor {
-    constructor(ctx, genWebpackConfig) {
+    constructor(ctx, initialWebpackConfig, opts) {
         this.ctx = ctx;
         this.running = false;
-        this.genWebpackConfig = genWebpackConfig;
+        this.initialWebpackConfig = initialWebpackConfig;
+        this.opts = opts;
 
         // include everything in widget folder
         // we want to get notified for every file so we can call webpack again
@@ -32,26 +35,60 @@ class WebpackProcessor {
         };
     }
 
+    _genWebpackConfig = () => {
+        const {debug, webpackConfig, webpackConfigPath} = this.opts;
+
+        // try load config from the widget folder first
+        let loadedConfig = {};
+        try {
+            loadedConfig = require(webpackConfigPath);
+        } catch (e) {
+            if (e.code !== 'MODULE_NOT_FOUND') {
+                throw e;
+            }
+        }
+        // if debug
+        const debugConfig = _.isUndefined(debug) ? {} : _.merge({
+            mode: "development",
+        }, debug);
+
+        return _.mergeWith(
+            this.initialWebpackConfig,
+            debugConfig,
+            loadedConfig,
+            webpackConfig,
+            // concat array instead of recursive merge
+            (objVal, srcVal) => {
+                if (_.isArray(objVal)) {
+                    return objVal.concat(srcVal);
+                }
+            }
+        );
+    };
+
     _compile = async () => {
-        const { ctx, genWebpackConfig } = this;
+        const { ctx } = this;
 
         if (this.running) {
             return;
         }
         this.running = true;
 
-        const config = genWebpackConfig();
-        ctx.log.info('Webpack on widget: %s', config.name);
+        const config = this._genWebpackConfig();
+        ctx.log.info(`Widget ${config.name}: webpacking`);
 
         const compiler = webpack(config);
         try {
             const stats = await promisify(compiler.run).apply(compiler);
+            const info = stats.toJson();
             if (stats.hasErrors() || stats.hasWarnings()) {
-                const info = stats.toJson();
                 info.errors.forEach(e => ctx.log.error(e));
                 info.warnings.forEach(w => ctx.log.warn(w));
             }
             await promisify(compiler.close).apply(compiler);
+
+            ctx.log.info(`Widget ${config.name}: created ${info.assets.length} outputs in ${info.time}ms`);
+
             return stats;
         } catch (err) {
             ctx.log.error(err.stack || err);
