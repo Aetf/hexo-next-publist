@@ -488,5 +488,5 @@ function setup() {
     $('.fouc-fix').removeClass('fouc-fix');
 }
 
-console.log('I am running');
+console.log('I am running great!');
 setup();

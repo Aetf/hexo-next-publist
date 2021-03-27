@@ -114,15 +114,26 @@ module.exports = (ctx, name, baseDir, opts) => {
     // create the widget box once
     const widget = new Widget(ctx, name, baseDir, opts);
 
-    // TODO: properly integrate with watch
-    // currently hexo.watch only calls watch on source and theme box.
-
-    // Builtin boxes are processed during load, before generate,
-    // but that is hard-coded to be only source and theme boxes,
-    // and we can't hook into that. We just process in the before_generate hook.
+    // The boxes to process are hard-coded during load and watch, this is a hack to
+    // integrate our box into hexo.load and hexo.watch
     ctx.extend.filter.register('before_generate', async () => {
-        // run widget.process, which calls our widget processor and
-        // save discovered files to the named model
-        await widget.process();
+        const watching = ctx._watchBox != null;
+        if (!watching) {
+            await widget.process();
+        } else {
+            if (!widget.isWatching()) {
+                await widget.watch();
+                widget.on('processAfter', ctx._watchBox);
+            }
+        }
     });
+    // monkey patch unwatch
+    const oldUnwatch = ctx.unwatch;
+    ctx.unwatch = function() {
+        if (this._watchBox != null) {
+            widget.removeListener('processAfter', this._watchBox);
+        }
+        widget.unwatch(this._watchBox);
+        oldUnwatch.apply(this);
+    };
 }
