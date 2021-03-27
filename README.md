@@ -32,14 +32,7 @@ There are three pieces need to be defined:
 
 ### Tag usage
 
-First of all, you need to add
-```yaml
-publist: true
-```
-to the front-matter of the post/page that you wish to use the publist tag.
-For performance reasons, publist will not inject supplimentary js and css unless told to do so.
-
-To insert publist, use the `publist` tag in the post markdown source.
+To create a publist, use the `publist` tag in the post markdown source.
 The only argument in the opening tag is the name of bib file.
 
 The content between the tags defines any conferences the bibtex file will refer. [More examples](#instance-options-between-the-tags).
@@ -200,10 +193,8 @@ publist:
 ## Internals
 
 - `_config.yml` contains main options under the key `publist`.
-- `src/injector.js` injects `templates/{headend,bodyend}.njk` to every page,
-but the content will only be inserted if the front-matter contains `publist_enabled: true`
-- `src/widget` implements a hexo box, processing all assets under `widget`, and serving them.
 - `src/bib-renderer.js` reads `.bib` files under `source/_data` in the user's repo. The result will
 be available as data in the data model.
+- `src/widget` implements a hexo box, processing all assets under `widget` using webpack, and serving them.
 - `src/publist.js` is the actual tag plugin, which reads bib data
 from the data model and renders the html.
