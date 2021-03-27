@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const cssnano = require('cssnano');
 
 const config = {
     entry: {
@@ -35,6 +36,16 @@ const config = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
+                    {
+                        loader: "postcss-loader",
+                        options: {
+                            postcssOptions: {
+                                plugins: [
+                                    cssnano({ preset: 'default', }),
+                                ],
+                            },
+                        },
+                    },
                     'sass-loader'
                 ]
             }
