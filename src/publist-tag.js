@@ -169,8 +169,8 @@ class PubsResolver {
             const mon = _.get(pub.bib.fields, 'month[0]', '1');
             const monFmt = parseInt(mon) ? 'MM' : 'MMM';
             const year = _.get(pub.bib.fields, 'year[0]', now.format('YYYY'));
+            date = moment.utc(`${year} ${mon}`, `YYYY ${monFmt}`);
 
-            date = moment(`${year} ${mon}`, `YYYY ${monFmt}`);
             if (!date) {
                 date = moment();
             }
@@ -278,7 +278,7 @@ function processInstanceOptsV2(loaded) {
                 conf.key,
                 _.defaults(
                     {venue: venueId, cat: venue.category},
-                    _.update(conf, 'date', moment.utc),
+                    _.update(conf, 'date', date => _.isUndefined(date) ? undefined : moment.utc(date)),
                     {url: venue.url}
                 ),
             ]);

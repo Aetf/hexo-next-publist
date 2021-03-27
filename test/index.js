@@ -206,7 +206,11 @@ test('Tag Options V2', t => {
                 name: 'arXiv:$1',
                 matches: '^arXiv:(.*)$',
                 url: 'https://arxiv.org/abs/$1',
-                cat: 'Technical Reports'
+                cat: 'Technical Reports',
+                date: undefined,
+            },
+            'arXiv': {
+                date: undefined,
             },
             'USENIX ;login: Winter 2017': {
                 key: "USENIX ;login: Winter 2017",
@@ -233,6 +237,9 @@ test('MCBib resolving', t => {
     const resolver = new PubsResolver(instOpts);
     const pubs = resolver.processPubs(parsedPubs);
     const fspecs = resolver.processFspecs(pubs);
+
+    // fs.writeFileSync(path.join(__dirname, 'data/MCPubs.resolved.json'), JSON.stringify(pubs));
+    // fs.writeFileSync(path.join(__dirname, 'data/MCPubs.fspecs.json'), JSON.stringify(fspecs));
 
     t.is(pubs.length, 32);
     t.deepEqual(normalize(pubs), JSON.parse(fs.readFileSync(path.join(__dirname, 'data/MCPubs.resolved.json'))))
