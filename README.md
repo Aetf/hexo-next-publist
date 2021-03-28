@@ -169,12 +169,19 @@ venues:
 
 #### Extra fields in bib source
 
-- `publist_link`, `publist_badge`, and `publist_abstract` are optional.
-- `publist_link` and `publist_badge` can be specified multiple times.
-- The content in `publist_abstract` will be rendered as markdown with support for latex math. If this
-field does not present, the normal `abstract` field will be used. However, in this case, the content
-will be used verbatim.
-- Other fields like `publist_xxx` can be added to attach metadata fields to the entry.
+The following extra fields specific to publist control the display of an entry. They will be stripped
+away from the bib source shown in the UI.
+
+- `publist_confkey`: optional. Link this entry to a conference occurence
+- `publist_link`: optional, can appear multiple times. Show a hyperlink button in the result.
+The content is of the format `title || url`. If relative, it will be resolved
+from the base `pub_dir/citekey`.
+- `publist_badge`: optional, can appear multiple times. Show a badge under the title.
+- `publist_abstract`: optional. Markdown rendered abstract, with support for latex math (If you have math plugin enabled).
+- `abstract`: optional. Verbatim abstract. Note that this will **NOT** be stripped.
+When both this field and `publist_abstract` are present, the latter is used.
+- `publist_xxx`: optional, can appear multiple times. Metadata fields. Can be used in `extra_filters`
+as `path: meta_xxx`.
 
 #### Global options in `_config.yml`
 

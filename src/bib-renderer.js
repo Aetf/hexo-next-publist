@@ -10,6 +10,41 @@ function formatLocation(file, line, column) {
     return `${file}:${line}:${column}`
 }
 
+function concatSource(node) {
+    if (Array.isArray(node)) {
+        return node.map(concatSource).join('');
+    }
+
+    return node.source || concatSource(node.value);
+}
+
+async function allSettled(promises) {
+    const [resolved, rejected] = _.partition(
+        await Promise.allSettled(promises),
+        _.matches({status: 'fulfilled'})
+    );
+    return [
+        resolved.map(e => e.value),
+        rejected.map(e => e.reason),
+    ];
+}
+
+function reportErrors(ctx, errors) {
+    let hasError = false;
+    for (const err of errors) {
+        if (err instanceof BibRendererError) {
+            hasError = true;
+            for (const inner of err.errors) {
+                ctx.log.error(inner);
+            }
+        } else {
+            // re-raise anything else, which should be fatal.
+            throw err;
+        }
+    }
+    return hasError;
+}
+
 class BibtexParseError extends Error {
     constructor(file, line, column, message, caller) {
         super(`${formatLocation(file, line, column)}: ${message}`);
@@ -38,60 +73,58 @@ class BibRendererError extends Error {
     }
 
     static fromParseErrors(file, errors) {
-        return new BibtexMultipleError(
+        return new BibRendererError(
             errors.map(err => BibtexParseError.fromParseError(file, err)),
             BibRendererError.fromParseErrors,
         );
     }
 
     static fromChunk(file, chunk) {
-        return new BibtexMultipleError(
+        return new BibRendererError(
             [BibtexParseError.fromChunk(file, chunk)],
             BibRendererError.fromChunk,
         );
     }
 }
 
-async function bibRenderer(ctx, opts, { path, text }) {
-    // parse content as bibtex
-    const { entries, errors } = await parseBibEntries(ctx, opts, { path, text });
-
-    let hasError = false;
-    for (const err of errors) {
-        if (err instanceof BibRendererError) {
-            hasError = true;
-            ctx.log.error(err);
-        } else {
-            // re-raise anything else, which should be fatal.
-            throw err;
-        }
+class BibRendererStrictAbort extends Error {
+    constructor(file) {
+        super(`'${file}': aborting because there were errors and the strict mode is enabled`);
+        this.name = 'BibRendererStrictAbort';
+        Error.captureStackTrace(this, BibRendererStrictAbort);
     }
+}
+
+async function bibRenderer(ctx, opts, { path, text }) {
+    let hasError = false;
+
+    // parse content as bibtex
+    const [ entries, errors ] = await parseBibEntries(ctx, opts, { path, text });
+    hasError |= reportErrors(ctx, errors);
+
+    // construct list of items
+    const [items, itemErrors] = await allSettled(entries.map(entry => itemFromEntry(ctx, opts, entry)));
+    hasError |= reportErrors(ctx, itemErrors);
+
     if (hasError) {
         if (opts.strict) {
-            // TODO: abort
-            throw new Error(`'${path}': abort! There were errors and the strict mode is enabled`);
+            throw new BibRendererStrictAbort(path);
         } else {
             ctx.log.warn(`${path}: there were errors while loading, bib entries may be incomplete.`);
         }
     }
 
-    // construct list of items
-    const items = await Promise.all(entries.map(entry => itemFromEntry(ctx, opts, entry)));
-
     ctx.log.info(`${path}: loaded ${items.length} bib entries`);
-    return {
-        items,
-    };
+    return { items };
 }
 
-function concatSource(node) {
-    if (Array.isArray(node)) {
-        return node.map(concatSource).join('');
-    }
-
-    return node.source || concatSource(node.value);
-}
-
+/**
+ * Parse the bibtex file, for each entry reconstruct bibStr and render abstract
+ * @param {*} ctx hexo
+ * @param {*} opts global optionsl
+ * @param {*} param2 
+ * @returns 
+ */
 async function parseBibEntries(ctx, opts, { path, text: input }) {
     // chunk into pieces for easier association of raw data and parsed data
     let chunks = await bibtex.chunker(input, { async: true });
@@ -103,13 +136,13 @@ async function parseBibEntries(ctx, opts, { path, text: input }) {
     }
     let res = chunks.filter(chunk => chunk.entry || chunk.error).map(async chunk => {
         if (chunk.error) {
-            throw new BibtexChunkerError(path, chunk);
+            throw BibRendererError.fromChunk(path, chunk);
         }
         const text = chunk.text;
         // normal info
         const bib = await bibtex.parse(text, bibOptions);
         if (bib.errors.length !== 0) {
-            throw new BibtexParseErrors(path, bib.errors);
+            throw BibRendererError.fromParseErrors(path, bib.errors);
         }
         if (bib.entries.length !== 1) {
             throw new TypeError('Expected chunk to have only one entry');
@@ -126,7 +159,7 @@ async function parseBibEntries(ctx, opts, { path, text: input }) {
         }
         const entryAst = ast[0].children[0];
 
-        // reconstruct original text after striping fields starting with public_
+        // reconstruct original text after striping fields starting with publist_
         const fields = entryAst.fields.filter(field => !publistPtn.test(field.name));
         let bibStr = `@${entryAst.type}{${entryAst.id},\n`;
         bibStr += fields.map(field => '    ' + field.source.trim()).join('\n');
@@ -154,12 +187,7 @@ async function parseBibEntries(ctx, opts, { path, text: input }) {
 
         return { entry, bibStr, abstract };
     });
-    res = await Promise.allSettled(res);
-    const entries = res
-        .filter(elem => elem.status === 'fulfilled')
-        .map(elem => elem.value);
-    const errors = res.filter(elem => elem.status === 'rejected').map(elem => elem.reason);
-    return { entries, errors };
+    return await allSettled(res);
 }
 
 async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
@@ -202,7 +230,7 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
     const item = {
         citekey,
         title,
-        authors: entry.creators.author.map(({lastName, firstName}) => `${firstName} ${lastName}`),
+        authors: _.get(entry.creators, 'author', []).map(({lastName, firstName}) => `${firstName} ${lastName}`),
         badges: _.get(entry.fields, 'publist_badge', []),
         confkey,
         abstract,
@@ -215,6 +243,7 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
     return item;
 }
 
+module.exports.BibRendererStrictAbort = BibRendererStrictAbort;
 module.exports.bibRenderer = bibRenderer;
 module.exports.register = (ctx, opts) => {
     ctx.extend.renderer.register('bib', 'json', function(data, options) {

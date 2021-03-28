@@ -408,15 +408,18 @@ class PublistTag {
 
         return locals;
     }
+
+    register = () => {
+        const { ctx } = this;
+        const self = this;
+        ctx.extend.tag.register(
+            'publist',
+            function (args, body) { return self._tag(args, body, this) },
+            { ends: true, async: false }
+        );
+    };
 }
 
 exports.loadInstanceOpts = loadInstanceOpts;
 exports.PubsResolver = PubsResolver;
-exports.register = (ctx, opts) => {
-    const tag = new PublistTag(ctx, opts);
-    ctx.extend.tag.register(
-        'publist',
-        function (args, body) { return tag._tag(args, body, this) },
-        { ends: true, async: false }
-    );
-};
+exports.PublistTag = PublistTag;

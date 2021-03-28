@@ -7,6 +7,7 @@ const pathFn = require('path');
 
 const { DEFAULT_OPTIONS, WIDGET_DIR, SELF } = require('./consts');
 const { Widget } = require('./widget');
+const { PublistTag } =require('./publist-tag');
 
 function processOptions (hexo) {
     let opts = _.defaults({}, hexo.config.publist, DEFAULT_OPTIONS);
@@ -53,7 +54,7 @@ function register(hexo) {
     }).register();
 
     // the actual tag
-    require('./publist-tag').register(hexo, opts);
+    new PublistTag(hexo, opts).register();
 }
 
 register(hexo);
