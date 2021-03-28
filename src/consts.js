@@ -19,3 +19,12 @@ module.exports.DEFAULT_INSTOPTS = {
     extra_filters: [],
     venues: {},
 }
+
+class PublistStrictAbort extends Error {
+    constructor(file) {
+        super(`'${file}': aborting because there were errors and the strict mode is enabled`);
+        this.name = 'PublistStrictAbort';
+        Error.captureStackTrace(this, PublistStrictAbort);
+    }
+}
+module.exports.PublistStrictAbort = PublistStrictAbort;

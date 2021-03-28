@@ -3,6 +3,7 @@
 const _ = require('lodash');
 const stripIndent = require('strip-indent');
 const bibtex = require('@retorquere/bibtex-parser');
+const { PublistStrictAbort } = require('./consts');
 
 function formatLocation(file, line, column) {
     line = line || "?";
@@ -87,14 +88,6 @@ class BibRendererError extends Error {
     }
 }
 
-class BibRendererStrictAbort extends Error {
-    constructor(file) {
-        super(`'${file}': aborting because there were errors and the strict mode is enabled`);
-        this.name = 'BibRendererStrictAbort';
-        Error.captureStackTrace(this, BibRendererStrictAbort);
-    }
-}
-
 async function bibRenderer(ctx, opts, { path, text }) {
     let hasError = false;
 
@@ -108,7 +101,7 @@ async function bibRenderer(ctx, opts, { path, text }) {
 
     if (hasError) {
         if (opts.strict) {
-            throw new BibRendererStrictAbort(path);
+            throw new PublistStrictAbort(path);
         } else {
             ctx.log.warn(`${path}: there were errors while loading, bib entries may be incomplete.`);
         }
@@ -243,7 +236,6 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
     return item;
 }
 
-module.exports.BibRendererStrictAbort = BibRendererStrictAbort;
 module.exports.bibRenderer = bibRenderer;
 module.exports.register = (ctx, opts) => {
     ctx.extend.renderer.register('bib', 'json', function(data, options) {

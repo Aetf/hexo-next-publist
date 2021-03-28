@@ -6,7 +6,8 @@ const stripIndent = require('strip-indent');
 
 const { getHexo } = require('./helpers');
 
-const { bibRenderer, BibRendererStrictAbort } = require('../src/bib-renderer');
+const { bibRenderer } = require('../src/bib-renderer');
+const { PublistStrictAbort } = require('../src/consts');
 
 test.beforeEach('Init hexo', async t => {
     t.context.hexo = await getHexo();
@@ -141,5 +142,5 @@ test('Strict abort', async t => {
 
     const err = await t.throwsAsync(async () => {
         await bibRenderer(hexo, { ...opts, strict: true }, { path: 'test.bib', text: content });
-    }, { instanceOf: BibRendererStrictAbort});
+    }, { instanceOf: PublistStrictAbort});
 })
