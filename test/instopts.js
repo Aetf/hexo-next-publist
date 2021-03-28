@@ -22,6 +22,7 @@ test('Tag Options V1', async t => {
     t.like(instOpts, {
         version: 1,
         pub_dir: 'publications/files',
+        show_unpublished: false,
         confs: {
             "ATC'20": {
                 venue: 'ATC',
@@ -66,6 +67,7 @@ test('Tag Options V2', async t => {
     t.like(instOpts, {
         version: 2,
         pub_dir: 'publications/files',
+        show_unpublished: false,
         highlight_authors: {},
         confs: {
             "NSDI'20": {

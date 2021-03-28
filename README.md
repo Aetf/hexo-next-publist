@@ -125,6 +125,8 @@ The full spec of this content is defined as a [JSON schema](blob/master/src/sche
 # the version of the config
 version: 2
 pub_dir: assets/pub
+# whether to show entries with date in the future
+show_unpublished: false
 highlight_authors: []
 # extra filters to show, they will filter on the item using given path
 extra_filters:

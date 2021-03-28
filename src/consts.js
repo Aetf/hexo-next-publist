@@ -15,6 +15,7 @@ module.exports.DEFAULT_OPTIONS = {
 module.exports.DEFAULT_INSTOPTS = {
     version: 2,
     pub_dir: 'assets',
+    show_unpublished: false,
     highlight_authors: [],
     extra_filters: [],
     venues: {},

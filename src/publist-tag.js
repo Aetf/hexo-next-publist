@@ -180,7 +180,7 @@ class PubsResolver {
         // sort and filter any unpublished items
         pubs = pubs.sort((a, b) => b.date.diff(a.date))
             .filter(pub => {
-                const res = pub.date.isBefore(now);
+                const res = pub.date.isBefore(now) || instOpts.show_unpublished;
                 if (!res) {
                     hexo.log.info(`${formatLocation(context)}: skip publication in the future: ${pub.citekey} @ ${pub.date}`);
                 }

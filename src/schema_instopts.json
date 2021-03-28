@@ -12,6 +12,10 @@
             "description": "directory used for relative links in publication items. Itself is relative to `source`.",
             "type": "string"
         },
+        "show_unpublished": {
+            "description": "Whether to show unpublished entries (i.e. the date is in the future). Default to false.",
+            "type": "boolean"
+        },
         "highlight_authors": {
             "description": "which author name to highlight",
             "type": "array",
