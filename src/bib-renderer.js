@@ -1,22 +1,98 @@
 'use strict';
 
 const _ = require('lodash');
-const moment = require('moment');
 const stripIndent = require('strip-indent');
 const bibtex = require('@retorquere/bibtex-parser');
 
-async function bibRenderer(ctx, opts, { text }) {
+function formatLocation(file, line, column) {
+    line = line || "?";
+    column = column || "?";
+    return `${file}:${line}:${column}`
+}
+
+class BibtexParseError extends Error {
+    constructor(file, line, column, message, caller) {
+        super(`${formatLocation(file, line, column)}: ${message}`);
+        this.name = 'BibtexParseError';
+        this.data = { file, line, column };
+        Error.captureStackTrace(this, caller || BibtexParseError);
+    }
+
+    static fromChunk(file, chunk) {
+        const line = _.get(chunk, 'offset.line');
+        const column = _.get(chunk, 'offset.pos');
+        return new BibtexParseError(file, line, column, chunk.error, BibtexParseError.fromChunk);
+    }
+
+    static fromParseError(file, err) {
+        return new BibtexParseError(file, err.line, err.column, err.message, BibtexParseError.fromParseError);
+    }
+}
+
+class BibRendererError extends Error {
+    constructor(errors, caller) {
+        super('')
+        this.name = 'BibRendererError';
+        this.errors = errors;
+        Error.captureStackTrace(this, caller || BibRendererError);
+    }
+
+    static fromParseErrors(file, errors) {
+        return new BibtexMultipleError(
+            errors.map(err => BibtexParseError.fromParseError(file, err)),
+            BibRendererError.fromParseErrors,
+        );
+    }
+
+    static fromChunk(file, chunk) {
+        return new BibtexMultipleError(
+            [BibtexParseError.fromChunk(file, chunk)],
+            BibRendererError.fromChunk,
+        );
+    }
+}
+
+async function bibRenderer(ctx, opts, { path, text }) {
     // parse content as bibtex
-    const { entries, errors } = await parseBibEntries(ctx, opts, text);
+    const { entries, errors } = await parseBibEntries(ctx, opts, { path, text });
+
+    let hasError = false;
+    for (const err of errors) {
+        if (err instanceof BibRendererError) {
+            hasError = true;
+            ctx.log.error(err);
+        } else {
+            // re-raise anything else, which should be fatal.
+            throw err;
+        }
+    }
+    if (hasError) {
+        if (opts.strict) {
+            // TODO: abort
+            throw new Error(`'${path}': abort! There were errors and the strict mode is enabled`);
+        } else {
+            ctx.log.warn(`${path}: there were errors while loading, bib entries may be incomplete.`);
+        }
+    }
+
     // construct list of items
     const items = await Promise.all(entries.map(entry => itemFromEntry(ctx, opts, entry)));
+
+    ctx.log.info(`${path}: loaded ${items.length} bib entries`);
     return {
-        errors,
         items,
     };
 }
 
-async function parseBibEntries(ctx, opts, input) {
+function concatSource(node) {
+    if (Array.isArray(node)) {
+        return node.map(concatSource).join('');
+    }
+
+    return node.source || concatSource(node.value);
+}
+
+async function parseBibEntries(ctx, opts, { path, text: input }) {
     // chunk into pieces for easier association of raw data and parsed data
     let chunks = await bibtex.chunker(input, { async: true });
 
@@ -27,19 +103,13 @@ async function parseBibEntries(ctx, opts, input) {
     }
     let res = chunks.filter(chunk => chunk.entry || chunk.error).map(async chunk => {
         if (chunk.error) {
-            return {
-                error: true,
-                errorString: chunk.error,
-            };
+            throw new BibtexChunkerError(path, chunk);
         }
         const text = chunk.text;
         // normal info
         const bib = await bibtex.parse(text, bibOptions);
         if (bib.errors.length !== 0) {
-            return {
-                error: true,
-                errorString: bib.errors.join(' '),
-            };
+            throw new BibtexParseErrors(path, bib.errors);
         }
         if (bib.entries.length !== 1) {
             throw new TypeError('Expected chunk to have only one entry');
@@ -66,14 +136,7 @@ async function parseBibEntries(ctx, opts, input) {
         let abstract = '';
         const absField = entryAst.fields.find(field => field.name === 'publist_abstract');
         if (absField) {
-            const concat_source = (node) => {
-                if (Array.isArray(node)) {
-                    return node.map(concat_source).join('');
-                }
-
-                return node.source || concat_source(node.value);
-            }
-            abstract = concat_source(absField.value).replace(/^{/, '').replace(/}$/, '');
+            abstract = concatSource(absField.value).replace(/^{/, '').replace(/}$/, '');
             // strip surrounding braces
             abstract = stripIndent(abstract).trim();
             // render using simple markdown
@@ -89,13 +152,13 @@ async function parseBibEntries(ctx, opts, input) {
             abstract = _.get(entry.fields, 'abstract[0]', '');
         }
 
-        return { entry, bibStr, abstract, error: false };
+        return { entry, bibStr, abstract };
     });
-    res = await Promise.all(res);
+    res = await Promise.allSettled(res);
     const entries = res
-        .filter(elem => !elem.error)
-        .map(elem => _.pick(elem, ['entry', 'bibStr', 'abstract']));
-    const errors = res.filter(elem => elem.error);
+        .filter(elem => elem.status === 'fulfilled')
+        .map(elem => elem.value);
+    const errors = res.filter(elem => elem.status === 'rejected').map(elem => elem.reason);
     return { entries, errors };
 }
 

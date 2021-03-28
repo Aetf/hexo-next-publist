@@ -24,13 +24,13 @@ Follow the instruction printed when running the previous command to install the 
 
 ## Usage
 
-There are three pieces need to be defined:
+There are three pieces to be defined:
 
 1. The actual tag, which also defines the set of conferences
 2. The bib source file, which defines the list of publications
 3. The publication assets directory, which contains the (optional) downloadable files
 
-### Tag usage
+### Tag
 
 To create a publist, use the `publist` tag in the post markdown source.
 The only argument in the opening tag is the name of bib file.

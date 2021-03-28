@@ -32,13 +32,16 @@ function maybePrependHref(pub_dir, citekey, href) {
 }
 
 class PubsResolver {
-    constructor(instOpts, now) {
+    constructor(hexo, opts, instOpts, context) {
+        this.hexo = hexo;
+        this.opts = opts;
         this.instOpts = instOpts;
-        this.now = now || moment()
+        this.context = context;
+        this.now = moment();
     }
 
     processPubs = pubs => {
-        const { now, instOpts } = this;
+        const { hexo, context, now, instOpts } = this;
 
         // resolve fields
         pubs = pubs.map(this._pubResolveConf)
@@ -46,7 +49,13 @@ class PubsResolver {
             .map(this._pubResolveHref);
         // sort and filter any unpublished items
         pubs = pubs.sort((a, b) => b.date.diff(a.date))
-            .filter(pub => pub.date.isBefore(now));
+            .filter(pub => {
+                const res = pub.date.isBefore(now);
+                if (!res) {
+                    hexo.log.info(`${context.source}: skip publication in the future: ${pub.citekey} @ ${pub.date}`);
+                }
+                return res;
+            });
 
         // prepare filtering
         // generate an extra object containig every extra attr specified in extra_filters
@@ -141,6 +150,7 @@ class PubsResolver {
     }
 
     _pubResolveConf = pub => {
+        const { hexo, opts, context } = this;
         const { confs, confs_fuzzy } = this.instOpts;
         // if we can get it directly from confs, use it
         let conf = _.get(confs, pub.confkey);
@@ -152,6 +162,13 @@ class PubsResolver {
                 // resolve fields that may depends on the match
                 conf.url = pub.confkey.replace(found.regex, conf.url);
                 conf.name = pub.confkey.replace(found.regex, conf.name);
+            } else {
+                const msg = `${context.source}: bib entry '${pub.citekey}' has unknown confkey '${pub.confkey}'`;
+                hexo.log.warn(msg);
+                if (opts.strict) {
+                    // TODO: abort
+                    throw new Error(msg);
+                }
             }
         }
         return {
@@ -161,18 +178,40 @@ class PubsResolver {
     }
 
     _pubResolveDate = pub => {
-        const { now } = this;
+        const { hexo, opts, context, now } = this;
 
         let date = _.get(pub.conf, 'date', moment.invalid());
         if (!date.isValid()) {
             // try the bib year and month field
-            const mon = _.get(pub.bib.fields, 'month[0]', '1');
-            const monFmt = parseInt(mon) ? 'MM' : 'MMM';
-            const year = _.get(pub.bib.fields, 'year[0]', now.format('YYYY'));
+            let year = _.get(pub.bib.fields, 'year[0]');
+            if (_.isUndefined(year)) {
+                const msg = `${context.source}: can not infer date for bib entry '${pub.citekey}'.`
+                            + ` There's no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid year field.`;
+                hexo.log.warn(msg);
+                if (opts.strict) {
+                    // TODO: abort
+                    throw new Error(msg);
+                }
+                year = now.format('YYYY');
+            }
+
+            let mon = 1;
+            let monFmt = 'MM';
+            if (_.has(pub.bib.fields, 'month[0]')) {
+                mon = pub.bib.fields.month[0];
+                monFmt = parseInt(mon) ? 'MM' : 'MMM';
+            }
             date = moment.utc(`${year} ${mon}`, `YYYY ${monFmt}`);
 
             if (!date) {
-                date = moment();
+                const msg = `${context.source}: can not infer date for bib entry '${pub.citekey}'.`
+                            + ` There's no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid month field.`;
+                hexo.log.warn(msg);
+                if (opts.strict) {
+                    // TODO: abort
+                    throw new Error(msg);
+                }
+                date = now;
             }
         }
         return {
@@ -313,29 +352,16 @@ class PublistTag {
 
     /**
      * @param {String} dataName 
-     * @param {*} context 
      * @returns An array of raw pub entries
      */
-    _loadRawPubs = (dataName, context) => {
-        const { hexo, opts } = this;
+    _loadRawPubs = dataName => {
+        const { hexo } = this;
         const hexoData = hexo.locals.get('data');
         if (!_.has(hexoData, dataName)) {
             hexo.log.warn(`Could not find your bibtex file named ${dataName}.bib`);
             return [];
-        } else {
-            const {errors, items: pubs} = hexoData[dataName];
-            for (const err of errors) {
-                hexo.log.error(`Error when parsing ${dataName}.bib: ${err.errorString}`);
-            }
-            if (errors.length != 0) {
-                if (opts.strict) {
-                    throw new Error(`Abort generating '${context.source}': '${dataName}'.bib contains errors and strict mode is enabled`);
-                } else {
-                    hexo.log.warn(`There were errors when parsing ${dataName}.bib, publist may be incomplete`);
-                }
-            }
-            return pubs;
         }
+        return hexoData[dataName].items;
     }
 
     /**
@@ -347,9 +373,9 @@ class PublistTag {
         const { hexo, opts } = this;
         const instOpts = loadInstanceOpts(content);
 
-        const rawPubs = this._loadRawPubs(dataName, context);
+        const rawPubs = this._loadRawPubs(dataName);
 
-        const resolver = new PubsResolver(instOpts);
+        const resolver = new PubsResolver(hexo, opts, instOpts, context);
         const pubs = resolver.processPubs(rawPubs);
         const fspecs = resolver.processFspecs(pubs);
 
