@@ -6,7 +6,6 @@ const _ = require('lodash');
 const moment = require('moment');
 const yaml = require('js-yaml');
 const Ajv = require('ajv').default;
-const betterAjvErrors = require('@sidvind/better-ajv-errors').default;
 
 const schema_instopts = require('./schema_instopts.json');
 const { TEMPLATE_DIR, DEFAULT_INSTOPTS } = require('./consts');
@@ -293,7 +292,7 @@ function processInstanceOptsV2(loaded) {
     const instOpts = {...DEFAULT_INSTOPTS, ...loaded};
 
     if (!instOptsValidator(instOpts)) {
-        const output = betterAjvErrors(schema_instopts, instOpts, instOptsValidator.errors);
+        const output = ajv.errorsText(instOptsValidator.errors);
         console.log(output);
         throw new Error("Invalid inst options");
     }
