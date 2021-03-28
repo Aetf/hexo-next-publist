@@ -8,7 +8,7 @@ const yaml = require('js-yaml');
 const Ajv = require('ajv').default;
 
 const schema_instopts = require('./schema_instopts.json');
-const { TEMPLATE_DIR, DEFAULT_INSTOPTS } = require('./consts');
+const { TEMPLATE_DIR, DEFAULT_INSTOPTS, PublistStrictAbort } = require('./consts');
 
 const ajv = new Ajv({ strict: true });
 const instOptsValidator = ajv.compile(schema_instopts);
@@ -30,13 +30,144 @@ function maybePrependHref(pub_dir, citekey, href) {
     }
 }
 
+function formatLocation(context) {
+    return `${context.source}`;
+}
+
+class PublistTagError extends Error {
+    constructor(message, context, caller) {
+        super(`${formatLocation(context)}: ${message}`);
+        this.name = 'PublistTagError';
+        this.data = { context };
+        Error.captureStackTrace(this, caller || PublistTagError);
+    }
+}
+
+/**
+ * One per tag instance
+ */
 class PubsResolver {
-    constructor(hexo, opts, instOpts, context) {
+    constructor(hexo, opts, instOptsYaml, context) {
         this.hexo = hexo;
         this.opts = opts;
-        this.instOpts = instOpts;
         this.context = context;
         this.now = moment();
+
+        this.instOpts = this._loadInstanceOpts(instOptsYaml);
+    }
+
+    /**
+     * @param {String} instOptsYaml the yaml string representing instOpts
+     */
+    _loadInstanceOpts = (instOptsYaml) => {
+        const { context } = this;
+
+        const loaded = {
+            version: 1,
+            ...yaml.load(instOptsYaml, {
+                schema: yaml.CORE_SCHEMA
+            })
+        };
+        if (loaded.version < 2) {
+            // TODO: warning
+            return this._processInstanceOptsV1(loaded);
+        }
+        if (loaded.version < 3) {
+            return this._processInstanceOptsV2(loaded);
+        }
+        throw new PublistTagError(`Config version newer than supported: ${loaded.version}`, context);
+    }
+
+    /**
+     * @param {object} loaded an version 1 instOpts object
+     */
+    _processInstanceOptsV1 = loaded => {
+        const defConf = {
+            venue: '',
+            name: '',
+            date: '',
+            url: '',
+            acceptance: '',
+            cat: '',
+        };
+
+        const obj = {
+            ...DEFAULT_INSTOPTS,
+            ...loaded,
+            confs_fuzzy: [],
+            version: 1,
+        };
+
+        // flatten the list of conferences
+        obj.confs = _.chain(obj.venues)
+            .toPairs()
+            .flatMap(([cat, val]) => {
+                return Object.entries(val)
+                    .map(([confKey, confVal]) => [confKey, {...defConf, ...confVal, cat}])
+                    .map(([confKey, confVal]) => [confKey, {...confVal, date: moment.utc(confVal.date)}]);
+            })
+            .fromPairs()
+            .value();
+
+        // ensure pub_dir has no leading / or tailing /
+        obj.pub_dir = obj.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
+
+        obj.extra_filters = obj.extra_filters.map(fspec => ({
+            id: fspec.name.toLowerCase().replace(' ', '-'),
+            ...fspec,
+        }));
+
+        return _.omit(obj, 'venues');
+    }
+
+    _processInstanceOptsV2 = loaded => {
+        const { hexo, context } = this;
+
+        const instOpts = {...DEFAULT_INSTOPTS, ...loaded};
+
+        if (!instOptsValidator(instOpts)) {
+            const output = ajv.errorsText(instOptsValidator.errors, { dataVar: 'instOpts' });
+            // TODO: format this error
+            hexo.log.error(output);
+            throw new PublistTagError(output, context);
+        }
+
+        // ensure pub_dir has no leading / or tailing /
+        instOpts.pub_dir = instOpts.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
+
+        // add an id for each fspec
+        instOpts.extra_filters = instOpts.extra_filters.map(fspec => ({
+            id: fspec.name.toLowerCase().replace(' ', '-'),
+            ...fspec,
+        }));
+
+        // highlight authors should be a unique set
+        instOpts.highlight_authors = new Set(instOpts.highlight_authors);
+
+        // flatten the list of conferences to confkey => conf details
+        instOpts.confs = _.chain(instOpts.venues)
+            .flatMap((venue, venueId) => {
+                return venue.occurances.map(conf => [
+                    conf.key,
+                    _.defaults(
+                        {venue: venueId, cat: venue.category},
+                        _.update(conf, 'date', date => _.isUndefined(date) ? undefined : moment.utc(date)),
+                        {url: venue.url}
+                    ),
+                ]);
+            })
+            .fromPairs()
+            .value();
+        // also take note of confs need regex matching
+        instOpts.confs_fuzzy = _.chain(instOpts.confs)
+            .values()
+            .filter(conf => !_.isUndefined(conf.matches))
+            .map(conf => ({ 
+                regex: new RegExp(conf.matches),
+                conf
+            }))
+            .value();
+        return _.omit(instOpts, 'venues');
     }
 
     processPubs = pubs => {
@@ -51,7 +182,7 @@ class PubsResolver {
             .filter(pub => {
                 const res = pub.date.isBefore(now);
                 if (!res) {
-                    hexo.log.info(`${context.source}: skip publication in the future: ${pub.citekey} @ ${pub.date}`);
+                    hexo.log.info(`${formatLocation(context)}: skip publication in the future: ${pub.citekey} @ ${pub.date}`);
                 }
                 return res;
             });
@@ -162,11 +293,10 @@ class PubsResolver {
                 conf.url = pub.confkey.replace(found.regex, conf.url);
                 conf.name = pub.confkey.replace(found.regex, conf.name);
             } else {
-                const msg = `${context.source}: bib entry '${pub.citekey}' has unknown confkey '${pub.confkey}'`;
-                hexo.log.warn(msg);
+                hexo.log.warn(`${formatLocation(context)}: bib entry '${pub.citekey}' has unknown confkey '${pub.confkey}'`);
+                hexo.log.debug(`All known confkeys: ${_.keys(confs)}, regexs: ${confs_fuzzy}`);
                 if (opts.strict) {
-                    // TODO: abort
-                    throw new Error(msg);
+                    throw new PublistStrictAbort(context.source);
                 }
             }
         }
@@ -184,12 +314,11 @@ class PubsResolver {
             // try the bib year and month field
             let year = _.get(pub.bib.fields, 'year[0]');
             if (_.isUndefined(year)) {
-                const msg = `${context.source}: can not infer date for bib entry '${pub.citekey}'.`
-                            + ` There's no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid year field.`;
+                const msg = `${formatLocation(context)}: can not infer date for bib entry '${pub.citekey}'.`
+                            + ` There is no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid year field.`;
                 hexo.log.warn(msg);
                 if (opts.strict) {
-                    // TODO: abort
-                    throw new Error(msg);
+                    throw new PublistStrictAbort(context.source);
                 }
                 year = now.format('YYYY');
             }
@@ -203,12 +332,11 @@ class PubsResolver {
             date = moment.utc(`${year} ${mon}`, `YYYY ${monFmt}`);
 
             if (!date) {
-                const msg = `${context.source}: can not infer date for bib entry '${pub.citekey}'.`
-                            + ` There's no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid month field.`;
+                const msg = `${formatLocation(context)}: can not infer date for bib entry '${pub.citekey}'.`
+                            + ` There is no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid month field.`;
                 hexo.log.warn(msg);
                 if (opts.strict) {
-                    // TODO: abort
-                    throw new Error(msg);
+                    throw new PublistStrictAbort(context.source);
                 }
                 date = now;
             }
@@ -221,146 +349,10 @@ class PubsResolver {
     }
 }
 
-function loadInstanceOpts(content) {
-    const loaded = {
-        version: 1,
-        ...yaml.load(content, {
-            schema: yaml.CORE_SCHEMA
-        })
-    };
-    if (loaded.version < 2) {
-        // TODO: warning
-        return processInstanceOptsV1(loaded);
-    }
-    if (loaded.version < 3) {
-        return processInstanceOptsV2(loaded);
-    }
-    throw new Error(`Config version newer than supported: ${loaded.version}`);
-}
-
-/**
- * The content is expected to be the yaml string representing an object
- * Each key is the category, values are conference name => conference data
- * @param {String} content the yaml string
- */
-function processInstanceOptsV1(loaded) {
-    const defConf = {
-        venue: '',
-        name: '',
-        date: '',
-        url: '',
-        acceptance: '',
-        cat: '',
-    };
-
-    const obj = {
-        pub_dir: '',
-        venues: {},
-        highlight_authors: [],
-        extra_filters: [],
-        ...loaded,
-    };
-
-    // flatten the list of conferences
-    let confs = Object.entries(obj.venues);
-    confs = confs.flatMap(([cat, val]) => {
-        return Object.entries(val)
-            .map(([confKey, confVal]) => [confKey, {...defConf, ...confVal, cat}])
-            .map(([confKey, confVal]) => [confKey, {...confVal, date: moment.utc(confVal.date)}]);
-    });
-    confs = _.fromPairs(confs);
-
-    // ensure pub_dir has no leading / or tailing /
-    const pub_dir = obj.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
-
-    const extra_filters = obj.extra_filters.map(fspec => ({
-        id: fspec.name.toLowerCase().replace(' ', '-'),
-        ...fspec,
-    }));
-
-    return {
-        version: 1,
-        pub_dir,
-        confs,
-        extra_filters,
-        highlight_authors: new Set(obj.highlight_authors),
-        confs_fuzzy: []
-    };
-}
-
-function processInstanceOptsV2(loaded) {
-    const instOpts = {...DEFAULT_INSTOPTS, ...loaded};
-
-    if (!instOptsValidator(instOpts)) {
-        const output = ajv.errorsText(instOptsValidator.errors);
-        console.log(output);
-        throw new Error("Invalid inst options");
-    }
-
-    // ensure pub_dir has no leading / or tailing /
-    const pub_dir = instOpts.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
-
-    // add an id for each fspec
-    const extra_filters = instOpts.extra_filters.map(fspec => ({
-        id: fspec.name.toLowerCase().replace(' ', '-'),
-        ...fspec,
-    }));
-
-    // highlight authors should be a unique set
-    const highlight_authors = new Set(instOpts.highlight_authors);
-
-    // flatten the list of conferences to confkey => conf details
-    const confs = _.chain(instOpts.venues)
-        .flatMap((venue, venueId) => {
-            return venue.occurances.map(conf => [
-                conf.key,
-                _.defaults(
-                    {venue: venueId, cat: venue.category},
-                    _.update(conf, 'date', date => _.isUndefined(date) ? undefined : moment.utc(date)),
-                    {url: venue.url}
-                ),
-            ]);
-        })
-        .fromPairs()
-        .value();
-    // also take note of confs need regex matching
-    const confs_fuzzy = _.chain(confs)
-        .values()
-        .filter(conf => !_.isUndefined(conf.matches))
-        .map(conf => ({ 
-            regex: new RegExp(conf.matches),
-            conf
-         }))
-        .value();
-
-    return {
-        version: instOpts.version,
-        pub_dir,
-        extra_filters,
-        highlight_authors,
-        confs,
-        confs_fuzzy,
-    }
-}
-
 class PublistTag {
     constructor(hexo, opts) {
         this.hexo = hexo;
         this.opts = opts;
-    }
-
-    /**
-     * @param {String} dataName 
-     * @returns An array of raw pub entries
-     */
-    _loadRawPubs = dataName => {
-        const { hexo } = this;
-        const hexoData = hexo.locals.get('data');
-        if (!_.has(hexoData, dataName)) {
-            hexo.log.warn(`Could not find your bibtex file named ${dataName}.bib`);
-            return [];
-        }
-        return hexoData[dataName].items;
     }
 
     /**
@@ -370,11 +362,15 @@ class PublistTag {
      */
     _tag = ([dataName], content, context) => {
         const { hexo, opts } = this;
-        const instOpts = loadInstanceOpts(content);
 
-        const rawPubs = this._loadRawPubs(dataName);
+        const hexoData = hexo.locals.get('data');
+        if (!_.has(hexoData, dataName)) {
+            throw new PublistTagError(`Could not find your bibtex file named ${dataName}.bib`, context);
+        }
+        const rawPubs = hexoData[dataName].items;
 
-        const resolver = new PubsResolver(hexo, opts, instOpts, context);
+        const resolver = new PubsResolver(hexo, opts, content, context);
+        const instOpts = resolver.instOpts;
         const pubs = resolver.processPubs(rawPubs);
         const fspecs = resolver.processFspecs(pubs);
 
@@ -419,6 +415,5 @@ class PublistTag {
     };
 }
 
-exports.loadInstanceOpts = loadInstanceOpts;
 exports.PubsResolver = PubsResolver;
 exports.PublistTag = PublistTag;

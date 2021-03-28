@@ -5,15 +5,19 @@ const test = require('ava');
 const path = require('path');
 const fs = require('fs');
 
-const { loadInstanceOpts } = require('../src/publist-tag');
+const { PubsResolver } = require('../src/publist-tag');
+const { getHexo } = require('./helpers');
 
 function normalize(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
-test('Tag Options V1', t => {
+test('Tag Options V1', async t => {
+    const hexo = await getHexo();
+
     const content = fs.readFileSync(path.join(__dirname, 'data/config.yml'));
-    const instOpts = normalize(loadInstanceOpts(content));
+    const resolver = new PubsResolver(hexo, {}, content, { source: 'test.md' });
+    const instOpts = normalize(resolver.instOpts);
 
     t.like(instOpts, {
         version: 1,
@@ -51,9 +55,12 @@ test('Tag Options V1', t => {
     });
 });
 
-test('Tag Options V2', t => {
+test('Tag Options V2', async t => {
+    const hexo = await getHexo();
+
     const content = fs.readFileSync(path.join(__dirname, 'data/config.v2.yml'));
-    const instOpts = normalize(loadInstanceOpts(content));
+    const resolver = new PubsResolver(hexo, {}, content, { source: 'test.md' });
+    const instOpts = normalize(resolver.instOpts);
 
     t.is(instOpts.confs_fuzzy.length, 1);
     t.like(instOpts, {
