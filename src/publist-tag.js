@@ -98,6 +98,9 @@ class PubsResolver {
             version: 1,
         };
 
+        // highlight authors should be a unique set
+        obj.highlight_authors = new Set(obj.highlight_authors);
+
         // flatten the list of conferences
         obj.confs = _.chain(obj.venues)
             .toPairs()

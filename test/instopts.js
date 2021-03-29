@@ -17,9 +17,8 @@ test('Tag Options V1', async t => {
 
     const content = fs.readFileSync(path.join(__dirname, 'data/config.yml'));
     const resolver = new PubsResolver(hexo, {}, content, { source: 'test.md' });
-    const instOpts = normalize(resolver.instOpts);
 
-    t.snapshot(instOpts);
+    t.snapshot(resolver.instOpts);
 });
 
 test('Tag Options V2', async t => {
@@ -27,8 +26,6 @@ test('Tag Options V2', async t => {
 
     const content = fs.readFileSync(path.join(__dirname, 'data/config.v2.yml'));
     const resolver = new PubsResolver(hexo, {}, content, { source: 'test.md' });
-    const instOpts = normalize(resolver.instOpts);
 
-    t.is(instOpts.confs_fuzzy.length, 1);
-    t.snapshot(instOpts);
+    t.snapshot(resolver.instOpts);
 });
