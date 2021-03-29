@@ -1,5 +1,6 @@
 'use strict';
 
+const pathFn = require('path');
 const _ = require('lodash');
 const stripIndent = require('strip-indent');
 const bibtex = require('@retorquere/bibtex-parser');
@@ -90,6 +91,7 @@ class BibRendererError extends Error {
 
 async function bibRenderer(ctx, opts, { path, text }) {
     let hasError = false;
+    path = pathFn.relative(ctx.source_dir, path);
 
     // parse content as bibtex
     const [ entries, errors ] = await parseBibEntries(ctx, opts, { path, text });

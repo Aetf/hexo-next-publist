@@ -31,15 +31,29 @@ function maybePrependHref(pub_dir, citekey, href) {
 }
 
 function formatLocation(context) {
-    return `${context.source}`;
+    return `Publist in ${context.source}`;
+}
+
+// Necessary for this error to survive from NunJucks error prettify
+function tagErrorSafe(err) {
+    err.lineno = 1;
+    err.Update = () => { this }
+    return err;
 }
 
 class PublistTagError extends Error {
+    /**
+     * The message should NOT match /Line (\d+), Column \d+/ to survive from hexo's formatNunJucksError
+     */
     constructor(message, context, caller) {
         super(`${formatLocation(context)}: ${message}`);
         this.name = 'PublistTagError';
-        this.data = { context };
+        // this.data = { context };
+        this.firstUpdate = true;
+        this.abc = 10;
         Error.captureStackTrace(this, caller || PublistTagError);
+
+        tagErrorSafe(this)
     }
 }
 
@@ -184,7 +198,7 @@ class PubsResolver {
             .filter(pub => {
                 const res = pub.date.isBefore(now) || instOpts.show_unpublished;
                 if (!res) {
-                    hexo.log.info(`${formatLocation(context)}: skip publication in the future: ${pub.citekey} @ ${pub.date}`);
+                    hexo.log.info(`${formatLocation(context)}: skip publication in the future: ${pub.citekey} @ ${pub.date.format('YYYY-MM-DD')}`);
                 }
                 return res;
             });
@@ -316,10 +330,14 @@ class PubsResolver {
                 conf.url = pub.confkey.replace(found.regex, conf.url);
                 conf.name = pub.confkey.replace(found.regex, conf.name);
             } else {
-                hexo.log.warn(`${formatLocation(context)}: bib entry '${pub.citekey}' has unknown confkey '${pub.confkey}'`);
-                hexo.log.debug(`All known confkeys: ${_.keys(confs)}, regexs: ${confs_fuzzy}`);
+                const msg = `${formatLocation(context)}: bib entry '${pub.citekey}' has unknown confkey '${pub.confkey}'`;
                 if (opts.strict) {
+                    hexo.log.error(msg);
+                    hexo.log.debug(`All known confkeys: ${_.keys(confs)}, regexs: ${confs_fuzzy}`);
                     throw new PublistStrictAbort(context.source);
+                } else {
+                    hexo.log.warn(msg);
+                    hexo.log.debug(`All known confkeys: ${_.keys(confs)}, regexs: ${confs_fuzzy}`);
                 }
             }
         }
@@ -339,9 +357,11 @@ class PubsResolver {
             if (_.isUndefined(year)) {
                 const msg = `${formatLocation(context)}: can not infer date for bib entry '${pub.citekey}'.`
                             + ` There is no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid year field.`;
-                hexo.log.warn(msg);
                 if (opts.strict) {
+                    hexo.log.error(msg);
                     throw new PublistStrictAbort(context.source);
+                } else {
+                    hexo.log.warn(msg);
                 }
                 year = now.format('YYYY');
             }
@@ -357,9 +377,11 @@ class PubsResolver {
             if (!date) {
                 const msg = `${formatLocation(context)}: can not infer date for bib entry '${pub.citekey}'.`
                             + ` There is no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid month field.`;
-                hexo.log.warn(msg);
                 if (opts.strict) {
+                    hexo.log.error(msg);
                     throw new PublistStrictAbort(context.source);
+                } else {
+                    hexo.log.warn(msg);
                 }
                 date = now;
             }
@@ -392,31 +414,49 @@ class PublistTag {
         }
         const rawPubs = hexoData[dataName].items;
 
-        const resolver = new PubsResolver(hexo, opts, content, context);
-        const instOpts = resolver.instOpts;
-        const pubs = resolver.processPubs(rawPubs);
-        const fspecs = resolver.processFspecs(pubs);
+        try {
+            const resolver = new PubsResolver(hexo, opts, content, context);
+            const instOpts = resolver.instOpts;
+            const pubs = resolver.processPubs(rawPubs);
+            const fspecs = resolver.processFspecs(pubs);
 
-        hexo.log.info(`${context.source}: Created publist with ${pubs.length} bib entries`);
-        const locals = this._bindHelpers({
-            // directly inject items into the template context
-            pubs,
-            fspecs,
-            instOpts,
-            opts,
-            // emulate hexo's own local environment in the rendering
-            config: hexo.config,
-            theme: Object.assign({}, hexo.config, hexo.theme.config, hexo.config.theme_config),
-            layout: 'layout',
-            cache: false,
-            env: hexo.env,
-            page: this,
-            view_dir: TEMPLATE_DIR
-        });
+            hexo.log.info(`${formatLocation(context)}: created with ${pubs.length} bib entries`);
+            const locals = this._bindHelpers({
+                // directly inject items into the template context
+                pubs,
+                fspecs,
+                instOpts,
+                opts,
+                // emulate hexo's own local environment in the rendering
+                config: hexo.config,
+                theme: Object.assign({}, hexo.config, hexo.theme.config, hexo.config.theme_config),
+                layout: 'layout',
+                cache: false,
+                env: hexo.env,
+                page: this,
+                view_dir: TEMPLATE_DIR
+            });
 
-        return hexo.render.renderSync({
-            path: pathFn.join(TEMPLATE_DIR, 'publist.njk'),
-        }, locals);
+            try {
+                return hexo.render.renderSync({
+                    path: pathFn.join(TEMPLATE_DIR, 'publist.njk'),
+                }, locals);
+            } catch (err) {
+                // wrap our internal nunjucks render error, and do not have [Line xx, Column xx] in the message
+                // so hexo don't confuse it with the context of outside document.
+                const e = new PublistTagError(
+                    `Publist internal error:\n` + err.message.replace(/\((.+)\) \[Line (\d+), Column (\d+)\]/, '$1:$2:$3'),
+                    context
+                );
+                e.cause = err;
+                throw e;
+            }
+        } catch (err) {
+            if (!(err instanceof PublistTagError)) {
+                err = tagErrorSafe(err);
+            }
+            throw err;
+        }
     }
 
     _bindHelpers = (locals) => {
