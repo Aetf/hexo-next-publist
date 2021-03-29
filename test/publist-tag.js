@@ -37,6 +37,25 @@ test.beforeEach('Init hexo', async t => {
     };
 });
 
+test('Registration with hexo', async t => {
+    const { hexo, opts } = t.context;
+    const publistTag = new PublistTag(hexo, opts);
+
+    setHexoLocals(hexo, 'test', [ ]);
+    publistTag.register();
+
+    const text = `
+    {% publist test %}
+    version: 2
+    {% endpublist %}
+    `;
+    const output = await hexo.extend.tag.render(
+        text,
+        { source: 'test.md' }
+    );
+    t.snapshot(output);
+});
+
 test('New badge', async t => {
     const { hexo, opts } = t.context;
     setHexoLocals(hexo, 'test', [

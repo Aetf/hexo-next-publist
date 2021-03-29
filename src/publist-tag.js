@@ -426,9 +426,9 @@ class PublistTag {
     }
 
     register = () => {
-        const { ctx } = this;
+        const { hexo } = this;
         const self = this;
-        ctx.extend.tag.register(
+        hexo.extend.tag.register(
             'publist',
             function (args, body) { return self._tag(args, body, this) },
             { ends: true, async: false }
