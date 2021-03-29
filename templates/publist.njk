@@ -43,7 +43,7 @@
 <style type="text/css">
     .fouc-fix { display:none; }
 </style>
-<link href="{{ config.publist.assets_prefix }}main.css" rel="stylesheet" />
+<link href="{{ opts.assets_prefix }}main.css" rel="stylesheet" />
 <div class="publist fouc-fix">
     <div class="publist-search-panel">
         <div class="publist-filters-header">
@@ -88,7 +88,7 @@
                             {%- else -%}
                                 {{ pub.title }}
                             {%- endif %}
-                            {% if pub.date.isAfter(moment().subtract(config.publist.new_month, 'months')) -%}
+                            {% if pub.date.isAfter(moment().subtract(opts.new_month, 'months')) -%}
                                 <span class="Label Label--info">New</span>
                             {%- endif %}
                         </div>
@@ -150,4 +150,4 @@
     </div> <!-- pub-list -->
 </div> <!-- publist -->
 
-<script data-pjax src="{{ config.publist.assets_prefix }}main.js"></script>
+<script data-pjax src="{{ opts.assets_prefix }}main.js"></script>

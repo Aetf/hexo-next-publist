@@ -3,6 +3,7 @@
 const test = require('ava');
 
 const stripIndent = require('strip-indent');
+const _ = require('lodash');
 
 const { getHexo } = require('./helpers');
 
@@ -29,22 +30,17 @@ test('Basic bib parsing', async t => {
     const { items } = await bibRenderer(hexo, opts, { path: 'test.bib', text: content });
 
     t.is(items.length, 1);
-    t.like(items[0], {
-        citekey: 'yu20mlsys',
-        title: 'Salus: Find-grained GPU sharing primitives for deep learning applications',
-        authors: ['Peifeng Yu', 'Mosharaf Chowdhury', 'Eff Efd'],
-        badges: [],
-        confkey: "MLSys'20",
-        abstract: '',
-        links: [],
-        meta: {},
-    });
-    t.is(items[0].bibStr, stripIndent(`    @inproceedings{yu20mlsys,
-        title = {{Salus}: Find-grained {GPU} Sharing primitives for Deep Learning Applications},
-        author = {Yu, Peifeng and Chowdhury, Mosharaf and Efd, Eff},
-        booktitle = {Proceedings of the 3rd Conference on Machine Learning and Systems},
-        year = {2020},
-    }\n`));
+    t.snapshot(_.pick(items[0], [
+        'citekey',
+        'title',
+        'authors',
+        'badges',
+        'confkey',
+        'abstract',
+        'links',
+        'meta',
+        'bibStr',
+    ]));
 });
 
 test.todo('Coauthor field is parsed');
@@ -84,6 +80,22 @@ test('Markdown abstract over normal abstract', async t => {
     t.is(items[0].abstract, "<p>Markdown <em>in</em> <strong>side</strong></p>\n");
 });
 
+test('Link fields', async t => {
+    const { hexo, opts } = t.context;
+
+    const content = `@inproceedings{yu20mlsys,
+        publist_link = {relative || def.pdf},
+        publist_link = {root-relative || /another/def.pdf},
+        publist_link = {protocal-relative || //example2.org/def.pdf},
+        publist_link = {absolute || https://example.org/def.pdf},
+    }`;
+
+    const { items } = await bibRenderer(hexo, opts, { path: 'test.bib', text: content });
+
+    t.is(items.length, 1);
+    t.snapshot(items[0].links);
+})
+
 test('Plural fields', async t => {
     const { hexo, opts } = t.context;
 
@@ -97,13 +109,7 @@ test('Plural fields', async t => {
     const { items } = await bibRenderer(hexo, opts, { path: 'test.bib', text: content });
 
     t.is(items.length, 1);
-    t.like(items[0], {
-        links: [
-            { name: 'abc', href: 'def.pdf'},
-            { name: 'abc2', href: 'def2.pdf'},
-        ],
-        badges: ['Good', 'Good2'],
-    })
+    t.snapshot(_.pick(items[0], ['links', 'badges']));
 })
 
 test('Meta fields', async t => {
@@ -119,13 +125,7 @@ test('Meta fields', async t => {
     const { items } = await bibRenderer(hexo, opts, { path: 'test.bib', text: content });
 
     t.is(items.length, 1);
-    t.like(items[0], {
-        meta: {
-            meta1: ['abc', 'abc3'],
-            meta2: ['abc2'],
-            xyz: ['qqq']
-        }
-    })
+    t.snapshot(items[0].meta);
 })
 
 test('Strict abort', async t => {

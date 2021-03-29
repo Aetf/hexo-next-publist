@@ -1,6 +1,6 @@
 version: 2
 # directory used for relative links in publication items
-pub_dir: publications/files
+pub_dir: publications/files/
 # which author name to highlight
 highlight_authors: []
 # extra filters to be present in the UI

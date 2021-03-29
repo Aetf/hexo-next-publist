@@ -60,7 +60,7 @@ class PubsResolver {
      * @param {String} instOptsYaml the yaml string representing instOpts
      */
     _loadInstanceOpts = (instOptsYaml) => {
-        const { context } = this;
+        const { hexo, context } = this;
 
         const loaded = {
             version: 1,
@@ -69,7 +69,7 @@ class PubsResolver {
             })
         };
         if (loaded.version < 2) {
-            // TODO: warning
+            hexo.log.warn(`${formatLocation(context)}: you are using an old version of the instOpts. Please migrate to version 2 ASAP.`);
             return this._processInstanceOptsV1(loaded);
         }
         if (loaded.version < 3) {
@@ -110,7 +110,7 @@ class PubsResolver {
             .value();
 
         // ensure pub_dir has no leading / or tailing /
-        obj.pub_dir = obj.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
+        obj.pub_dir = obj.pub_dir.replace(/^\//, '').replace(/\/$/, '');
 
         obj.extra_filters = obj.extra_filters.map(fspec => ({
             id: fspec.name.toLowerCase().replace(' ', '-'),
@@ -127,13 +127,12 @@ class PubsResolver {
 
         if (!instOptsValidator(instOpts)) {
             const output = ajv.errorsText(instOptsValidator.errors, { dataVar: 'instOpts' });
-            // TODO: format this error
             hexo.log.error(output);
             throw new PublistTagError(output, context);
         }
 
         // ensure pub_dir has no leading / or tailing /
-        instOpts.pub_dir = instOpts.pub_dir.replace(/^\//, '').replace(/\/$/, '/');
+        instOpts.pub_dir = instOpts.pub_dir.replace(/^\//, '').replace(/\/$/, '');
 
         // add an id for each fspec
         instOpts.extra_filters = instOpts.extra_filters.map(fspec => ({
@@ -204,6 +203,26 @@ class PubsResolver {
         return pubs
     }
 
+    /**
+     * Generate an array of fspec, each of them describes a filter
+     * fspec object has the following fields
+     *
+     * fspec.name: display name
+     * fspec.id: unique fspec id
+     * fspec.path: attribute path on pub
+     * fspec.choices: a map of <category display name> => array of choice object
+     * 
+     * The category display is used to implement two-level dropdown menu.
+     * Use an empty string '' to represent uncategorized choices.
+     * 
+     * choice object has the following fields
+     * 
+     * choice.display: display name (if undefined, use choice.value)
+     * choice.value: unique identifier of the value
+     * choice.count: number of pub entries matching the fspec
+     *
+     * @param {*} pubs processed pubs
+     */
     processFspecs = pubs => {
         const { instOpts } = this;
 
@@ -227,6 +246,7 @@ class PubsResolver {
                 id: fspec.name.toLowerCase().replace(' ', '-'),
                 path: fspec.path,
                 choices: {
+                    // '' means uncategorized choices
                     '': choices,
                 },
             };
@@ -380,6 +400,7 @@ class PublistTag {
             pubs,
             fspecs,
             instOpts,
+            opts,
             // emulate hexo's own local environment in the rendering
             config: hexo.config,
             theme: Object.assign({}, hexo.config, hexo.theme.config, hexo.config.theme_config),
