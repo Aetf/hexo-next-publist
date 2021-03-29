@@ -1,7 +1,9 @@
 'use strict';
 
 const pathFn = require('path');
+const crypto = require('crypto');
 
+const chalk = require('chalk');
 const _ = require('lodash');
 const moment = require('moment');
 const yaml = require('js-yaml');
@@ -31,7 +33,7 @@ function maybePrependHref(pub_dir, citekey, href) {
 }
 
 function formatLocation(context) {
-    return `Publist in ${context.source}`;
+    return `${chalk.magenta(context.source)}: publist`;
 }
 
 // Necessary for this error to survive from NunJucks error prettify
@@ -198,7 +200,7 @@ class PubsResolver {
             .filter(pub => {
                 const res = pub.date.isBefore(now) || instOpts.show_unpublished;
                 if (!res) {
-                    hexo.log.info(`${formatLocation(context)}: skip publication in the future: ${pub.citekey} @ ${pub.date.format('YYYY-MM-DD')}`);
+                    hexo.log.info(`${formatLocation(context)}: skip publication in the future: ${chalk.magenta(pub.citekey)} @ ${pub.date.format('YYYY-MM-DD')}`);
                 }
                 return res;
             });
@@ -227,6 +229,7 @@ class PubsResolver {
      * fspec.name: display name
      * fspec.id: unique fspec id
      * fspec.path: attribute path on pub
+     * fspec.default: the default choice object
      * fspec.choices: a map of <category display name> => array of choice object
      * 
      * The category display is used to implement two-level dropdown menu.
@@ -243,6 +246,8 @@ class PubsResolver {
     processFspecs = pubs => {
         const { instOpts } = this;
 
+        const all = {display: 'All', value: '!all', count: pubs.length};
+
         const fspecs = instOpts.extra_filters.map(fspec => {
             const possibleValues = pubs.flatMap(item => item.extra[fspec.id]);
             let counts = possibleValues.reduce((counts, x) => {
@@ -256,12 +261,13 @@ class PubsResolver {
             const cntOthers = pubs.filter(item => item.extra[fspec.id].length === 0).length;
             choices.unshift({display: 'Others', value: '!others', count: cntOthers});
             // add !all
-            choices.unshift({display: 'All', value: '!all', count: pubs.length});
+            choices.unshift(all);
             // there is only one level for extra filter
             return {
                 name: fspec.name,
                 id: fspec.name.toLowerCase().replace(' ', '-'),
                 path: fspec.path,
+                default: all,
                 choices: {
                     // '' means uncategorized choices
                     '': choices,
@@ -285,7 +291,7 @@ class PubsResolver {
         }));
         // add !all
         venues[''] = [
-            {display: 'All', value: '!all', count: pubs.length},
+            all,
             {
                 display: 'Others',
                 value: '!others',
@@ -296,6 +302,7 @@ class PubsResolver {
         fspecs.unshift({
             name: 'Venue',
             id: 'venue',
+            default: all,
             choices: venues,
         });
 
@@ -395,9 +402,10 @@ class PubsResolver {
 }
 
 class PublistTag {
-    constructor(hexo, opts) {
+    constructor(hexo, opts, test_id) {
         this.hexo = hexo;
         this.opts = opts;
+        this.test_id = test_id;
     }
 
     /**
@@ -406,7 +414,7 @@ class PublistTag {
      * @param {*} context The calling context, contains info about the rendering source
      */
     _tag = ([dataName], content, context) => {
-        const { hexo, opts } = this;
+        const { hexo, opts, test_id } = this;
 
         const hexoData = hexo.locals.get('data');
         if (!_.has(hexoData, dataName)) {
@@ -420,6 +428,9 @@ class PublistTag {
             const pubs = resolver.processPubs(rawPubs);
             const fspecs = resolver.processFspecs(pubs);
 
+            // create a unique id for this instance
+            const publist_id = test_id || `publist-${crypto.randomBytes(4).toString('hex')}`;
+
             hexo.log.info(`${formatLocation(context)}: created with ${pubs.length} bib entries`);
             const locals = this._bindHelpers({
                 // directly inject items into the template context
@@ -427,6 +438,7 @@ class PublistTag {
                 fspecs,
                 instOpts,
                 opts,
+                publist_id,
                 // emulate hexo's own local environment in the rendering
                 config: hexo.config,
                 theme: Object.assign({}, hexo.config, hexo.theme.config, hexo.config.theme_config),

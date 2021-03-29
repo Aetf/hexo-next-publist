@@ -20,7 +20,7 @@ test('MCBib parsing and resolving', async t => {
         MCPubs: parsedBib,
     });
     
-    const publistTag = new PublistTag(hexo, opts);
+    const publistTag = new PublistTag(hexo, opts, 'test-id');
     const output = await publistTag._tag(['MCPubs'], await getData('config.v2.yml'), { source: 'MCPubs.bib' });
 
     t.snapshot(output);

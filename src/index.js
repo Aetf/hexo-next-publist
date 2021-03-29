@@ -8,6 +8,7 @@ const pathFn = require('path');
 const { DEFAULT_OPTIONS, WIDGET_DIR, SELF } = require('./consts');
 const { Widget } = require('./widget');
 const { PublistTag } =require('./publist-tag');
+const { SSRFilter } = require('./filter');
 
 function processOptions (hexo) {
     let opts = _.defaults({}, hexo.config.publist, DEFAULT_OPTIONS);
@@ -55,6 +56,9 @@ function register(hexo) {
 
     // the actual tag
     new PublistTag(hexo, opts).register();
+
+    // after generate filter to optionally do server-side rendering
+    new SSRFilter(hexo, opts).register();
 }
 
 register(hexo);

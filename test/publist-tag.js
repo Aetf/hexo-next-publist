@@ -39,7 +39,7 @@ test.beforeEach('Init hexo', async t => {
 
 test('Registration with hexo', async t => {
     const { hexo, opts } = t.context;
-    const publistTag = new PublistTag(hexo, opts);
+    const publistTag = new PublistTag(hexo, opts, 'test-id');
 
     setHexoLocals(hexo, 'test', [ ]);
     publistTag.register();

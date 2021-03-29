@@ -1,9 +1,12 @@
 'use strict';
 
 const pathFn = require('path');
+
+const chalk = require('chalk');
 const _ = require('lodash');
 const stripIndent = require('strip-indent');
 const bibtex = require('@retorquere/bibtex-parser');
+
 const { PublistStrictAbort } = require('./consts');
 
 function formatLocation(file, line, column) {
@@ -109,7 +112,7 @@ async function bibRenderer(ctx, opts, { path, text }) {
         }
     }
 
-    ctx.log.info(`${path}: loaded ${items.length} bib entries`);
+    ctx.log.info(`${chalk.magenta(path)}: loaded ${items.length} bib entries`);
     return { items };
 }
 

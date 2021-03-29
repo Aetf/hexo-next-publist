@@ -474,7 +474,6 @@ class PublistSearchPanel {
 }
 
 function setup() {
-    console.log('Running publist setup')
     // copy function for research publication page
     new CopyBibTex('.pub-list .pub-links .pub-link-bibtex');
 
@@ -483,10 +482,6 @@ function setup() {
 
     // apply filtering according to url hash
     new PublistSearchPanel('.publist');
-
-    // TODO: implement a spinner
-    $('.fouc-fix').removeClass('fouc-fix');
 }
 
-console.log('I am running great!');
 setup();

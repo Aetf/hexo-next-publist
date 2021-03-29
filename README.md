@@ -196,6 +196,8 @@ publist:
   new_months: 3
   # if strict mode is enabled, any bibtex parsing errors will be fatal
   strict: false
+  # whether to embed css file directly in html, may help FUOC when using pjax
+  embed_css: true
 ```
 
 

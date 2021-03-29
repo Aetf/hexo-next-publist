@@ -1,7 +1,10 @@
-const _ = require('lodash');
 const pathFn = require('path');
 const { promisify } = require('util');
+
+const _ = require('lodash');
 const webpack = require('webpack');
+const chalk = require('chalk');
+
 const { pDebounce } = require('./pDebounce.js');
 
 class MemFsPlugin {
@@ -75,7 +78,7 @@ class WebpackProcessor {
         this.running = true;
 
         const config = this._genWebpackConfig();
-        ctx.log.info(`Widget ${config.name}: webpacking`);
+        ctx.log.debug(`Widget ${chalk.magenta(config.name)}: webpacking`);
 
         const compiler = webpack(config);
         try {
@@ -87,7 +90,10 @@ class WebpackProcessor {
             }
             await promisify(compiler.close).apply(compiler);
 
-            ctx.log.info(`Widget ${config.name}: created ${info.assets.length} outputs in ${info.time}ms`);
+            ctx.log.info(`${info.assets.length} files webpacked for ${config.name} in ${chalk.cyan(info.time, 'ms')}`);
+            for (const asset of info.assets) {
+                ctx.log.debug(`Webpacked: ${config.name}::${asset.name} ${asset.size} bytes`);
+            }
 
             return stats;
         } catch (err) {

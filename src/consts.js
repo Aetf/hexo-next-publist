@@ -10,6 +10,7 @@ module.exports.DEFAULT_OPTIONS = {
     assets_prefix: '/assets/publist/',
     new_months: 3,
     strict: false,
+    embed_css: true,
 };
 
 module.exports.DEFAULT_INSTOPTS = {
