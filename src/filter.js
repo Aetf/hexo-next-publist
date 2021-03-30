@@ -41,7 +41,7 @@ class SSRFilter {
                     }
                     const css = ctx.route.get(found[1]);
                     if (_.isUndefined(css)) {
-                        ctx.log.debug(`Route ${found[1]} not found`);
+                        ctx.log.error(`Route ${found[1]} not found`);
                         ctx.log.debug('All routes', ctx.route.list());
                         return line;
                     }
