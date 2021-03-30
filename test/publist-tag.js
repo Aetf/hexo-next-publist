@@ -115,6 +115,39 @@ test('confkey literal and regex match', async t => {
     t.is(pubs[1].conf.url, 'https://abc.com/1');
 });
 
+test('confkey regex match does not affect each other', async t => {
+    const { hexo, opts } = t.context;
+    const rawPubs = [
+        createEntry({ confkey: "abc'2", title: 'Title2', }),
+        createEntry({ confkey: "abc'1", title: 'Title1', }),
+    ];
+
+    const instOpts = `
+    version: 2
+    pub_dir: assets/
+    venues:
+      Abc:
+        category: Conferences
+        occurrences:
+        - key: abc-all
+          matches: ^abc'(.*)$
+          name: The $1 ABC
+          url: https://abc.com/$1
+          date: 2021-01-01
+    `;
+
+    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
+    const pubs = resolver.processPubs(rawPubs);
+
+    t.is(pubs.length, 2);
+    t.is(pubs[0].conf.key, 'abc-all');
+    t.is(pubs[0].conf.name, 'The 2 ABC');
+    t.is(pubs[0].conf.url, 'https://abc.com/2');
+    t.is(pubs[1].conf.key, 'abc-all');
+    t.is(pubs[1].conf.name, 'The 1 ABC');
+    t.is(pubs[1].conf.url, 'https://abc.com/1');
+});
+
 test('Conference url in parent', async t => {
     const { hexo, opts } = t.context;
     const rawPubs = [

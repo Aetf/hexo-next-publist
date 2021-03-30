@@ -332,7 +332,8 @@ class PubsResolver {
             // try get it from a regex match
             const found = _.find(confs_fuzzy, ({regex}) => regex.test(pub.confkey))
             if (!_.isUndefined(found)) {
-                conf = found.conf;
+                // make sure to use a copy here because we are modifying the conf object
+                conf = { ...found.conf };
                 // resolve fields that may depends on the match
                 conf.url = pub.confkey.replace(found.regex, conf.url);
                 conf.name = pub.confkey.replace(found.regex, conf.name);
