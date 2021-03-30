@@ -67,7 +67,7 @@ test('New badge', async t => {
     venues:
       Abc:
         category: Conferences
-        occurances:
+        occurrences:
         - key: abc'1
           name: The First ABC
           date: ${moment().subtract(1, 'month').format('YYYY-MM-DD')}
@@ -92,7 +92,7 @@ test('confkey literal and regex match', async t => {
       Abc:
         category: Conferences
         url: https://abc.com
-        occurances:
+        occurrences:
         - key: abcworkshop
           name: The ABC Workshop
           date: 2021-01-01
@@ -128,7 +128,7 @@ test('Conference url in parent', async t => {
       Abc:
         category: Conferences
         url: https://abc.com
-        occurances:
+        occurrences:
         - key: abc'1
           name: The First ABC
           date: 2021-01-01
@@ -171,7 +171,7 @@ test('Date resolving', async t => {
     venues:
       Abc:
         category: Conferences
-        occurances:
+        occurrences:
         - key: abc'1
           name: The First ABC
           date: 2021-01-01
@@ -209,7 +209,7 @@ test('Link resolving', async t => {
     venues:
       Abc:
         category: Conferences
-        occurances:
+        occurrences:
         - key: abc'1
           name: The First ABC
           date: 2021-01-01
@@ -234,7 +234,7 @@ test('Entries are sorted by date in desc order', async t => {
     venues:
       Abc:
         category: Conferences
-        occurances:
+        occurrences:
         - key: abc'1
           name: The First ABC
           date: 2020-01-01
@@ -259,7 +259,7 @@ test('Unpublished entries are hidden by default', async t => {
     venues:
       Abc:
         category: Conferences
-        occurances:
+        occurrences:
         - key: abc'1
           name: The First ABC
           date: ${new Date().getFullYear()+1}-01-01
@@ -282,7 +282,7 @@ test('Unpublished entries are shown if requested', async t => {
     venues:
       Abc:
         category: Conferences
-        occurances:
+        occurrences:
         - key: abc'1
           name: The First ABC
           date: ${new Date().getFullYear()+1}-01-01
@@ -322,7 +322,7 @@ test('Filtering spec generation', async t => {
     venues:
       Abc:
         category: Conferences
-        occurances:
+        occurrences:
         - key: abc'1
           name: The First ABC
           date: 2021-01-01
@@ -344,7 +344,7 @@ test('Strict reject entry without date', async t => {
     venues:
       Abc:
         category: Conferences
-        occurances:
+        occurrences:
         - key: abc'1
           name: THe First ABC
     `;

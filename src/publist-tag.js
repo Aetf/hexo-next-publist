@@ -165,7 +165,7 @@ class PubsResolver {
         // flatten the list of conferences to confkey => conf details
         instOpts.confs = _.chain(instOpts.venues)
             .flatMap((venue, venueId) => {
-                return venue.occurances.map(conf => [
+                return venue.occurrences.map(conf => [
                     conf.key,
                     _.defaults(
                         {venue: venueId, cat: venue.category},

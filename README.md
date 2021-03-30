@@ -47,7 +47,7 @@ extra_filters: []
 venues:
   MLSys:
     category: Conferences
-    occurances:
+    occurrences:
     # key is used in publist_confkey, must be unique across conferences
     - key: MLSys'20
       # conference full name
@@ -137,7 +137,7 @@ extra_filters:
 venues:
   MLSys:
     category: Conferences
-    occurances:
+    occurrences:
     # key is used in publist_confkey, must be unique across conferences
     - key: MLSys'20
       # conference full name
@@ -152,7 +152,7 @@ venues:
     category: Technical Reports
     # url can also be set on the whole (optional)
     url: https://arxiv.org
-    occurances:
+    occurrences:
     - key: arXiv-all
       # instead of using key to match confkey in literal,
       # use the regex given here.

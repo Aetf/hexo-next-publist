@@ -57,11 +57,11 @@
                         "type": "string"
                     },
                     "url": {
-                        "description": "the url of the conference, can be override by individual occurances",
+                        "description": "the url of the conference, can be override by individual occurrences",
                         "type": "string"
                     },
-                    "occurances": {
-                        "description": "list of occurances of the conference",
+                    "occurrences": {
+                        "description": "list of occurrences of the conference",
                         "type": "array",
                         "items": {
                             "type": "object",
@@ -96,7 +96,7 @@
                         }
                     }
                 },
-                "required": [ "category", "occurances" ],
+                "required": [ "category", "occurrences" ],
                 "additionalProperties": false
             }
         }

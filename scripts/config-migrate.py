@@ -11,13 +11,13 @@ for cat, catVals in c['venues'].items():
         if conf['venue'] not in venues:
             venues[conf['venue']] = {
                 'category': cat,
-                'occurances': []
+                'occurrences': []
             }
         # build a new dict to control key ordering
         occr = {'key': confKey}
         occr.update(conf)
         del occr['venue']
-        venues[conf['venue']]['occurances'].append(occr)
+        venues[conf['venue']]['occurrences'].append(occr)
 c['venues'] = venues
 c['version'] = 2
 print(yaml.dump(c, sort_keys=False))
