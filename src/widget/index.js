@@ -42,10 +42,10 @@ class Widget extends Box {
             name,
             resolve: {
                 // resolve paths for modules inside code
-                modules: [pathFn.join(baseDir, 'node_modules')]
+                modules: ['node_modules', pathFn.join(ctx.base_dir, 'node_modules')]
             },
             resolveLoader: {
-                modules: [pathFn.join(baseDir, 'node_modules')]
+                modules: ['node_modules', pathFn.join(ctx.base_dir, 'node_modules')]
             },
             cache: {
                 type: 'filesystem',
@@ -66,7 +66,12 @@ class Widget extends Box {
         // for each file in the volume.
         // hexo will then call routerReflesh on each generatorResult to add it to actual routes.
         ctx.extend.generator.register(`${name}-widget`, () => {
-            return generateFromVolume(this.volume, '/dist', prefixUrl);
+            try {
+                return generateFromVolume(this.volume, '/dist', prefixUrl);
+            } catch (err) {
+                ctx.log.error(err);
+                return [];
+            }
         });
     }
 

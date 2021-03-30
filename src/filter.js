@@ -32,7 +32,6 @@ class SSRFilter {
         const { ctx } = this;
         const ptn = /^\s*<!-- begin-(\S+) -->$[\s\S]+?^\s*<!-- end-\1 -->$/gm;
         return await replaceAsync(content, ptn, async (match, p1) => {
-            ctx.log.info(`Embeded publist css file: ${chalk.magenta(path)}`);
 
             const linesPromise = match.split('\n')
                 .map(async line => {
@@ -46,6 +45,7 @@ class SSRFilter {
                         ctx.log.debug('All routes', ctx.route.list());
                         return line;
                     }
+                    ctx.log.info(`Embeded publist css file: ${chalk.magenta(path)}`);
                     const style = await streamToString(css);
                     return `<style type="text/css">\n${style}\n</style>`;
                 });
