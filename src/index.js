@@ -31,7 +31,6 @@ function register(hexo) {
     // widget_dir must be from the hexo.base_dir/node_modules
     // which may be a symlink. So we can not directly use WIDGET_DIR
     //const widget_dir = pathFn.join(hexo.base_dir, 'node_modules', 'hexo-next-publist', 'widget');
-    console.log('widget dir is ', WIDGET_DIR);
     const debug = pathFn.resolve(hexo.base_dir) === SELF;
     const selfNodeModules = pathFn.join(SELF, 'node_modules');
 
