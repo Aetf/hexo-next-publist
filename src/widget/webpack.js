@@ -101,6 +101,7 @@ class WebpackProcessor {
             if (err.details) {
                 ctx.log.error(err.details);
             }
+            throw err;
         } finally {
             this.running = false;
         }
