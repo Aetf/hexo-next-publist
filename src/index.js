@@ -3,11 +3,10 @@
 /* global hexo */
 
 const _ = require('lodash');
-const pathFn = require('path');
 
-const { DEFAULT_OPTIONS, WIDGET_DIR, SELF } = require('./consts');
-const { Widget } = require('./widget');
-const { PublistTag } =require('./publist-tag');
+const { DEFAULT_OPTIONS } = require('./consts');
+const { PublistWidget } = require('./publist-widget');
+const { PublistTag } = require('./publist-tag');
 const { SSRFilter } = require('./filter');
 
 function processOptions (hexo) {
@@ -28,30 +27,8 @@ function register(hexo) {
     // register renderer bib in _data, which is inside the source box
     require('./bib-renderer').register(hexo, opts);
 
-    // widget_dir must be from the hexo.base_dir/node_modules
-    // which may be a symlink. So we can not directly use WIDGET_DIR
-    //const widget_dir = pathFn.join(hexo.base_dir, 'node_modules', 'hexo-next-publist', 'widget');
-    const debug = pathFn.resolve(hexo.base_dir) === SELF;
-    const selfNodeModules = pathFn.join(SELF, 'node_modules');
-
-    new Widget(hexo, 'publist', WIDGET_DIR, {
-        prefixUrl: opts.assets_prefix,
-        // additional resolve paths for self's node_modules
-        webpackConfig: {
-            resolve: {
-                modules: [selfNodeModules]
-            },
-            resolveLoader: {
-                modules: [selfNodeModules]
-            },
-        },
-        webpackConfigPath: 'webpack.config.js',
-        debug: debug ? {
-            snapshot: {
-                managedPaths: [selfNodeModules]
-            }
-        } : undefined,
-    }).register();
+    // a widget box containing js/css files for publist
+    new PublistWidget(hexo, opts).register();
 
     // the actual tag
     new PublistTag(hexo, opts).register();
