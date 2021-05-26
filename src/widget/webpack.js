@@ -55,6 +55,7 @@ class WebpackProcessor {
         }, debug);
 
         return _.mergeWith(
+            {},
             this.initialWebpackConfig,
             debugConfig,
             loadedConfig,
