@@ -5,6 +5,7 @@ const prequire = require('parent-require');
 const { Volume, createFsFromVolume } = require('memfs');
 const { WebpackProcessor, MemFsPlugin } = require('./webpack');
 const _ = require('lodash');
+const { PublistWebpackError } = require('../consts');
 
 const Box = prequire('hexo/lib/box');
 
@@ -70,7 +71,7 @@ class Widget extends Box {
                 return generateFromVolume(this.volume, '/dist', prefixUrl);
             } catch (err) {
                 ctx.log.error(err);
-                return [];
+                throw new PublistWebpackError();
             }
         });
     }

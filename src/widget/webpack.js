@@ -1,4 +1,3 @@
-const pathFn = require('path');
 const { promisify } = require('util');
 
 const _ = require('lodash');
@@ -90,9 +89,11 @@ class WebpackProcessor {
             }
             await promisify(compiler.close).apply(compiler);
 
-            ctx.log.info(`${info.assets.length} files webpacked for ${config.name} in ${chalk.cyan(info.time, 'ms')}`);
-            for (const asset of info.assets) {
-                ctx.log.debug(`Webpacked: ${config.name}::${asset.name} ${asset.size} bytes`);
+            if (!stats.hasErrors()) {
+                ctx.log.info(`${info.assets.length} files webpacked for ${config.name} in ${chalk.cyan(info.time, 'ms')}`);
+                for (const asset of info.assets) {
+                    ctx.log.debug(`Webpacked: ${config.name}::${asset.name} ${asset.size} bytes`);
+                }
             }
 
             return stats;

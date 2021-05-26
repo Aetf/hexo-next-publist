@@ -30,3 +30,12 @@ class PublistStrictAbort extends Error {
     }
 }
 module.exports.PublistStrictAbort = PublistStrictAbort;
+
+class PublistWebpackError extends Error {
+    constructor() {
+        super(`Aborting because there were errors when webpacking`);
+        this.name = 'PublistWebpackError';
+        Error.captureStackTrace(this, PublistWebpackError);
+    }
+}
+module.exports.PublistWebpackError = PublistWebpackError;
