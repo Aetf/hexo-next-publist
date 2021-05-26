@@ -1,6 +1,7 @@
 const pathFn = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const cssnano = require('cssnano');
+const babelPresetEnv = require('@babel/preset-env').default;
 
 const SELF = pathFn.resolve(__dirname, '..');
 
@@ -42,9 +43,13 @@ const config = {
                     {
                         loader: 'babel-loader',
                         options: {
+                            root: __dirname,
                             presets: [
                                 [
-                                    '@babel/preset-env',
+                                    // load preset-env by require directly
+                                    // otherwise babel has problem finding the correct node_modules
+                                    // path when this is used as a library
+                                    babelPresetEnv,
                                     {
                                         targets: "defaults",
                                         useBuiltIns: "usage",

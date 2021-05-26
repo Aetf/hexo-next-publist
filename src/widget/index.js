@@ -43,10 +43,10 @@ class Widget extends Box {
             name,
             resolve: {
                 // resolve paths for modules inside code
-                modules: ['node_modules', pathFn.join(ctx.base_dir, 'node_modules')]
+                modules: [pathFn.join(baseDir, 'node_modules')]
             },
             resolveLoader: {
-                modules: ['node_modules', pathFn.join(ctx.base_dir, 'node_modules')]
+                modules: [pathFn.join(baseDir, 'node_modules')]
             },
             cache: {
                 type: 'filesystem',
