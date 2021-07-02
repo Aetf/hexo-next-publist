@@ -13,8 +13,6 @@ class PublistWidget extends Widget {
         const debug = pathFn.resolve(ctx.base_dir) === SELF;
         const selfNodeModules = pathFn.join(SELF, 'node_modules');
 
-        console.log(selfNodeModules);
-
         super(ctx, 'publist', WIDGET_DIR, {
             prefixUrl: opts.assets_prefix,
             // additional resolve paths for self's node_modules
