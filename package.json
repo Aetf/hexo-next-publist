@@ -49,6 +49,7 @@
         "sass-loader": "^11.0.1",
         "strip-indent": "^3.0.0",
         "style-loader": "^2.0.0",
+        "verror": "^1.10.0",
         "webpack": "^5.28.0"
     },
     "peerDependencies": {

@@ -6,6 +6,7 @@ const chalk = require('chalk');
 const _ = require('lodash');
 const stripIndent = require('strip-indent');
 const bibtex = require('@retorquere/bibtex-parser');
+const { MultiError } = require('verror');
 
 const { PublistStrictAbort } = require('./consts');
 
@@ -35,19 +36,19 @@ async function allSettled(promises) {
 }
 
 function reportErrors(ctx, errors) {
-    let hasError = false;
+    let bibErrors = [];
     for (const err of errors) {
         if (err instanceof BibRendererError) {
-            hasError = true;
             for (const inner of err.errors) {
                 ctx.log.error(inner);
             }
+            bibErrors.push(err);
         } else {
             // re-raise anything else, which should be fatal.
             throw err;
         }
     }
-    return hasError;
+    return bibErrors;
 }
 
 class BibtexParseError extends Error {
@@ -93,20 +94,20 @@ class BibRendererError extends Error {
 }
 
 async function bibRenderer(ctx, opts, { path, text }) {
-    let hasError = false;
+    let bibErrors = [];
     path = pathFn.relative(ctx.source_dir, path);
 
     // parse content as bibtex
     const [ entries, errors ] = await parseBibEntries(ctx, opts, { path, text });
-    hasError |= reportErrors(ctx, errors);
+    bibErrors.push(...reportErrors(ctx, errors));
 
     // construct list of items
     const [items, itemErrors] = await allSettled(entries.map(entry => itemFromEntry(ctx, opts, entry)));
-    hasError |= reportErrors(ctx, itemErrors);
+    bibErrors.push(...reportErrors(ctx, itemErrors));
 
-    if (hasError) {
+    if (bibErrors.length > 0) {
         if (opts.strict) {
-            throw new PublistStrictAbort(path);
+            throw new PublistStrictAbort(path, new MultiError(bibErrors));
         } else {
             ctx.log.warn(`${path}: there were errors while loading, bib entries may be incomplete.`);
         }

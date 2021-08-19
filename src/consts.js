@@ -1,6 +1,7 @@
 'use strict';
 
 const pathFn = require('path');
+const { VError, WError } = require('verror');
 
 module.exports.SELF = pathFn.resolve(__dirname, '..');
 module.exports.TEMPLATE_DIR = pathFn.resolve(__dirname, '../templates');
@@ -22,20 +23,26 @@ module.exports.DEFAULT_INSTOPTS = {
     venues: {},
 }
 
-class PublistStrictAbort extends Error {
-    constructor(file) {
-        super(`'${file}': aborting because there were errors and the strict mode is enabled`);
-        this.name = 'PublistStrictAbort';
-        Error.captureStackTrace(this, PublistStrictAbort);
+class PublistStrictAbort extends VError {
+    constructor(file, cause, info) {
+        super({
+            name: 'PublistStrictAbort',
+            cause,
+            info,
+            constructorOpt: PublistStrictAbort,
+        }, `'${file}': aborting because there were errors and the strict mode is enabled`);
     }
 }
 module.exports.PublistStrictAbort = PublistStrictAbort;
 
-class PublistWebpackError extends Error {
-    constructor() {
-        super(`Aborting because there were errors when webpacking`);
-        this.name = 'PublistWebpackError';
-        Error.captureStackTrace(this, PublistWebpackError);
+class PublistWebpackError extends WError {
+    constructor(cause, info) {
+        super({
+            name: 'PublistWebpackError',
+            cause,
+            info,
+            constructorOpt: PublistWebpackError,
+        }, `Aborting because there were errors when webpacking`);
     }
 }
 module.exports.PublistWebpackError = PublistWebpackError;

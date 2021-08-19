@@ -8,6 +8,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const yaml = require('js-yaml');
 const Ajv = require('ajv').default;
+const { VError } = require('verror');
 
 const schema_instopts = require('./schema_instopts.json');
 const { TEMPLATE_DIR, DEFAULT_INSTOPTS, PublistStrictAbort } = require('./consts');
@@ -191,35 +192,40 @@ class PubsResolver {
     processPubs = pubs => {
         const { hexo, context, now, instOpts } = this;
 
-        // resolve fields
-        pubs = pubs.map(this._pubResolveConf)
-            .map(this._pubResolveDate)
-            .map(this._pubResolveHref);
-        // sort and filter any unpublished items
-        pubs = pubs.sort((a, b) => b.date.diff(a.date))
-            .filter(pub => {
-                const res = pub.date.isBefore(now) || instOpts.show_unpublished;
-                if (!res) {
-                    hexo.log.info(`${formatLocation(context)}: skip publication in the future: ${chalk.magenta(pub.citekey)} @ ${pub.date.format('YYYY-MM-DD')}`);
-                }
-                return res;
-            });
+        try {
+            // resolve fields
+            pubs = pubs.map(this._pubResolveConf)
+                .map(this._pubResolveDate)
+                .map(this._pubResolveHref);
+            // sort and filter any unpublished items
+            pubs = pubs.sort((a, b) => b.date.diff(a.date))
+                .filter(pub => {
+                    const res = pub.date.isBefore(now) || instOpts.show_unpublished;
+                    if (!res) {
+                        hexo.log.info(`${formatLocation(context)}: skip publication in the future: ${chalk.magenta(pub.citekey)} @ ${pub.date.format('YYYY-MM-DD')}`);
+                    }
+                    return res;
+                });
 
-        // prepare filtering
-        // generate an extra object containig every extra attr specified in extra_filters
-        for (const item of pubs) {
-            item.extra = {};
-            for (const fspec of instOpts.extra_filters) {
-                let value = _.get(item, fspec.path, []);
-                if (!Array.isArray(value)) {
-                    // convert everything to array
-                    value = [value];
+            // prepare filtering
+            // generate an extra object containig every extra attr specified in extra_filters
+            for (const item of pubs) {
+                item.extra = {};
+                for (const fspec of instOpts.extra_filters) {
+                    let value = _.get(item, fspec.path, []);
+                    if (!Array.isArray(value)) {
+                        // convert everything to array
+                        value = [value];
+                    }
+                    item.extra[fspec.id] = value;
                 }
-                item.extra[fspec.id] = value;
+                item.extra_json_escaped = _.escape(JSON.stringify(item.extra));
             }
-            item.extra_json_escaped = _.escape(JSON.stringify(item.extra));
+            return pubs
+        } catch (err) {
+            hexo.log.debug(VError.info(err));
+            throw new PublistStrictAbort(context.source, err);
         }
-        return pubs
     }
 
     /**
@@ -341,13 +347,15 @@ class PubsResolver {
             } else {
                 const msg = `${formatLocation(context)}: bib entry '${pub.citekey}' has unknown confkey '${pub.confkey}'`;
                 if (opts.strict) {
-                    hexo.log.error(msg);
-                    hexo.log.debug(`All known confkeys: ${_.keys(confs)}, regexs: ${confs_fuzzy}`);
-                    throw new PublistStrictAbort(context.source);
-                } else {
-                    hexo.log.warn(msg);
-                    hexo.log.debug(`All known confkeys: ${_.keys(confs)}, regexs: ${confs_fuzzy}`);
+                    throw new VError({
+                        info: {
+                            confkeys: _.keys(confs),
+                            regexs: confs_fuzzy
+                        }
+                    }, msg);
                 }
+                hexo.log.warn(msg);
+                hexo.log.debug(`All known confkeys: ${_.keys(confs)}, regexs: ${confs_fuzzy}`);
             }
         }
         return {
@@ -367,11 +375,9 @@ class PubsResolver {
                 const msg = `${formatLocation(context)}: can not infer date for bib entry '${pub.citekey}'.`
                             + ` There is no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid year field.`;
                 if (opts.strict) {
-                    hexo.log.error(msg);
-                    throw new PublistStrictAbort(context.source);
-                } else {
-                    hexo.log.warn(msg);
+                    throw new VError(msg);
                 }
+                hexo.log.warn(msg);
                 year = now.format('YYYY');
             }
 
@@ -387,11 +393,9 @@ class PubsResolver {
                 const msg = `${formatLocation(context)}: can not infer date for bib entry '${pub.citekey}'.`
                             + ` There is no date info for '${pub.confkey}', and '${pub.citekey}' doesn't have a valid month field.`;
                 if (opts.strict) {
-                    hexo.log.error(msg);
-                    throw new PublistStrictAbort(context.source);
-                } else {
-                    hexo.log.warn(msg);
+                    throw new VError(msg);
                 }
+                hexo.log.warn(msg);
                 date = now;
             }
         }
