@@ -8,10 +8,6 @@ const fs = require('fs');
 const { PubsResolver } = require('../src/publist-tag');
 const { getHexo } = require('./helpers');
 
-function normalize(obj) {
-    return JSON.parse(JSON.stringify(obj));
-}
-
 test('Tag Options V1', async t => {
     const hexo = await getHexo();
 

@@ -168,7 +168,7 @@ class PubsResolver {
                 return venue.occurrences.map(conf => [
                     conf.key,
                     _.defaults(
-                        {venue: venueId, cat: venue.category},
+                        {venue: venueId, cat: _.get(venue, 'category', '')},
                         _.update(conf, 'date', date => _.isUndefined(date) ? undefined : moment.utc(date)),
                         {url: venue.url}
                     ),
@@ -297,6 +297,7 @@ class PubsResolver {
                 value: '!others',
                 count: pubs.filter(pub => pub.confkey.length === 0).length,
             },
+            ...venues[''] || [],
         ];
 
         fspecs.unshift({
