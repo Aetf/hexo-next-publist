@@ -13,6 +13,10 @@ extra_filters:
   path: badges
 # mapping from general conference name to details
 venues:
+  'PhD Dissertation':
+    occurrences:
+    - key: phdthesis
+      name: PhD Dissertation
   arXiv:
     category: Technical Reports
     occurrences:

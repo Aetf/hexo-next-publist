@@ -330,6 +330,7 @@ test('Filtering spec generation', async t => {
     const { hexo, opts } = t.context;
     const pubs = [
         createEntry({
+            citekey: 'first-article',
             confkey: "abc'1", title: 'Title',
             badges: ['Badge1'],
             meta: {
@@ -337,6 +338,7 @@ test('Filtering spec generation', async t => {
             }
         }),
         createEntry({
+            citekey: 'second-article',
             confkey: "abc'1", title: 'Title2',
             badges: ['Badge2'],
             meta: {
@@ -366,10 +368,37 @@ test('Filtering spec generation', async t => {
     t.snapshot(fspecs);
 });
 
+test('Uncategorized venue', async t => {
+    const { hexo, opts } = t.context;
+    const pubs = [
+        createEntry({
+            citekey: 'mythesis', confkey: "phdthesis", title: 'Title',
+            bib: {
+                fields: {
+                    year: ['2021'], month: ['08'],
+                }
+            }
+        }),
+    ];
+
+    const instOpts = `
+    version: 2
+    venues:
+      'PhD Dissertation':
+        occurrences:
+        - key: phdthesis
+          name: PhD Dissertation
+    `;
+
+    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
+    const fspecs = resolver.processFspecs(resolver.processPubs(pubs));
+    t.snapshot(fspecs);
+});
+
 test('Strict reject entry without date', async t => {
     const { hexo, opts } = t.context;
     setHexoLocals(hexo, 'test', [
-        createEntry({ confkey: "abc'1", title: 'Title' }),
+        createEntry({ citekey: 'strict-article', confkey: "abc'1", title: 'Title' }),
     ]);
 
     const instOpts = `
@@ -392,6 +421,7 @@ test('Strict reject entry without confkey', async t => {
     const { hexo, opts } = t.context;
     setHexoLocals(hexo, 'test', [
         createEntry({
+            citekey: 'no-confkey-article',
             title: 'Title',
             bib: {
                 fields: {
