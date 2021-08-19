@@ -1,0 +1,8 @@
+[git]
+tagArgs=["-s"]
+requireBranch="master"
+tagAnnotation="v${version}\n\n${changelog}\n"
+[npm]
+publish=false
+[github]
+release=false
