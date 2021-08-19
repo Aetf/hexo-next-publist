@@ -53,7 +53,7 @@
                 "type": "object",
                 "properties": {
                     "category": {
-                        "description": "The category of the conference",
+                        "description": "the category of the conference. Omit to create an uncategorized venue",
                         "type": "string"
                     },
                     "url": {
@@ -80,7 +80,7 @@
                                     "type": "string"
                                 },
                                 "date": {
-                                    "description": "the date when the conference is held. Also used in sorting. When missing, the year and month from the bib entry is used.",
+                                    "description": "the date when the conference is held. Also used in sorting. When omitted, the date defined in the venue is used. When both are missing, the year and month from the bib entry is used.",
                                     "type": "string"
                                 },
                                 "url": {
@@ -96,7 +96,7 @@
                         }
                     }
                 },
-                "required": [ "category", "occurrences" ],
+                "required": [ "occurrences" ],
                 "additionalProperties": false
             }
         }
