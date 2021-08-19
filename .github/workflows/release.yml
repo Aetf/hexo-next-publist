@@ -1,9 +1,6 @@
 name: release
 on:
   push:
-    # Enable when testing release infrastructure on a branch.
-    branches:
-    - build
     tags:
     - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
@@ -20,27 +17,16 @@ jobs:
   create-release:
     needs: test
     runs-on: ubuntu-latest
-    env:
-      # Set to force version number, e.g., when no tag exists.
-      PKG_VERSION: ''
     steps:
-      - name: Get the release version from the tag
-        if: env.PKG_VERSION == ''
+      - uses: actions/checkout@v2
+      - name: Generate release note
         run: |
-          # Apparently, this is the right way to get a tag name. Really?
-          #
-          # See: https://github.community/t5/GitHub-Actions/How-to-get-just-the-tag-name/m-p/32167/highlight/true#M1027
-          echo "PKG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-          echo "version is: ${{ env.PKG_VERSION }}"
-
-      - name: Create GitHub release
-        id: release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git fetch --tags --force
+          git for-each-ref --format="## Changelog%0a%0a%(contents:body)" ${GITHUB_REF} > ${{ github.workspace }}-ReleaseNote.txt
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ env.PKG_VERSION }}
-          release_name: ${{ env.PKG_VERSION }}
+          body_path: ${{ github.workspace }}-ReleaseNote.txt
 
   publish-npm:
     needs: test
