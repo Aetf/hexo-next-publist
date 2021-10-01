@@ -27,7 +27,7 @@
     "dependencies": {
         "@babel/core": "^7.13.13",
         "@babel/preset-env": "^7.13.12",
-        "@primer/css": "^17.1.1",
+        "@primer/css": "^17.11.0",
         "@retorquere/bibtex-parser": "^3.2.35",
         "ajv": "^8.0.1",
         "babel-loader": "^8.2.2",
@@ -36,6 +36,7 @@
         "core-js": "^3.9.1",
         "css-loader": "^5.2.0",
         "cssnano": "^5.0.4",
+        "cssnano-preset-advanced": "^5.1.4",
         "hexo-fs": "^3.1.0",
         "js-yaml": "^4.0.0",
         "lodash": "^4.17.21",

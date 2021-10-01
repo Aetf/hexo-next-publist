@@ -1,5 +1,34 @@
 /* Color */
 @import "./min-color.scss";
+
+/*
+
+// Import all colors, mostly for use in the gen-min-color.py
+
+@import "@primer/css/support/mixins/color-modes.scss";
+@import "@primer/primitives/dist/scss/colors/_light.scss";
+// Outputs the CSS variables
+// Use :root (html element) to define a default
+
+@include color-mode-theme(light, true) {
+  @include primer-colors-light;
+}
+
+// Color mode boundaries
+// Enables nesting of different color modes
+
+[data-color-mode] {
+  color: var(--color-fg-default);
+  background-color: var(--color-canvas-default);
+}
+
+// color-scheme
+// Enables color modes for native elements
+
+@include color-mode(light) { color-scheme: light; }
+@include color-mode(dark) { color-scheme: light; }
+*/
+
 /* Tooltipped */
 @import "@primer/css/tooltips/index.scss";
 /* SelectMenu */

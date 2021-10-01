@@ -18,12 +18,17 @@ with open(sys.argv[2]) as f:
         for line in f.readlines()
     ])
 
+with open(sys.argv[1]) as f:
+    theme = dict(
+        line.strip().split(':')
+        for line in f
+    )
+
 print("/* Genreated by gen-min-color.py */")
 print(":root {")
-with open(sys.argv[1]) as f:
-    for line in f:
-        name, val = line.strip().split(':')
-        if name in needed:
-            print(f'  {name}:{val};')
-
+for name in sorted(needed):
+    if name in theme:
+        print(f'  {name}:{theme[name]};')
+    else:
+        print(f'{name} not found in theme', file=sys.stderr)
 print("}")
