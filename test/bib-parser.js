@@ -75,15 +75,16 @@ test('bibtex parsing', t => {
     const opts = {
         verbatimFields: [/^publist_/],
     }
-    const chunks = bibtex.chunker(BIBSOURCE, opts);
+    const chunks = bibtex.chunker.parse(BIBSOURCE, opts);
     t.is(chunks.length, 1);
 
     const chunk = chunks[0].text;
     // normal info
     const bib = bibtex.parse(chunk, opts).entries[0];
     // get ast to strip fields
-    const ast = bibtex.ast(chunk, opts);
-    const entryAst = ast[0].children[0];
+    const ast = bibtex.ast(chunk, opts, false).filter(node => node.kind === 'Entry');
+    t.is(ast.length, 1);
+    const entryAst = ast[0];
 
     const fields = entryAst.fields.filter(field => !field.name.startsWith('publist_'));
     let gen = `@${entryAst.type}{${entryAst.id},\n`;

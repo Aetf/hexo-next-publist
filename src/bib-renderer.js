@@ -126,11 +126,10 @@ async function bibRenderer(ctx, opts, { path, text }) {
  */
 async function parseBibEntries(ctx, opts, { path, text: input }) {
     // chunk into pieces for easier association of raw data and parsed data
-    let chunks = await bibtex.chunker(input, { async: true });
+    let chunks = await bibtex.chunker.promises.parse(input);
 
     const publistPtn = /^publist_/;
     const bibOptions = {
-        async: true,
         verbatimFields: [publistPtn],
     }
     let res = chunks.filter(chunk => chunk.entry || chunk.error).map(async chunk => {
@@ -139,7 +138,7 @@ async function parseBibEntries(ctx, opts, { path, text: input }) {
         }
         const text = chunk.text;
         // normal info
-        const bib = await bibtex.parse(text, bibOptions);
+        const bib = await bibtex.promises.parse(text, bibOptions);
         if (bib.errors.length !== 0) {
             throw BibRendererError.fromParseErrors(path, bib.errors);
         }
@@ -148,15 +147,15 @@ async function parseBibEntries(ctx, opts, { path, text: input }) {
         }
         const entry = bib.entries[0];
         // get ast
-        const ast = await bibtex.ast(text, bibOptions);
-        if (ast.length !== 1
-            || ast[0].kind !== 'Bibliography'
-            || ast[0].children.length !== 1
-            || ast[0].children[0].kind !== 'Entry'
-            ) {
+        // in newer version of bibtex parser, ast can not automatically cleanup chunks with
+        // NonEntryText, so we disable clean and do filtering ourselves.
+        // The only thing we lose is the ability to translate @string references and a few other
+        // things, which aren't commonly used anyway.
+        const ast = bibtex.ast(text, bibOptions, false).filter(node => node.kind === 'Entry');
+        if (ast.length !== 1) {
             throw new TypeError('Expected only one entry chunk in the ast');
         }
-        const entryAst = ast[0].children[0];
+        const entryAst = ast[0];
 
         // reconstruct original text after striping fields starting with publist_
         const fields = entryAst.fields.filter(field => !publistPtn.test(field.name));
