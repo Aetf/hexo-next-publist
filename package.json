@@ -47,7 +47,7 @@
         "postcss": "^8.2.8",
         "postcss-loader": "^6.1.1",
         "sass": "^1.34.0",
-        "sass-loader": "^12.1.0",
+        "sass-loader": "^13.0.0",
         "strip-indent": "^3.0.0",
         "style-loader": "^3.3.0",
         "verror": "^1.10.0",
