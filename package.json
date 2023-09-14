@@ -45,7 +45,7 @@
         "moment": "^2.29.1",
         "parent-require": "^1.0.0",
         "postcss": "^8.2.8",
-        "postcss-loader": "^6.1.1",
+        "postcss-loader": "^7.0.0",
         "sass": "^1.34.0",
         "sass-loader": "^13.0.0",
         "strip-indent": "^3.0.0",
