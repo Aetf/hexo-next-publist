@@ -40,7 +40,7 @@
         "hexo-fs": "^4.1.0",
         "js-yaml": "^4.0.0",
         "lodash": "^4.17.21",
-        "memfs": "^3.2.0",
+        "memfs": "^4.0.0",
         "mini-css-extract-plugin": "^2.3.0",
         "moment": "^2.29.1",
         "parent-require": "^1.0.0",
