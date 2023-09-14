@@ -30,7 +30,7 @@
         "@primer/css": "^21.0.0",
         "@retorquere/bibtex-parser": "^7.0.0",
         "ajv": "^8.0.1",
-        "babel-loader": "^8.2.2",
+        "babel-loader": "^9.0.0",
         "chalk": "^4.1.0",
         "clipboard": "^2.0.8",
         "core-js": "^3.9.1",
