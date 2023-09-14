@@ -35,7 +35,7 @@
         "clipboard": "^2.0.8",
         "core-js": "^3.9.1",
         "css-loader": "^6.3.0",
-        "cssnano": "^5.0.4",
+        "cssnano": "^6.0.0",
         "cssnano-preset-advanced": "^6.0.0",
         "hexo-fs": "^4.1.0",
         "js-yaml": "^4.0.0",
