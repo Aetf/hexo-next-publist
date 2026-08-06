@@ -22,6 +22,8 @@ jobs:
   create-release:
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Generate release note
@@ -31,6 +33,7 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           body_path: ${{ github.workspace }}-ReleaseNote.txt
 
   publish-npm:
