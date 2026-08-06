@@ -3,12 +3,17 @@ on:
   push:
     tags:
     - 'v[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
       - run: npm ci
@@ -33,11 +38,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
           registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false # never use caching in release builds
       - run: npm ci
+      - run: npm run build --if-present
       - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
