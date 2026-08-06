@@ -7,7 +7,21 @@ const { WebpackProcessor, MemFsPlugin } = require('./webpack');
 const _ = require('lodash');
 const { PublistWebpackError } = require('../consts');
 
-const Box = prequire('hexo/lib/box');
+// Hexo >= 7 ships compiled sources under dist/ and exports Box as a default
+// export; Hexo <= 6 had lib/box with a plain module.exports.
+const Box = (() => {
+    for (const modPath of ['hexo/dist/box', 'hexo/lib/box']) {
+        try {
+            const mod = prequire(modPath);
+            return mod.default || mod;
+        } catch (err) {
+            // only swallow "this hexo version doesn't have that path", so a genuine
+            // failure inside the module itself still surfaces
+            if (!/Cannot find module/.test(err.message)) throw err;
+        }
+    }
+    throw new Error('hexo-next-publist: cannot locate hexo\'s Box class');
+})();
 
 
 class Widget extends Box {
