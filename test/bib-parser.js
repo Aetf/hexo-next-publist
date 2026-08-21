@@ -77,8 +77,8 @@ test('bibtex parsing', t => {
     t.is(chunks.length, 1);
 
     const chunk = chunks[0].text;
-    // normal info
-    const bib = bibtex.parse(chunk, opts).entries[0];
+    // normal info, only parsed to make sure it doesn't throw
+    bibtex.parse(chunk, opts);
     // get ast to strip fields
     const ast = bibtex.ast(chunk, opts, false).filter(node => node.kind === 'Entry');
     t.is(ast.length, 1);

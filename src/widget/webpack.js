@@ -114,7 +114,7 @@ export class WebpackProcessor {
     // second pDebounce actually groups calls waiting for 100ms
     _compileDebounce = pDebounce(pDebounce.promise(this._compile), 100)
 
-    process = async (file) => {
+    process = async () => {
         // The file may be deleted, changed or created.
         // No matter what, we just rerun webpack
         await this._compileDebounce();

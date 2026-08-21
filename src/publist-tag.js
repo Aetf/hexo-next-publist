@@ -476,7 +476,7 @@ export class PublistTag {
             }
         } catch (err) {
             if (!(err instanceof PublistTagError)) {
-                err = tagErrorSafe(err);
+                tagErrorSafe(err);
             }
             throw err;
         }

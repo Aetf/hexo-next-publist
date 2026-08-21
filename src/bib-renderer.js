@@ -164,7 +164,7 @@ async function parseBibEntries(ctx, opts, { path, text: input }) {
         bibStr += '\n}\n';
 
         // get abstract
-        let abstract = '';
+        let abstract;
         const absField = entryAst.fields.find(field => field.name === 'publist_abstract');
         if (absField) {
             abstract = concatSource(absField.value).replace(/^{/, '').replace(/}$/, '');
