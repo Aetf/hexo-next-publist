@@ -372,7 +372,25 @@ export class PubsResolver {
     _pubResolveDate = pub => {
         const { hexo, opts, context, now } = this;
 
-        let date = _.get(pub.conf, 'date', moment.invalid());
+        // the entry's own biblatex date field takes priority over the
+        // conference date, so individual entries can be fine tuned
+        let date = moment.invalid();
+        const bibDate = _.get(pub.bib.fields, 'date[0]');
+        if (!_.isUndefined(bibDate)) {
+            // biblatex date ranges sort by their start
+            date = moment.utc(bibDate.split('/')[0], ['YYYY-MM-DD', 'YYYY-MM', 'YYYY'], true);
+            if (!date.isValid()) {
+                const msg = `${formatLocation(context)}: bib entry '${pub.citekey}' has an invalid date field '${bibDate}'.`;
+                if (opts.strict) {
+                    throw new VError(msg);
+                }
+                hexo.log.warn(msg);
+            }
+        }
+
+        if (!date.isValid()) {
+            date = _.get(pub.conf, 'date', moment.invalid());
+        }
         if (!date.isValid()) {
             // try the bib year and month field
             let year = _.get(pub.bib.fields, 'year[0]');
