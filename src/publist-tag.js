@@ -1,17 +1,22 @@
-'use strict';
+import pathFn from 'node:path';
+import crypto from 'node:crypto';
+import { createRequire } from 'node:module';
 
-const pathFn = require('path');
-const crypto = require('crypto');
+import chalk from 'chalk';
+import _ from 'lodash';
+import moment from 'moment';
+import yaml from 'js-yaml';
+import { Ajv } from 'ajv';
+import verror from 'verror';
 
-const chalk = require('chalk');
-const _ = require('lodash');
-const moment = require('moment');
-const yaml = require('js-yaml');
-const Ajv = require('ajv').default;
-const { VError } = require('verror');
+import { TEMPLATE_DIR, DEFAULT_INSTOPTS, PublistStrictAbort } from './consts.js';
 
+const { VError } = verror;
+
+// import attributes for JSON are still Node-version-sensitive, so load the
+// schema through a real require instead
+const require = createRequire(import.meta.url);
 const schema_instopts = require('./schema_instopts.json');
-const { TEMPLATE_DIR, DEFAULT_INSTOPTS, PublistStrictAbort } = require('./consts');
 
 const ajv = new Ajv({ strict: true });
 const instOptsValidator = ajv.compile(schema_instopts);
@@ -63,7 +68,7 @@ class PublistTagError extends Error {
 /**
  * One per tag instance
  */
-class PubsResolver {
+export class PubsResolver {
     constructor(hexo, opts, instOptsYaml, context) {
         this.hexo = hexo;
         this.opts = opts;
@@ -407,7 +412,7 @@ class PubsResolver {
     }
 }
 
-class PublistTag {
+export class PublistTag {
     constructor(hexo, opts, test_id) {
         this.hexo = hexo;
         this.opts = opts;
@@ -496,6 +501,3 @@ class PublistTag {
         );
     };
 }
-
-exports.PubsResolver = PubsResolver;
-exports.PublistTag = PublistTag;

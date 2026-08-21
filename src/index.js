@@ -1,13 +1,10 @@
-'use strict';
+import _ from 'lodash';
 
-/* global hexo */
-
-const _ = require('lodash');
-
-const { DEFAULT_OPTIONS } = require('./consts');
-const { PublistWidget } = require('./publist-widget');
-const { PublistTag } = require('./publist-tag');
-const { SSRFilter } = require('./filter');
+import { DEFAULT_OPTIONS } from './consts.js';
+import { register as registerBibRenderer } from './bib-renderer.js';
+import { PublistWidget } from './publist-widget.js';
+import { PublistTag } from './publist-tag.js';
+import { SSRFilter } from './filter.js';
 
 function processOptions (hexo) {
     let opts = _.defaults({}, hexo.config.publist, DEFAULT_OPTIONS);
@@ -21,11 +18,11 @@ function processOptions (hexo) {
     return opts;
 }
 
-function register(hexo) {
+export default function register(hexo) {
     const opts = processOptions(hexo);
 
     // register renderer bib in _data, which is inside the source box
-    require('./bib-renderer').register(hexo, opts);
+    registerBibRenderer(hexo, opts);
 
     // a widget box containing js/css files for publist
     new PublistWidget(hexo, opts).register();
@@ -36,5 +33,3 @@ function register(hexo) {
     // after generate filter to optionally do server-side rendering
     new SSRFilter(hexo, opts).register();
 }
-
-register(hexo);
