@@ -1,15 +1,15 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "major": {
     "dependencyDashboardApproval": true
   },
-  "patch": {
-    "enabled": false
-  },
-  "automergeStrategy": "squash",
+  "minimumReleaseAge": "3 days",
+  "rebaseWhen": "behind-base-branch",
+  "automergeStrategy": "rebase",
+  "semanticCommits": "enabled",
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
@@ -18,6 +18,10 @@
     {
       "matchDepTypes": ["devDependencies"],
       "automerge": true
+    },
+    {
+      "matchDepTypes": ["dependencies"],
+      "semanticCommitType": "fix"
     }
   ]
 }
