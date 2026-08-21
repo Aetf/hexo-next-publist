@@ -1,12 +1,13 @@
-'use strict';
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
-const test = require('ava');
+import test from 'ava';
 
-const path = require('path');
-const fs = require('fs');
+import { PubsResolver } from '../src/publist-tag.js';
+import { getHexo } from './helpers/index.js';
 
-const { PubsResolver } = require('../src/publist-tag');
-const { getHexo } = require('./helpers');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 test('Tag Options V1', async t => {
     const hexo = await getHexo();

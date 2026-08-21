@@ -1,10 +1,8 @@
-'use strict';
+import test from 'ava';
 
-const test = require('ava');
+import stripIndent from 'strip-indent';
 
-const stripIndent = require('strip-indent');
-
-const bibtex = require('@retorquere/bibtex-parser');
+import bibtex from '@retorquere/bibtex-parser';
 
 const BIBSOURCE =
 `% publist specific settings starts with publist_, they will not show up in the end result

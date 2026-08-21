@@ -1,14 +1,15 @@
-'use strict';
+import { createRequire } from 'node:module';
 
-const test = require('ava');
+import test from 'ava';
 
-const stripIndent = require('strip-indent');
-const _ = require('lodash');
+import _ from 'lodash';
 
-const { getHexo } = require('./helpers');
+import { getHexo } from './helpers/index.js';
 
-const { bibRenderer } = require('../src/bib-renderer');
-const { PublistStrictAbort } = require('../src/consts');
+import { bibRenderer } from '../src/bib-renderer.js';
+import { PublistStrictAbort } from '../src/consts.js';
+
+const require = createRequire(import.meta.url);
 
 test.beforeEach('Init hexo', async t => {
     t.context.hexo = await getHexo();
