@@ -1,0 +1,13 @@
+# Minimal hexo site rendering the publist fixture, used by the render
+# regression check to compare a PR's rendering against its merge base.
+title: render-check
+url: http://render-check.invalid
+root: /
+permalink: :year/:month/:day/:title/
+theme: bare
+
+publist:
+  strict: true
+  # keep css out of the html so the html diff only sees markup changes;
+  # css is covered by the screenshot comparison instead
+  embed_css: false
