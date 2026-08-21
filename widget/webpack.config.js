@@ -1,7 +1,15 @@
-const pathFn = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const cssnano = require('cssnano');
-const babelPresetEnv = require('@babel/preset-env').default;
+import pathFn from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import cssnano from 'cssnano';
+import babelPresetEnvModule from '@babel/preset-env';
+
+// @babel/preset-env is CJS with an interop default export
+const babelPresetEnv = babelPresetEnvModule.default ?? babelPresetEnvModule;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = pathFn.dirname(__filename);
 
 const SELF = pathFn.resolve(__dirname, '..');
 
@@ -90,4 +98,4 @@ const config = {
     },
 };
 
-module.exports = config;
+export default config;

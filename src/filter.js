@@ -1,7 +1,5 @@
-'use strict'
-
-const _ = require('lodash');
-const chalk = require('chalk');
+import _ from 'lodash';
+import chalk from 'chalk';
 
 function streamToString (stream) {
   const chunks = [];
@@ -22,7 +20,7 @@ async function replaceAsync(str, regex, asyncFn) {
     return str.replace(regex, () => data.shift());
 }
 
-class SSRFilter {
+export class SSRFilter {
     constructor(ctx, opts) {
         this.ctx = ctx;
         this.opts = opts;
@@ -90,5 +88,3 @@ class SSRFilter {
         }
     }
 }
-
-module.exports.SSRFilter = SSRFilter;

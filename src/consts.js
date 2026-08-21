@@ -1,20 +1,24 @@
-'use strict';
+import pathFn from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const pathFn = require('path');
-const { VError, WError } = require('verror');
+import verror from 'verror';
 
-module.exports.SELF = pathFn.resolve(__dirname, '..');
-module.exports.TEMPLATE_DIR = pathFn.resolve(__dirname, '../templates');
-module.exports.WIDGET_DIR = pathFn.resolve(__dirname, '../widget');
+const { VError, WError } = verror;
 
-module.exports.DEFAULT_OPTIONS = {
+const __dirname = pathFn.dirname(fileURLToPath(import.meta.url));
+
+export const SELF = pathFn.resolve(__dirname, '..');
+export const TEMPLATE_DIR = pathFn.resolve(__dirname, '../templates');
+export const WIDGET_DIR = pathFn.resolve(__dirname, '../widget');
+
+export const DEFAULT_OPTIONS = {
     assets_prefix: '/assets/publist/',
     new_months: 3,
     strict: false,
     embed_css: true,
 };
 
-module.exports.DEFAULT_INSTOPTS = {
+export const DEFAULT_INSTOPTS = {
     version: 2,
     pub_dir: 'assets',
     show_unpublished: false,
@@ -23,7 +27,7 @@ module.exports.DEFAULT_INSTOPTS = {
     venues: {},
 }
 
-class PublistStrictAbort extends VError {
+export class PublistStrictAbort extends VError {
     constructor(file, cause, info) {
         super({
             name: 'PublistStrictAbort',
@@ -33,9 +37,8 @@ class PublistStrictAbort extends VError {
         }, `'${file}': aborting because there were errors and the strict mode is enabled`);
     }
 }
-module.exports.PublistStrictAbort = PublistStrictAbort;
 
-class PublistWebpackError extends WError {
+export class PublistWebpackError extends WError {
     constructor(cause, info) {
         super({
             name: 'PublistWebpackError',
@@ -45,4 +48,3 @@ class PublistWebpackError extends WError {
         }, `Aborting because there were errors when webpacking`);
     }
 }
-module.exports.PublistWebpackError = PublistWebpackError;

@@ -1,11 +1,9 @@
-'use strict'
+import pathFn from 'node:path';
 
-const pathFn = require('path');
+import { WIDGET_DIR, SELF } from './consts.js';
+import { Widget } from './widget/index.js';
 
-const { WIDGET_DIR, SELF } = require('./consts');
-const { Widget } = require('./widget');
-
-class PublistWidget extends Widget {
+export class PublistWidget extends Widget {
     constructor(ctx, opts) {
         // widget_dir must be from the hexo.base_dir/node_modules
         // which may be a symlink. So we can not directly use WIDGET_DIR
@@ -33,5 +31,3 @@ class PublistWidget extends Widget {
         });
     }
 }
-
-module.exports.PublistWidget = PublistWidget;

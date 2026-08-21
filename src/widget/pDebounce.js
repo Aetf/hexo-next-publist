@@ -1,4 +1,4 @@
-const pDebounce = (fn, wait, options = {}) => {
+export const pDebounce = (fn, wait, options = {}) => {
     if (!Number.isFinite(wait)) {
         throw new TypeError('Expected `wait` to be a finite number');
     }
@@ -51,5 +51,3 @@ pDebounce.promise = function_ => {
         }
     };
 };
-
-module.exports.pDebounce = pDebounce;

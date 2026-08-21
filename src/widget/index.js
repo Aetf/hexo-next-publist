@@ -1,18 +1,22 @@
-'use strict'
+import pathFn from 'node:path';
+import { createRequire } from 'node:module';
 
-const pathFn = require('path');
-const prequire = require('parent-require');
-const { Volume, createFsFromVolume } = require('memfs');
-const { WebpackProcessor, MemFsPlugin } = require('./webpack');
-const _ = require('lodash');
-const { PublistWebpackError } = require('../consts');
+import { Volume, createFsFromVolume } from 'memfs';
+import _ from 'lodash';
+
+import { WebpackProcessor, MemFsPlugin } from './webpack.js';
+import { PublistWebpackError } from '../consts.js';
+
+// hexo is a peer dependency, resolve it from where this package is installed
+// (Node walks up from here into the consuming site's node_modules)
+const require = createRequire(import.meta.url);
 
 // Hexo >= 7 ships compiled sources under dist/ and exports Box as a default
 // export; Hexo <= 6 had lib/box with a plain module.exports.
 const Box = (() => {
     for (const modPath of ['hexo/dist/box', 'hexo/lib/box']) {
         try {
-            const mod = prequire(modPath);
+            const mod = require(modPath);
             return mod.default || mod;
         } catch (err) {
             // only swallow "this hexo version doesn't have that path", so a genuine
@@ -24,7 +28,7 @@ const Box = (() => {
 })();
 
 
-class Widget extends Box {
+export class Widget extends Box {
     /**
      * @param {*} ctx The hexo instance
      * @param {string} name Base path of the box
@@ -142,5 +146,3 @@ function generateFromVolume(vol, basedir, prefixUrl) {
         .flatMap(e => generateFromVolume(vol, pathFn.join(basedir, e.name), pathFn.join(prefixUrl, e.name)))
     return fileRoutes.concat(subRoutes);
 }
-
-module.exports.Widget = Widget;

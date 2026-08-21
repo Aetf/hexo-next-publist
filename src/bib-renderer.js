@@ -1,14 +1,14 @@
-'use strict';
+import pathFn from 'node:path';
 
-const pathFn = require('path');
+import chalk from 'chalk';
+import _ from 'lodash';
+import stripIndent from 'strip-indent';
+import bibtex from '@retorquere/bibtex-parser';
+import verror from 'verror';
 
-const chalk = require('chalk');
-const _ = require('lodash');
-const stripIndent = require('strip-indent');
-const bibtex = require('@retorquere/bibtex-parser');
-const { MultiError } = require('verror');
+import { PublistStrictAbort } from './consts.js';
 
-const { PublistStrictAbort } = require('./consts');
+const { MultiError } = verror;
 
 function formatLocation(file, line, column) {
     line = line || "?";
@@ -93,7 +93,7 @@ class BibRendererError extends Error {
     }
 }
 
-async function bibRenderer(ctx, opts, { path, text }) {
+export async function bibRenderer(ctx, opts, { path, text }) {
     let bibErrors = [];
     path = pathFn.relative(ctx.source_dir, path);
 
@@ -241,8 +241,7 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
     return item;
 }
 
-module.exports.bibRenderer = bibRenderer;
-module.exports.register = (ctx, opts) => {
+export const register = (ctx, opts) => {
     ctx.extend.renderer.register('bib', 'json', function(data, options) {
         return bibRenderer(ctx, {...opts, ...options}, data);
     });

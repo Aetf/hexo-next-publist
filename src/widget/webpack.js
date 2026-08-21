@@ -1,12 +1,13 @@
-const { promisify } = require('util');
+import { promisify } from 'node:util';
+import { pathToFileURL } from 'node:url';
 
-const _ = require('lodash');
-const webpack = require('webpack');
-const chalk = require('chalk');
+import _ from 'lodash';
+import webpack from 'webpack';
+import chalk from 'chalk';
 
-const { pDebounce } = require('./pDebounce.js');
+import { pDebounce } from './pDebounce.js';
 
-class MemFsPlugin {
+export class MemFsPlugin {
     constructor(fs) {
         this.fs = fs;
     }
@@ -22,7 +23,7 @@ class MemFsPlugin {
     }
 }
 
-class WebpackProcessor {
+export class WebpackProcessor {
     constructor(ctx, initialWebpackConfig, opts) {
         this.ctx = ctx;
         this.running = false;
@@ -37,15 +38,15 @@ class WebpackProcessor {
         };
     }
 
-    _genWebpackConfig = () => {
+    _genWebpackConfig = async () => {
         const {debug, webpackConfig, webpackConfigPath} = this.opts;
 
         // try load config from the widget folder first
         let loadedConfig = {};
         try {
-            loadedConfig = require(webpackConfigPath);
+            loadedConfig = (await import(pathToFileURL(webpackConfigPath).href)).default;
         } catch (e) {
-            if (e.code !== 'MODULE_NOT_FOUND') {
+            if (e.code !== 'ERR_MODULE_NOT_FOUND') {
                 throw e;
             }
         }
@@ -77,7 +78,7 @@ class WebpackProcessor {
         }
         this.running = true;
 
-        const config = this._genWebpackConfig();
+        const config = await this._genWebpackConfig();
         ctx.log.debug(`Widget ${chalk.magenta(config.name)}: webpacking`);
 
         const compiler = webpack(config);
@@ -119,6 +120,3 @@ class WebpackProcessor {
         await this._compileDebounce();
     }
 }
-
-module.exports.WebpackProcessor = WebpackProcessor;
-module.exports.MemFsPlugin = MemFsPlugin;
