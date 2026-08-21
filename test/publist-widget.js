@@ -21,7 +21,9 @@ test('Routes are added to hexo', async t => {
 
     const routes = hexo.route.list().sort();
 
-    t.deepEqual(routes, ['test/main.css', 'test/main.js']);
+    // main.css.map: the test runs in debug (development) mode, where webpack
+    // >= 5.109 emits a source map for the extracted css
+    t.deepEqual(routes, ['test/main.css', 'test/main.css.map', 'test/main.js']);
 
     // webpack works
     await t.notThrowsAsync(async () => {
