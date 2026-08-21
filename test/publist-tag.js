@@ -21,6 +21,7 @@ function createEntry(entry) {
         {
             links: [],
             badges: [],
+            coauthors: [],
             meta: {},
             bib: { fields: { } },
          },
@@ -440,4 +441,59 @@ test('Strict reject entry without confkey', async t => {
     }, { instanceOf: PublistStrictAbort });
 });
 
-test.todo('Entry renderering with coauthor');
+test('Entry rendering with coauthor', async t => {
+    const { hexo, opts } = t.context;
+    setHexoLocals(hexo, 'test', [
+        createEntry({
+            confkey: "abc'1",
+            title: 'Title',
+            authors: ['Peifeng Yu', 'Mosharaf Chowdhury', 'Eff Efd'],
+            coauthors: ['Peifeng Yu', 'Mosharaf Chowdhury'],
+        }),
+    ]);
+
+    const instOpts = `
+    version: 2
+    venues:
+      Abc:
+        category: Conferences
+        occurrences:
+        - key: abc'1
+          name: The First ABC
+          date: 2021-01-01
+    `;
+
+    const publistTag = new PublistTag(hexo, opts, 'test-id');
+    const output = await publistTag._tag(['test'], instOpts, { source: 'test.bib' });
+    // both coauthors carry the mark, the third author does not
+    t.regex(output, /Peifeng&nbspYu<sup class="pub-coauthor-mark"/);
+    t.regex(output, /Mosharaf&nbspChowdhury<sup class="pub-coauthor-mark"/);
+    t.notRegex(output, /Eff&nbspEfd<sup/);
+    t.regex(output, /pub-coauthor-note/);
+});
+
+test('Entry rendering without coauthor has no equal contribution note', async t => {
+    const { hexo, opts } = t.context;
+    setHexoLocals(hexo, 'test', [
+        createEntry({
+            confkey: "abc'1",
+            title: 'Title',
+            authors: ['Peifeng Yu'],
+        }),
+    ]);
+
+    const instOpts = `
+    version: 2
+    venues:
+      Abc:
+        category: Conferences
+        occurrences:
+        - key: abc'1
+          name: The First ABC
+          date: 2021-01-01
+    `;
+
+    const publistTag = new PublistTag(hexo, opts, 'test-id');
+    const output = await publistTag._tag(['test'], instOpts, { source: 'test.bib' });
+    t.notRegex(output, /pub-coauthor/);
+});
