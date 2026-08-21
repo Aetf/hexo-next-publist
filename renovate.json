@@ -6,6 +6,9 @@
   "major": {
     "dependencyDashboardApproval": true
   },
+  "patch": {
+    "enabled": false
+  },
   "minimumReleaseAge": "3 days",
   "rebaseWhen": "behind-base-branch",
   "automergeStrategy": "rebase",
