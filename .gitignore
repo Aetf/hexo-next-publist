@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+
+# Local AI tooling notes
+CLAUDE.md
