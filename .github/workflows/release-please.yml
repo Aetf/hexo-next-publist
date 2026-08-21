@@ -1,0 +1,26 @@
+name: Release Please
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-24.04
+    steps:
+      # An App token rather than GITHUB_TOKEN, so CI runs on the release PR
+      # and the pushed release tag triggers the npm publish workflow.
+      - name: Generate GitHub token
+        uses: actions/create-github-app-token@v3
+        id: generate-token
+        with:
+          client-id: ${{ secrets.RELEASE_PLZ_APP_ID }}
+          private-key: ${{ secrets.RELEASE_PLZ_PRIVATE_KEY }}
+      - uses: googleapis/release-please-action@v5
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
