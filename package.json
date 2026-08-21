@@ -17,7 +17,8 @@
         "publication",
         "academia"
     ],
-    "main": "src/index.js",
+    "type": "module",
+    "main": "index.cjs",
     "scripts": {
         "eslint": "eslint .",
         "test": "ava",
