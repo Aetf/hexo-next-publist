@@ -44,7 +44,26 @@ test('Basic bib parsing', async t => {
     ]));
 });
 
-test.todo('Coauthor field is parsed');
+test('Coauthor field is parsed', async t => {
+    const { hexo, opts } = t.context;
+
+    const content = `@inproceedings{yu20mlsys,
+        title = {{Salus}: Find-grained {GPU} Sharing primitives for Deep Learning Applications},
+        author = {Yu, Peifeng and Chowdhury, Mosharaf and Efd, Eff},
+
+        publist_confkey = {MLSys'20},
+        publist_coauthor = {Peifeng Yu},
+        publist_coauthor = {Mosharaf Chowdhury},
+    }`;
+
+    const { items } = await bibRenderer(hexo, opts, { path: 'test.bib', text: content });
+
+    t.is(items.length, 1);
+    t.deepEqual(items[0].coauthors, ['Peifeng Yu', 'Mosharaf Chowdhury']);
+    // coauthor is handled explicitly, not as a generic meta field
+    t.false('coauthor' in items[0].meta);
+    t.notRegex(items[0].bibStr, /publist/);
+});
 
 test('Extra fields are stripped', async t => {
     const { hexo, opts } = t.context;

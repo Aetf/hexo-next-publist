@@ -216,7 +216,7 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
         }
         // the name after removing publist_ prefix
         const name = field.slice('publist_'.length)
-        if (['confkey', 'link', 'badge', 'abstract'].indexOf(name) !== -1) {
+        if (['confkey', 'link', 'badge', 'abstract', 'coauthor'].indexOf(name) !== -1) {
             // already handled
             continue;
         }
@@ -229,6 +229,8 @@ async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {
         citekey,
         title,
         authors: _.get(entry.creators, 'author', []).map(({lastName, firstName}) => `${firstName} ${lastName}`),
+        // authors marked as contributed equally, must match the "First Last" form above
+        coauthors: _.get(entry.fields, 'publist_coauthor', []),
         badges: _.get(entry.fields, 'publist_badge', []),
         confkey,
         abstract,

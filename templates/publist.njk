@@ -107,8 +107,14 @@
                                 {%- if loop.last and not loop.first %}and {% endif %}
                             <span class="pub-author {{ authorcls }} {{ hlcls }}">
                                 {{- author | replace(' ', '&nbsp') | safe -}}
+                                {%- if pub.coauthors and pub.coauthors.includes(author) -%}
+                                <sup class="pub-coauthor-mark" title="Equal contribution">*</sup>
+                                {%- endif -%}
                             </span>
                             {%- endfor %}
+                            {%- if pub.coauthors and pub.coauthors.length > 0 %}
+                            <span class="pub-coauthor-note">(<sup>*</sup>&nbspequal&nbspcontribution)</span>
+                            {%- endif %}
                         </div>
                         {% if pub.conf -%}
                         <div class="pub-conference">

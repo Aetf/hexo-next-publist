@@ -207,6 +207,15 @@
     font-weight: bold;
 }
 
+.pub-block .pub-author .pub-coauthor-mark {
+    /* keep the mark from stretching the line box */
+    line-height: 0;
+}
+.pub-block .pub-authors .pub-coauthor-note {
+    color: var(--color-fg-muted);
+    font-size: 0.9em;
+}
+
 /* Filter */
 .filter-hide {
     display: none !important;

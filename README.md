@@ -97,6 +97,8 @@ The date of an entry (used for sorting and the year shown in the UI) is resolved
     publist_badge = {Artifacts Available},
     publist_badge = {Artifacts Evaluated Functional},
     publist_badge = {Artifacts Replicated},
+    publist_coauthor = {Peifeng Yu},
+    publist_coauthor = {Mosharaf Chowdhury},
     publist_abstract = {
       This is an abstract.
 
@@ -192,6 +194,9 @@ away from the bib source shown in the UI.
 The content is of the format `title || url`. If relative, it will be resolved
 from the base `pub_dir/citekey`.
 - `publist_badge`: optional, can appear multiple times. Show a badge under the title.
+- `publist_coauthor`: optional, can appear multiple times. Mark the given author (in the same
+`First Last` form as shown in the UI) as an equal contributor: the author gets a `*` mark and
+the author line gets an `(* equal contribution)` note.
 - `publist_abstract`: optional. Markdown rendered abstract, with support for latex math (If you have math plugin enabled).
 - `abstract`: optional. Verbatim abstract. Note that this will **NOT** be stripped.
 When both this field and `publist_abstract` are present, the latter is used.
