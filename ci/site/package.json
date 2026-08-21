@@ -1,0 +1,19 @@
+{
+  "name": "render-check-site",
+  "private": true,
+  "description": "Fixture hexo site for the render regression check, see ../../.github/workflows/render-check.yml",
+  "hexo": {
+    "version": "8.1.2"
+  },
+  "dependencies": {
+    "hexo": "^8.0.0",
+    "hexo-cli": "^4.3.0",
+    "hexo-renderer-marked": "^6.1.1",
+    "hexo-next-publist": "file:../.."
+  },
+  "devDependencies": {
+    "pixelmatch": "^7.1.0",
+    "playwright": "^1.55.0",
+    "pngjs": "^7.0.0"
+  }
+}

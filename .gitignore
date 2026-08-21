@@ -60,3 +60,5 @@ typings/
 
 # Local AI tooling notes
 CLAUDE.md
+ci/site/db.json
+ci/site/public/

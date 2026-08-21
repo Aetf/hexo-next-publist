@@ -1,0 +1,58 @@
+name: render-check
+
+on:
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+# Builds the fixture site in ci/site twice — once with the PR's plugin, once
+# with the merge base's — and fails if the rendered output meaningfully
+# differs (html modulo the random publist instance id, plus a pixel
+# comparison of the page). A green run means the change is render-neutral,
+# which is what lets renovate updates automerge safely.
+jobs:
+  render-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+      - name: Install head plugin deps
+        run: npm ci
+      - name: Check out and install merge-base plugin
+        run: |
+          git worktree add /tmp/base-plugin "$(git merge-base origin/master HEAD)"
+          cd /tmp/base-plugin
+          npm ci
+      - name: Install fixture site
+        working-directory: ci/site
+        run: npm install
+      - name: Install chromium
+        working-directory: ci/site
+        run: npx playwright install --with-deps chromium
+      - name: Generate with head plugin
+        working-directory: ci/site
+        run: |
+          npx hexo generate
+          mv public /tmp/public-head
+      - name: Generate with merge-base plugin
+        working-directory: ci/site
+        run: |
+          ln -sfn /tmp/base-plugin node_modules/hexo-next-publist
+          npx hexo clean
+          npx hexo generate
+          mv public /tmp/public-base
+      - name: Compare
+        working-directory: ci/site
+        run: node render-check.mjs /tmp/public-base /tmp/public-head /tmp/render-diff
+      - name: Upload diff artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: render-diff
+          path: /tmp/render-diff
