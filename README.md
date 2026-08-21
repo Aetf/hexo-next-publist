@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/hexo-next-publist)](https://npmjs.org/package/hexo-next-publist)
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/Aetf/hexo-next-publist)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Aetf/hexo-next-publist/Node.js%20CI)](https://github.com/Aetf/hexo-next-publist/actions?query=workflow%3A"Node.js+CI")
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Aetf/hexo-next-publist/node.js.yml?branch=master)](https://github.com/Aetf/hexo-next-publist/actions/workflows/node.js.yml)
 
 [![NPM](https://nodei.co/npm/hexo-next-publist.png)](https://npmjs.org/package/hexo-next-publist)
 
@@ -21,6 +21,12 @@ This will install `hexo-next-publist` and add it as a dependency in your `packag
 
 NOTE: There are also several peer dependencies you may need to install.
 Follow the instruction printed when running the previous command to install the missing ones.
+
+Since v3.0.0 the package is [ESM](https://nodejs.org/api/esm.html). This is transparent when
+it is loaded as a hexo plugin: a bundled CJS entry shim keeps hexo's current plugin loader
+working until hexo gains native ESM plugin support
+([hexojs/hexo#5820](https://github.com/hexojs/hexo/pull/5820)). However, `require`-ing the
+package directly from CJS code is no longer supported.
 
 ## Usage
 
@@ -207,5 +213,5 @@ publist:
 - `src/bib-renderer.js` reads `.bib` files under `source/_data` in the user's repo. The result will
 be available as data in the data model.
 - `src/widget` implements a hexo box, processing all assets under `widget` using webpack, and serving them.
-- `src/publist.js` is the actual tag plugin, which reads bib data
+- `src/publist-tag.js` is the actual tag plugin, which reads bib data
 from the data model and renders the html.
