@@ -141,7 +141,7 @@ test('Strict abort', async t => {
         await bibRenderer(hexo, { ...opts, strict: false }, { path: 'test.bib', text: content });
     });
 
-    const err = await t.throwsAsync(async () => {
+    await t.throwsAsync(async () => {
         await bibRenderer(hexo, { ...opts, strict: true }, { path: 'test.bib', text: content });
     }, { instanceOf: PublistStrictAbort});
 })

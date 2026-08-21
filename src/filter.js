@@ -29,7 +29,7 @@ export class SSRFilter {
     _ssr_post = async (path, content) => {
         const { ctx } = this;
         const ptn = /^\s*<!-- begin-(\S+) -->$[\s\S]+?^\s*<!-- end-\1 -->$/gm;
-        return await replaceAsync(content, ptn, async (match, p1) => {
+        return await replaceAsync(content, ptn, async (match) => {
 
             const linesPromise = match.split('\n')
                 .map(async line => {

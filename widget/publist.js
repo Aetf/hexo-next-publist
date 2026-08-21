@@ -176,7 +176,7 @@ class CopyBibTex {
     }
 
     _fallbackMessage = action => {
-        var actionMsg = '';
+        var actionMsg;
         var actionKey = (action === 'cut' ? 'X' : 'C');
 
         if (/iPhone|iPad/i.test(navigator.userAgent)) {
@@ -264,7 +264,7 @@ class PublistSearchPanel {
      * @returns {Map<string, Set<string>>}
      */
     _parseFragment = encodedHash => {
-        const fragRegex = /^#(\/\w+:([@!]?[^@,\/#]+)(,[@!]?[^@,\/#]+)*)+$/;
+        const fragRegex = /^#(\/\w+:([@!]?[^@,/#]+)(,[@!]?[^@,/#]+)*)+$/;
 
         try {
             const hash = decodeURI(encodedHash);
