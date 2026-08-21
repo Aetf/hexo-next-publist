@@ -9,9 +9,17 @@ export default [
         ignores: ['index.cjs'],
     },
     {
-        files: ['**/*.js', '**/*.cjs'],
+        files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
         languageOptions: {
             globals: globals.node,
+        },
+    },
+    {
+        // drives a browser via playwright: node script containing page.evaluate
+        // callbacks that run in the browser
+        files: ['ci/site/render-check.mjs'],
+        languageOptions: {
+            globals: { ...globals.node, ...globals.browser },
         },
     },
     {
