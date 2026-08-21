@@ -218,6 +218,141 @@ test('Date resolving', async t => {
     t.is(pubs[1].date.toISOString(), '2020-01-01T00:00:00.000Z');
 });
 
+test('Bib date field takes priority over conference date', async t => {
+    const { hexo, opts } = t.context;
+    const rawPubs = [
+        createEntry({
+            confkey: "abc'1",
+            title: 'Title1',
+            bib: {
+                fields: {
+                    date: ['2022-05-04'],
+                    year: ['2020'],
+                    month: ['01']
+                }
+            }
+        }),
+        createEntry({
+            confkey: "abc'1",
+            title: 'Title2',
+        }),
+    ];
+
+    const instOpts = `
+    version: 2
+    venues:
+      Abc:
+        category: Conferences
+        occurrences:
+        - key: abc'1
+          name: The First ABC
+          date: 2021-01-01
+    `;
+
+    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
+    const pubs = resolver.processPubs(rawPubs);
+
+    t.is(pubs.length, 2);
+    t.is(pubs[0].date.toISOString(), '2022-05-04T00:00:00.000Z');
+    t.is(pubs[1].date.toISOString(), '2021-01-01T00:00:00.000Z');
+});
+
+test('Bib date field supports ranges and partial dates', async t => {
+    const { hexo, opts } = t.context;
+    const rawPubs = [
+        createEntry({
+            confkey: "abc'1",
+            title: 'Range',
+            bib: { fields: { date: ['2022-05-04/2022-05-06'] } }
+        }),
+        createEntry({
+            confkey: "abc'1",
+            title: 'YearMonth',
+            bib: { fields: { date: ['2022-03'] } }
+        }),
+        createEntry({
+            confkey: "abc'1",
+            title: 'YearOnly',
+            bib: { fields: { date: ['2022'] } }
+        }),
+    ];
+
+    const instOpts = `
+    version: 2
+    venues:
+      Abc:
+        category: Conferences
+        occurrences:
+        - key: abc'1
+          name: The First ABC
+          date: 2021-01-01
+    `;
+
+    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
+    const pubs = resolver.processPubs(rawPubs);
+
+    t.is(pubs.length, 3);
+    t.is(pubs[0].date.toISOString(), '2022-05-04T00:00:00.000Z');
+    t.is(pubs[1].date.toISOString(), '2022-03-01T00:00:00.000Z');
+    t.is(pubs[2].date.toISOString(), '2022-01-01T00:00:00.000Z');
+});
+
+test('Invalid bib date field falls back to conference date', async t => {
+    const { hexo, opts } = t.context;
+    const rawPubs = [
+        createEntry({
+            confkey: "abc'1",
+            title: 'Title1',
+            bib: { fields: { date: ['May the 4th'] } }
+        }),
+    ];
+
+    const instOpts = `
+    version: 2
+    venues:
+      Abc:
+        category: Conferences
+        occurrences:
+        - key: abc'1
+          name: The First ABC
+          date: 2021-01-01
+    `;
+
+    const resolver = new PubsResolver(hexo, { ...opts, strict: false }, instOpts, { source: 'test.bib' });
+    const pubs = resolver.processPubs(rawPubs);
+
+    t.is(pubs.length, 1);
+    t.is(pubs[0].date.toISOString(), '2021-01-01T00:00:00.000Z');
+});
+
+test('Strict reject invalid bib date field', async t => {
+    const { hexo, opts } = t.context;
+    setHexoLocals(hexo, 'test', [
+        createEntry({
+            citekey: 'bad-date-article',
+            confkey: "abc'1",
+            title: 'Title',
+            bib: { fields: { date: ['May the 4th'] } }
+        }),
+    ]);
+
+    const instOpts = `
+    version: 2
+    venues:
+      Abc:
+        category: Conferences
+        occurrences:
+        - key: abc'1
+          name: The First ABC
+          date: 2021-01-01
+    `;
+
+    const publistTag = new PublistTag(hexo, opts);
+    await t.throwsAsync(async () => {
+        await publistTag._tag(['test'], instOpts, { source: 'test.bib' });
+    }, { instanceOf: PublistStrictAbort });
+});
+
 test('Link resolving', async t => {
     const { hexo, opts } = t.context;
     const rawPubs = [

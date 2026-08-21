@@ -73,6 +73,12 @@ Bib source files are treated as data sources, so they need to be placed in the `
 
 You'll need to add some [publist specific fields](#extra-fields-in-bib-source) in the bib file to control the handling, and they will be striped out when shown in the UI.
 
+The date of an entry (used for sorting and the year shown in the UI) is resolved in this order:
+
+1. the entry's own biblatex [`date`](https://mirrors.ibiblio.org/CTAN/macros/latex/contrib/biblatex/doc/biblatex.pdf) field (`YYYY[-MM[-DD]]`; date ranges sort by their start),
+2. the `date` of the conference occurrence the entry links to,
+3. the entry's legacy `year`/`month` fields.
+
 <details>
   <summary>Example bib file</summary>
   <p>
@@ -148,7 +154,8 @@ venues:
     - key: MLSys'20
       # conference full name
       name: The 3rd Conference on Machine Learning and Systems
-      # conference date for sorting (optional. If this is missing, the year and month in bib entry will be used)
+      # conference date for sorting (optional. An entry's own biblatex date field
+      # takes priority; if both are missing, the year and month in bib entry will be used)
       date: 2020-03-02
       # conference website (optional. Will use an url from the parent level if there's one)
       url: https://mlsys.org/Conferences/2020
