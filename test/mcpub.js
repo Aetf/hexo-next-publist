@@ -1,11 +1,9 @@
-'use strict';
+import test from 'ava';
 
-const test = require('ava');
+import { getHexo, getData } from './helpers/index.js';
 
-const { getHexo, getData } = require('./helpers');
-
-const { bibRenderer } = require('../src/bib-renderer');
-const { PublistTag } = require('../src/publist-tag');
+import { bibRenderer } from '../src/bib-renderer.js';
+import { PublistTag } from '../src/publist-tag.js';
 
 test('MCBib parsing and resolving', async t => {
     const hexo = await getHexo();

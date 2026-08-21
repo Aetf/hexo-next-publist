@@ -1,14 +1,12 @@
-'use strict';
+import test from 'ava';
 
-const test = require('ava');
+import _ from 'lodash';
+import moment from 'moment';
 
-const _ = require('lodash');
-const moment = require('moment');
+import { getHexo } from './helpers/index.js';
 
-const { getHexo, getData } = require('./helpers');
-
-const { PublistTag, PubsResolver } = require('../src/publist-tag');
-const { PublistStrictAbort } = require('../src/consts');
+import { PublistTag, PubsResolver } from '../src/publist-tag.js';
+import { PublistStrictAbort } from '../src/consts.js';
 
 function setHexoLocals(hexo, name, items) {
     hexo.locals.set('data', {

@@ -1,9 +1,7 @@
-'use strict';
+import test from 'ava';
 
-const test = require('ava');
-
-const { getHexo } = require('./helpers');
-const { PublistWidget } = require('../src/publist-widget');
+import { getHexo } from './helpers/index.js';
+import { PublistWidget } from '../src/publist-widget.js';
 
 test.beforeEach('Init hexo', async t => {
     t.context.hexo = await getHexo();
