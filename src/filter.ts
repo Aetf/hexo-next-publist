@@ -1,44 +1,49 @@
-import _ from 'lodash';
 import chalk from 'chalk';
+import type Hexo from 'hexo';
 
-function streamToString (stream) {
-  const chunks = [];
-  return new Promise((resolve, reject) => {
-    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)));
-    stream.on('error', (err) => reject(err));
-    stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-  })
+import type { PublistOptions } from './consts.js';
+
+function streamToString(stream: NodeJS.ReadableStream): Promise<string> {
+    const chunks: Buffer[] = [];
+    return new Promise((resolve, reject) => {
+        stream.on('data', (chunk: Buffer | string) => chunks.push(Buffer.from(chunk)));
+        stream.on('error', (err: Error) => reject(err));
+        stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+    });
 }
 
-async function replaceAsync(str, regex, asyncFn) {
-    const promises = [];
-    str.replace(regex, (match, ...args) => {
-        const promise = asyncFn(match, ...args);
-        promises.push(promise);
+async function replaceAsync(
+    str: string,
+    regex: RegExp,
+    asyncFn: (match: string) => Promise<string>,
+): Promise<string> {
+    const promises: Promise<string>[] = [];
+    str.replace(regex, (match) => {
+        promises.push(asyncFn(match));
+        return match;
     });
     const data = await Promise.all(promises);
-    return str.replace(regex, () => data.shift());
+    return str.replace(regex, () => data.shift()!);
 }
 
 export class SSRFilter {
-    constructor(ctx, opts) {
-        this.ctx = ctx;
-        this.opts = opts;
-    }
+    constructor(
+        private readonly ctx: Hexo,
+        private readonly opts: Partial<PublistOptions>,
+    ) {}
 
-    _ssr_post = async (path, content) => {
+    _ssr_post = async (path: string, content: string): Promise<string> => {
         const { ctx } = this;
         const ptn = /^\s*<!-- begin-(\S+) -->$[\s\S]+?^\s*<!-- end-\1 -->$/gm;
         return await replaceAsync(content, ptn, async (match) => {
-
             const linesPromise = match.split('\n')
                 .map(async line => {
                     const found = line.match(/^<link\s+href="([^"]+\.css)"/);
-                    if (found == null) {
+                    if (found?.[1] == null) {
                         return line;
                     }
-                    const css = ctx.route.get(found[1]);
-                    if (_.isUndefined(css)) {
+                    const css = this.ctx.route.get(found[1]);
+                    if (css == null) {
                         ctx.log.error(`Route ${found[1]} not found`);
                         ctx.log.debug('All routes', ctx.route.list());
                         return line;
@@ -49,9 +54,9 @@ export class SSRFilter {
                 });
             return (await Promise.all(linesPromise)).join('\n');
         });
-    }
+    };
 
-    after_generate = async () => {
+    after_generate = async (): Promise<void> => {
         const { ctx, opts } = this;
         if (!opts.embed_css) {
             return;
@@ -62,7 +67,7 @@ export class SSRFilter {
                 continue;
             }
             const post_stream = ctx.route.get(path);
-            if (_.isUndefined(post_stream)) {
+            if (post_stream == null) {
                 continue;
             }
             let content = await streamToString(post_stream);
@@ -72,19 +77,9 @@ export class SSRFilter {
                 data: content,
             });
         }
-    }
+    };
 
-    register = () => {
-        const { ctx } = this;
-
-        const filters = _.functions(this)
-            .filter(name => !name.startsWith('_') && name !== 'register');
-        for (const filter of filters) {
-            ctx.extend.filter.register(
-                filter,
-                this[filter],
-                100,
-            );
-        }
-    }
+    register = (): void => {
+        this.ctx.extend.filter.register('after_generate', this.after_generate, 100);
+    };
 }

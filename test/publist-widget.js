@@ -1,7 +1,7 @@
 import test from 'ava';
 
 import { getHexo } from './helpers/index.js';
-import { PublistWidget } from '../src/publist-widget.js';
+import { PublistWidget } from '../dist/publist-widget.js';
 
 test.beforeEach('Init hexo', async t => {
     t.context.hexo = await getHexo();

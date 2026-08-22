@@ -87,7 +87,7 @@
                             {%- else -%}
                                 {{ pub.title }}
                             {%- endif %}
-                            {% if pub.date.isAfter(moment().subtract(opts.new_month, 'months')) -%}
+                            {% if pub.is_new -%}
                                 <span class="Label Label--info">New</span>
                             {%- endif %}
                         </div>
@@ -101,7 +101,7 @@
                         <div class="pub-authors">
                             {%- set comma = joiner(", ") -%}
                             {%- for author in pub.authors -%}
-                                {%- set hlcls = "pub-highlight" if instOpts.highlight_authors.has(author) else "" -%}
+                                {%- set hlcls = "pub-highlight" if instOpts.highlight_authors.includes(author) else "" -%}
                                 {%- set authorcls = "pub-author-" + author.replace(' ', '-') -%}
                                 {{- comma() -}}
                                 {%- if loop.last and not loop.first %}and {% endif %}

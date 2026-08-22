@@ -66,3 +66,6 @@ ci/site/public/
 # Rust wasm build outputs (bib-wasm)
 bib-wasm/target/
 bib-wasm/pkg/
+
+# TypeScript build output
+dist/

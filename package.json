@@ -24,7 +24,7 @@
         "CHANGELOG.md",
         "index.cjs",
         "bridge.cjs",
-        "src/",
+        "dist/",
         "templates/",
         "widget/",
         "bib-wasm/pkg/"
@@ -32,16 +32,17 @@
     "scripts": {
         "eslint": "eslint .",
         "build:wasm": "wasm-pack build bib-wasm --target nodejs --release --out-dir pkg && rm -f bib-wasm/pkg/.gitignore",
-        "prepack": "npm run build:wasm",
-        "pretest": "npm run build:wasm",
+        "prepack": "npm run build",
+        "pretest": "npm run build",
         "test": "ava",
-        "test-watch": "ava --watch"
+        "test-watch": "ava --watch",
+        "build:ts": "tsc",
+        "build": "npm run build:wasm && npm run build:ts"
     },
     "dependencies": {
         "@babel/core": "^7.13.13",
         "@babel/preset-env": "^7.13.12",
         "@primer/css": "^17.11.0",
-        "ajv": "^8.0.1",
         "babel-loader": "^9.0.0",
         "chalk": "^5.6.2",
         "clipboard": "^2.0.8",
@@ -50,11 +51,9 @@
         "cssnano": "^6.0.0",
         "cssnano-preset-advanced": "^6.0.0",
         "hexo-fs": "^4.1.0",
-        "js-yaml": "^4.0.0",
         "lodash": "^4.17.21",
         "memfs": "^4.0.0",
         "mini-css-extract-plugin": "^2.3.0",
-        "moment": "^2.29.1",
         "postcss": "^8.2.8",
         "postcss-loader": "^7.0.0",
         "sass": "^1.34.0",
@@ -72,12 +71,16 @@
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
-        "ajv-cli": "^5.0.0",
+        "@types/lodash": "^4.17.25",
+        "@types/node": "^26.2.0",
+        "@types/verror": "^1.10.11",
         "ava": "^5.3.1",
         "eslint": "^10.9.0",
         "globals": "^17.11.0",
         "hexo": "^8.0.0",
         "hexo-renderer-marked": "^6.1.1",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.67.0",
         "wasm-pack": "^0.15.0"
     }
 }

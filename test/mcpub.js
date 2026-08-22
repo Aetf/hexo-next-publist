@@ -2,8 +2,8 @@ import test from 'ava';
 
 import { getHexo, getData } from './helpers/index.js';
 
-import { bibRenderer } from '../src/bib-renderer.js';
-import { PublistTag } from '../src/publist-tag.js';
+import { bibRenderer } from '../dist/bib-renderer.js';
+import { PublistTag } from '../dist/publist-tag.js';
 
 test('MCBib parsing and resolving', async t => {
     const hexo = await getHexo();
