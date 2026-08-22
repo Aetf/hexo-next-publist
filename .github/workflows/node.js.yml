@@ -24,6 +24,10 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Add wasm target
+      run: rustup target add wasm32-unknown-unknown
     - run: npm ci
     - run: npm run build --if-present
+    - name: Rust tests
+      run: cargo test --manifest-path bib-wasm/Cargo.toml
     - run: npm test

@@ -62,3 +62,7 @@ typings/
 CLAUDE.md
 ci/site/db.json
 ci/site/public/
+
+# Rust wasm build outputs (bib-wasm)
+bib-wasm/target/
+bib-wasm/pkg/

@@ -5,8 +5,9 @@ export default [
     js.configs.recommended,
     {
         // vm shim: its top-level await only parses inside hexo's async
-        // wrapper, not as a standalone file
-        ignores: ['index.cjs'],
+        // wrapper, not as a standalone file; bib-wasm/pkg is wasm-pack
+        // generated code
+        ignores: ['index.cjs', 'bib-wasm/'],
     },
     {
         files: ['**/*.js', '**/*.cjs', '**/*.mjs'],
