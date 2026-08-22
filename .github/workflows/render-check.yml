@@ -22,13 +22,18 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: lts/*
+      - name: Add wasm target
+        run: rustup target add wasm32-unknown-unknown
       - name: Install head plugin deps
-        run: npm ci
+        run: |
+          npm ci
+          npm run build:wasm
       - name: Check out and install merge-base plugin
         run: |
           git worktree add /tmp/base-plugin "$(git merge-base origin/master HEAD)"
           cd /tmp/base-plugin
           npm ci
+          npm run build:wasm --if-present
       - name: Install fixture site
         working-directory: ci/site
         run: npm install

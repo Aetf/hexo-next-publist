@@ -3,8 +3,9 @@ import pathFn from 'node:path';
 import chalk from 'chalk';
 import _ from 'lodash';
 import stripIndent from 'strip-indent';
-import bibtex from '@retorquere/bibtex-parser';
 import verror from 'verror';
+
+import { parse_bib } from '../bib-wasm/pkg/publist_bib_wasm.js';
 
 import { PublistStrictAbort } from './consts.js';
 
@@ -14,14 +15,6 @@ function formatLocation(file, line, column) {
     line = line || "?";
     column = column || "?";
     return `${file}:${line}:${column}`
-}
-
-function concatSource(node) {
-    if (Array.isArray(node)) {
-        return node.map(concatSource).join('');
-    }
-
-    return node.source || concatSource(node.value);
 }
 
 async function allSettled(promises) {
@@ -58,16 +51,6 @@ class BibtexParseError extends Error {
         this.data = { file, line, column };
         Error.captureStackTrace(this, caller || BibtexParseError);
     }
-
-    static fromChunk(file, chunk) {
-        const line = _.get(chunk, 'offset.line');
-        const column = _.get(chunk, 'offset.pos');
-        return new BibtexParseError(file, line, column, chunk.error, BibtexParseError.fromChunk);
-    }
-
-    static fromParseError(file, err) {
-        return new BibtexParseError(file, err.line, err.column, err.message, BibtexParseError.fromParseError);
-    }
 }
 
 class BibRendererError extends Error {
@@ -76,20 +59,6 @@ class BibRendererError extends Error {
         this.name = 'BibRendererError';
         this.errors = errors;
         Error.captureStackTrace(this, caller || BibRendererError);
-    }
-
-    static fromParseErrors(file, errors) {
-        return new BibRendererError(
-            errors.map(err => BibtexParseError.fromParseError(file, err)),
-            BibRendererError.fromParseErrors,
-        );
-    }
-
-    static fromChunk(file, chunk) {
-        return new BibRendererError(
-            [BibtexParseError.fromChunk(file, chunk)],
-            BibRendererError.fromChunk,
-        );
     }
 }
 
@@ -121,59 +90,33 @@ export async function bibRenderer(ctx, opts, { path, text }) {
  * Parse the bibtex file, for each entry reconstruct bibStr and render abstract
  * @param {*} ctx hexo
  * @param {*} opts global optionsl
- * @param {*} param2 
- * @returns 
+ * @param {*} param2
+ * @returns
  */
 async function parseBibEntries(ctx, opts, { path, text: input }) {
-    // chunk into pieces for easier association of raw data and parsed data
-    let chunks = await bibtex.chunker.promises.parse(input);
+    const parsed = JSON.parse(parse_bib(input));
 
-    const publistPtn = /^publist_/;
-    const bibOptions = {
-        verbatimFields: [publistPtn],
-    }
-    let res = chunks.filter(chunk => chunk.entry || chunk.error).map(async chunk => {
-        if (chunk.error) {
-            throw BibRendererError.fromChunk(path, chunk);
-        }
-        const text = chunk.text;
-        // normal info
-        const bib = await bibtex.promises.parse(text, bibOptions);
-        if (bib.errors.length !== 0) {
-            throw BibRendererError.fromParseErrors(path, bib.errors);
-        }
-        if (bib.entries.length !== 1) {
-            throw new TypeError('Expected chunk to have only one entry');
-        }
-        const entry = bib.entries[0];
-        // get ast
-        // in newer version of bibtex parser, ast can not automatically cleanup chunks with
-        // NonEntryText, so we disable clean and do filtering ourselves.
-        // The only thing we lose is the ability to translate @string references and a few other
-        // things, which aren't commonly used anyway.
-        const ast = bibtex.ast(text, bibOptions, false).filter(node => node.kind === 'Entry');
-        if (ast.length !== 1) {
-            throw new TypeError('Expected only one entry chunk in the ast');
-        }
-        const entryAst = ast[0];
+    const errors = parsed.errors.map(err => new BibRendererError([
+        new BibtexParseError(path, err.line, err.column, err.message),
+    ]));
 
-        // reconstruct original text after striping fields starting with publist_
-        const fields = entryAst.fields.filter(field => !publistPtn.test(field.name));
-        let bibStr = `@${entryAst.type}{${entryAst.id},\n`;
-        bibStr += fields.map(field => '    ' + field.source.trim()).join('\n');
-        bibStr += '\n}\n';
+    const entries = await Promise.all(parsed.entries.map(async wasmEntry => {
+        // compatibility shape consumed by itemFromEntry and publist-tag
+        const entry = {
+            key: wasmEntry.key,
+            type: wasmEntry.type,
+            fields: Object.fromEntries(wasmEntry.fields.map(({ name, values }) => [name, values])),
+            creators: wasmEntry.creators,
+        };
 
         // get abstract
         let abstract;
-        const absField = entryAst.fields.find(field => field.name === 'publist_abstract');
-        if (absField) {
-            abstract = concatSource(absField.value).replace(/^{/, '').replace(/}$/, '');
-            // strip surrounding braces
-            abstract = stripIndent(abstract).trim();
+        if (wasmEntry.abstractRaw != null) {
+            abstract = stripIndent(wasmEntry.abstractRaw).trim();
             // render using simple markdown
             abstract = await ctx.render.render(
                 { text: abstract, engine: 'markdown' },
-                { 
+                {
                     gfm: false,
                     breaks: false,
                 }
@@ -183,9 +126,10 @@ async function parseBibEntries(ctx, opts, { path, text: input }) {
             abstract = _.get(entry.fields, 'abstract[0]', '');
         }
 
-        return { entry, bibStr, abstract };
-    });
-    return await allSettled(res);
+        return { entry, bibStr: wasmEntry.bibStr, abstract };
+    }));
+
+    return [entries, errors];
 }
 
 async function itemFromEntry(ctx, opts, { entry, bibStr, abstract }) {

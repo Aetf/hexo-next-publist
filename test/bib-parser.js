@@ -2,7 +2,7 @@ import test from 'ava';
 
 import stripIndent from 'strip-indent';
 
-import bibtex from '@retorquere/bibtex-parser';
+import { parse_bib } from '../bib-wasm/pkg/publist_bib_wasm.js';
 
 const BIBSOURCE =
 `% publist specific settings starts with publist_, they will not show up in the end result
@@ -70,40 +70,15 @@ utilization of DL inference applications by 42x over not sharing
 the GPU and 7x over NVIDIA MPS with small overhead.`;
 
 test('bibtex parsing', t => {
-    const opts = {
-        verbatimFields: [/^publist_/],
-    }
-    const chunks = bibtex.chunker.parse(BIBSOURCE, opts);
-    t.is(chunks.length, 1);
+    const { entries, errors } = JSON.parse(parse_bib(BIBSOURCE));
+    t.deepEqual(errors, []);
+    t.is(entries.length, 1);
 
-    const chunk = chunks[0].text;
-    // normal info, only parsed to make sure it doesn't throw
-    bibtex.parse(chunk, opts);
-    // get ast to strip fields
-    const ast = bibtex.ast(chunk, opts, false).filter(node => node.kind === 'Entry');
-    t.is(ast.length, 1);
-    const entryAst = ast[0];
+    const entry = entries[0];
+    // publist_ fields are stripped from the reconstructed bib string
+    t.is(entry.bibStr, BIBCOPY);
 
-    const fields = entryAst.fields.filter(field => !field.name.startsWith('publist_'));
-    let gen = `@${entryAst.type}{${entryAst.id},\n`;
-    gen += fields.map(field => '    ' + field.source.trim()).join('\n');
-    gen += '\n}\n';
-
-    t.is(gen, BIBCOPY);
-
-    // get abstract
-    const absField = entryAst.fields.filter(field => field.name === 'publist_abstract')[0];
-
-    const concat_source = (node) => {
-        if (Array.isArray(node)) {
-            return node.map(concat_source).join('');
-        }
-
-        return node.source || concat_source(node.value);
-    }
-    // strip surrounding braces
-    let abs = concat_source(absField.value).replace(/^{/, '').replace(/}$/, '');
-    abs = stripIndent(abs).trim();
-
+    // abstract is extracted verbatim
+    const abs = stripIndent(entry.abstractRaw).trim();
     t.is(abs, ABSTRACT);
 });
