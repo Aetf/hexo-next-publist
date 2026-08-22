@@ -57,7 +57,7 @@ jobs:
         run: node render-check.mjs /tmp/public-base /tmp/public-head /tmp/render-diff
       - name: Upload diff artifacts
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: render-diff
           path: /tmp/render-diff
