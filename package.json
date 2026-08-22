@@ -42,7 +42,7 @@
     "dependencies": {
         "@babel/core": "^7.13.13",
         "@babel/preset-env": "^7.13.12",
-        "@primer/css": "^17.11.0",
+        "@primer/css": "^22.0.0",
         "babel-loader": "^10.0.0",
         "chalk": "^6.0.0",
         "clipboard": "^2.0.8",
