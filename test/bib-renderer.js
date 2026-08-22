@@ -160,7 +160,10 @@ test('Strict abort', async t => {
         await bibRenderer(hexo, { ...opts, strict: false }, { path: 'test.bib', text: content });
     });
 
-    await t.throwsAsync(async () => {
+    // any: true because PublistStrictAbort extends legacy verror's VError,
+    // which does not pass ava 8's util.types.isNativeError() check
+    const err = await t.throwsAsync(async () => {
         await bibRenderer(hexo, { ...opts, strict: true }, { path: 'test.bib', text: content });
-    }, { instanceOf: PublistStrictAbort});
+    }, { any: true });
+    t.true(err instanceof PublistStrictAbort);
 })
