@@ -40,8 +40,8 @@
         "build": "npm run build:wasm && npm run build:ts"
     },
     "dependencies": {
-        "@babel/core": "^7.13.13",
-        "@babel/preset-env": "^7.13.12",
+        "@babel/core": "^8.0.0",
+        "@babel/preset-env": "^8.0.0",
         "@primer/css": "^22.0.0",
         "babel-loader": "^10.0.0",
         "chalk": "^6.0.0",
