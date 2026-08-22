@@ -33,8 +33,55 @@
 @import "@primer/css/tooltips/index.scss";
 /* SelectMenu */
 @import "@primer/css/select-menu/index.scss";
-/* Label and Counter */
-@import "@primer/css/labels/index.scss";
+/* Label and Counter
+ * @primer/css v22 removed the .Label/.Counter components (only .IssueLabel
+ * remains); their replacement lives in Primer ViewComponents, which is not
+ * consumable from plain CSS. Vendor the rules we use, verbatim from
+ * @primer/css@17.11.0 dist/labels.css, on top of the same --color-* variables.
+ */
+.Label {
+  display: inline-block;
+  padding: 0 7px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  border: 1px solid transparent;
+  border-radius: 2em;
+  background-color: transparent !important;
+  border-color: var(--color-border-default);
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.Label--info {
+  color: var(--color-accent-fg);
+  border-color: var(--color-accent-emphasis);
+}
+
+.Label--danger {
+  color: var(--color-danger-fg);
+  border-color: var(--color-danger-emphasis);
+}
+
+.Counter {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 6px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--color-fg-default);
+  text-align: center;
+  background-color: var(--color-neutral-muted);
+  border: 1px solid transparent;
+  border-radius: 2em;
+
+  &:empty {
+    display: none;
+  }
+}
 /* details-reset */
 @import "@primer/css/utilities/details.scss";
 
