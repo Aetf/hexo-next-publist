@@ -27,12 +27,15 @@ jobs:
       - name: Install head plugin deps
         run: |
           npm ci
-          npm run build:wasm
+          npm run build
       - name: Check out and install merge-base plugin
+        # `build` covers wasm+ts on current versions; the extra `build:wasm`
+        # fallback keeps older merge bases (which had no `build` script) working
         run: |
           git worktree add /tmp/base-plugin "$(git merge-base origin/master HEAD)"
           cd /tmp/base-plugin
           npm ci
+          npm run build --if-present
           npm run build:wasm --if-present
       - name: Install fixture site
         working-directory: ci/site

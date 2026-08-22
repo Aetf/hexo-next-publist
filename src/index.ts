@@ -1,24 +1,25 @@
 import _ from 'lodash';
+import type Hexo from 'hexo';
 
-import { DEFAULT_OPTIONS } from './consts.js';
+import { DEFAULT_OPTIONS, type PublistOptions } from './consts.js';
 import { register as registerBibRenderer } from './bib-renderer.js';
 import { PublistWidget } from './publist-widget.js';
 import { PublistTag } from './publist-tag.js';
 import { SSRFilter } from './filter.js';
 
-function processOptions (hexo) {
-    let opts = _.defaults({}, hexo.config.publist, DEFAULT_OPTIONS);
+function processOptions(hexo: Hexo): PublistOptions {
+    const opts: PublistOptions = _.defaults({}, hexo.config['publist'], DEFAULT_OPTIONS);
 
     if (!opts.assets_prefix.endsWith('/')) {
         opts.assets_prefix = opts.assets_prefix + '/';
     }
 
-    hexo.config.publist = opts;
+    hexo.config['publist'] = opts;
 
     return opts;
 }
 
-export default function register(hexo) {
+export default function register(hexo: Hexo): void {
     const opts = processOptions(hexo);
 
     // register renderer bib in _data, which is inside the source box

@@ -1,12 +1,11 @@
 import test from 'ava';
 
 import _ from 'lodash';
-import moment from 'moment';
 
 import { getHexo } from './helpers/index.js';
 
-import { PublistTag, PubsResolver } from '../src/publist-tag.js';
-import { PublistStrictAbort } from '../src/consts.js';
+import { PublistTag, resolvePublist } from '../dist/publist-tag.js';
+import { PublistStrictAbort } from '../dist/consts.js';
 
 function setHexoLocals(hexo, name, items) {
     hexo.locals.set('data', {
@@ -69,7 +68,7 @@ test('New badge', async t => {
         occurrences:
         - key: abc'1
           name: The First ABC
-          date: ${moment().subtract(1, 'month').format('YYYY-MM-DD')}
+          date: ${new Date(Date.now() - 32 * 24 * 3600 * 1000).toISOString().slice(0, 10)}
     `;
 
     const publistTag = new PublistTag(hexo, { ...opts, new_month: 3 });
@@ -102,8 +101,7 @@ test('confkey literal and regex match', async t => {
           date: 2021-01-01
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const pubs = resolver.processPubs(rawPubs);
+    const { pubs } = resolvePublist(hexo, opts, instOpts, rawPubs, { source: 'test.bib' });
 
     t.is(pubs.length, 2);
     t.is(pubs[0].conf.key, 'abcworkshop');
@@ -135,8 +133,7 @@ test('confkey regex match does not affect each other', async t => {
           date: 2021-01-01
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const pubs = resolver.processPubs(rawPubs);
+    const { pubs } = resolvePublist(hexo, opts, instOpts, rawPubs, { source: 'test.bib' });
 
     t.is(pubs.length, 2);
     t.is(pubs[0].conf.key, 'abc-all');
@@ -166,8 +163,7 @@ test('Conference url in parent', async t => {
           date: 2021-01-01
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const pubs = resolver.processPubs(rawPubs);
+    const { pubs } = resolvePublist(hexo, opts, instOpts, rawPubs, { source: 'test.bib' });
 
     t.is(pubs.length, 1);
     t.is(pubs[0].conf.url, 'https://abc.com');
@@ -211,12 +207,11 @@ test('Date resolving', async t => {
           name: The First ABC
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const pubs = resolver.processPubs(rawPubs);
+    const { pubs } = resolvePublist(hexo, opts, instOpts, rawPubs, { source: 'test.bib' });
 
     t.is(pubs.length, 2);
-    t.is(pubs[0].date.toISOString(), '2021-01-01T00:00:00.000Z');
-    t.is(pubs[1].date.toISOString(), '2020-01-01T00:00:00.000Z');
+    t.is(pubs[0].date, '2021-01-01T00:00:00.000Z');
+    t.is(pubs[1].date, '2020-01-01T00:00:00.000Z');
 });
 
 test('Bib date field takes priority over conference date', async t => {
@@ -250,12 +245,11 @@ test('Bib date field takes priority over conference date', async t => {
           date: 2021-01-01
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const pubs = resolver.processPubs(rawPubs);
+    const { pubs } = resolvePublist(hexo, opts, instOpts, rawPubs, { source: 'test.bib' });
 
     t.is(pubs.length, 2);
-    t.is(pubs[0].date.toISOString(), '2022-05-04T00:00:00.000Z');
-    t.is(pubs[1].date.toISOString(), '2021-01-01T00:00:00.000Z');
+    t.is(pubs[0].date, '2022-05-04T00:00:00.000Z');
+    t.is(pubs[1].date, '2021-01-01T00:00:00.000Z');
 });
 
 test('Bib date field supports ranges and partial dates', async t => {
@@ -289,13 +283,12 @@ test('Bib date field supports ranges and partial dates', async t => {
           date: 2021-01-01
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const pubs = resolver.processPubs(rawPubs);
+    const { pubs } = resolvePublist(hexo, opts, instOpts, rawPubs, { source: 'test.bib' });
 
     t.is(pubs.length, 3);
-    t.is(pubs[0].date.toISOString(), '2022-05-04T00:00:00.000Z');
-    t.is(pubs[1].date.toISOString(), '2022-03-01T00:00:00.000Z');
-    t.is(pubs[2].date.toISOString(), '2022-01-01T00:00:00.000Z');
+    t.is(pubs[0].date, '2022-05-04T00:00:00.000Z');
+    t.is(pubs[1].date, '2022-03-01T00:00:00.000Z');
+    t.is(pubs[2].date, '2022-01-01T00:00:00.000Z');
 });
 
 test('Invalid bib date field falls back to conference date', async t => {
@@ -319,11 +312,10 @@ test('Invalid bib date field falls back to conference date', async t => {
           date: 2021-01-01
     `;
 
-    const resolver = new PubsResolver(hexo, { ...opts, strict: false }, instOpts, { source: 'test.bib' });
-    const pubs = resolver.processPubs(rawPubs);
+    const { pubs } = resolvePublist(hexo, { ...opts, strict: false }, instOpts, rawPubs, { source: 'test.bib' });
 
     t.is(pubs.length, 1);
-    t.is(pubs[0].date.toISOString(), '2021-01-01T00:00:00.000Z');
+    t.is(pubs[0].date, '2021-01-01T00:00:00.000Z');
 });
 
 test('Strict reject invalid bib date field', async t => {
@@ -382,8 +374,7 @@ test('Link resolving', async t => {
           date: 2021-01-01
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const pubs = resolver.processPubs(rawPubs);
+    const { pubs } = resolvePublist(hexo, opts, instOpts, rawPubs, { source: 'test.bib' });
 
     t.is(pubs.length, 1);
     t.snapshot(pubs[0].links);
@@ -497,8 +488,7 @@ test('Filtering spec generation', async t => {
           date: 2021-01-01
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const fspecs = resolver.processFspecs(resolver.processPubs(pubs));
+    const { fspecs } = resolvePublist(hexo, opts, instOpts, pubs, { source: 'test.bib' });
     t.snapshot(fspecs);
 });
 
@@ -524,8 +514,7 @@ test('Uncategorized venue', async t => {
           name: PhD Dissertation
     `;
 
-    const resolver = new PubsResolver(hexo, opts, instOpts, { source: 'test.bib' });
-    const fspecs = resolver.processFspecs(resolver.processPubs(pubs));
+    const { fspecs } = resolvePublist(hexo, opts, instOpts, pubs, { source: 'test.bib' });
     t.snapshot(fspecs);
 });
 

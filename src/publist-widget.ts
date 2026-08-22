@@ -1,11 +1,13 @@
 import pathFn from 'node:path';
 import { existsSync } from 'node:fs';
 
-import { WIDGET_DIR, SELF } from './consts.js';
+import type Hexo from 'hexo';
+
+import { WIDGET_DIR, SELF, type PublistOptions } from './consts.js';
 import { Widget } from './widget/index.js';
 
 export class PublistWidget extends Widget {
-    constructor(ctx, opts) {
+    constructor(ctx: Hexo, opts: PublistOptions) {
         // hexo's Box derives cache ids as src.substring(base_dir.length), which
         // assumes the box lives under the site's base_dir. Prefer the (possibly
         // symlinked) install path inside the site so that assumption holds;
@@ -21,17 +23,17 @@ export class PublistWidget extends Widget {
             // additional resolve paths for self's node_modules
             webpackConfig: {
                 resolve: {
-                    modules: [selfNodeModules]
+                    modules: [selfNodeModules],
                 },
                 resolveLoader: {
-                    modules: [selfNodeModules]
+                    modules: [selfNodeModules],
                 },
             },
             webpackConfigPath: 'webpack.config.js',
             debug: debug ? {
                 snapshot: {
-                    managedPaths: [selfNodeModules]
-                }
+                    managedPaths: [selfNodeModules],
+                },
             } : undefined,
         });
     }

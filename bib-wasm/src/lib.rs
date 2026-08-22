@@ -8,6 +8,7 @@
 mod chunker;
 mod model;
 mod sentence;
+pub mod tag;
 
 use biblatex::{Bibliography, RawBibliography};
 use unicode_normalization::UnicodeNormalization;
@@ -18,6 +19,20 @@ use model::{Creator, Entry, Field, Output, PError};
 #[wasm_bindgen]
 pub fn parse_bib(input: &str) -> String {
     serde_json::to_string(&parse(input)).expect("output serialization cannot fail")
+}
+
+/// Run the publist tag pipeline: yaml instance options + bib items in,
+/// template context (pubs, fspecs, instOpts) plus diagnostics out.
+#[wasm_bindgen]
+pub fn process_tag(input: &str) -> String {
+    let out = match serde_json::from_str::<tag::Input>(input) {
+        Ok(inp) => tag::process(inp),
+        Err(e) => tag::Output {
+            fatal: Some(tag::Fatal::tag(format!("invalid tag input: {e}"))),
+            ..Default::default()
+        },
+    };
+    serde_json::to_string(&out).expect("output serialization cannot fail")
 }
 
 /// Line/column (1-based) of a byte offset within `src`.

@@ -6,8 +6,8 @@ import _ from 'lodash';
 
 import { getHexo } from './helpers/index.js';
 
-import { bibRenderer } from '../src/bib-renderer.js';
-import { PublistStrictAbort } from '../src/consts.js';
+import { bibRenderer } from '../dist/bib-renderer.js';
+import { PublistStrictAbort } from '../dist/consts.js';
 
 const require = createRequire(import.meta.url);
 
