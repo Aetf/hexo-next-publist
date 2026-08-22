@@ -10,7 +10,7 @@ license = "Apache-2.0 AND MIT"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-biblatex = "0.10"
+biblatex = "0.12"
 wasm-bindgen = "0.2"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }
