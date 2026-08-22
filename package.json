@@ -61,7 +61,6 @@
         "sass-loader": "^17.0.0",
         "strip-indent": "^4.1.1",
         "style-loader": "^4.0.0",
-        "verror": "^1.10.0",
         "webpack": "^5.28.0"
     },
     "peerDependencies": {
@@ -74,7 +73,6 @@
         "@eslint/js": "^10.0.1",
         "@types/lodash": "^4.17.25",
         "@types/node": "^26.2.0",
-        "@types/verror": "^1.10.11",
         "ava": "^8.0.0",
         "eslint": "^10.9.0",
         "globals": "^17.11.0",
