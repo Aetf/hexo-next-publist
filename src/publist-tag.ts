@@ -2,15 +2,12 @@ import pathFn from 'node:path';
 import crypto from 'node:crypto';
 
 import chalk from 'chalk';
-import verror from 'verror';
 import type Hexo from 'hexo';
 
 import { process_tag } from '../bib-wasm/pkg/publist_bib_wasm.js';
 
 import { TEMPLATE_DIR, PublistStrictAbort, type PublistOptions } from './consts.js';
 import type { BibItem } from './bib-renderer.js';
-
-const { VError } = verror;
 
 /** The rendering context hexo passes to a tag: where the tag appears. */
 export interface TagContext {
@@ -96,7 +93,7 @@ export function resolvePublist(
         }
         throw new PublistStrictAbort(
             context.source,
-            new VError(`${formatLocation(context)}: ${result.fatal.message}`),
+            new Error(`${formatLocation(context)}: ${result.fatal.message}`),
         );
     }
     return result;

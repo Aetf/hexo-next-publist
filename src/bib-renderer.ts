@@ -2,14 +2,11 @@ import pathFn from 'node:path';
 
 import chalk from 'chalk';
 import stripIndent from 'strip-indent';
-import verror from 'verror';
 import type Hexo from 'hexo';
 
 import { parse_bib } from '../bib-wasm/pkg/publist_bib_wasm.js';
 
 import { PublistStrictAbort, type PublistOptions } from './consts.js';
-
-const { MultiError } = verror;
 
 function formatLocation(file: string, line?: number, column?: number): string {
     return `${file}:${line ?? '?'}:${column ?? '?'}`;
@@ -113,7 +110,7 @@ export async function bibRenderer(
 
     if (bibErrors.length > 0) {
         if (opts.strict) {
-            throw new PublistStrictAbort(path, new MultiError(bibErrors));
+            throw new PublistStrictAbort(path, new AggregateError(bibErrors, `${bibErrors.length} error(s) while parsing bib entries`));
         } else {
             ctx.log.warn(`${path}: there were errors while loading, bib entries may be incomplete.`);
         }
