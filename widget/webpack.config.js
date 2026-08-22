@@ -4,9 +4,11 @@ import { fileURLToPath } from 'node:url';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import cssnano from 'cssnano';
 import babelPresetEnvModule from '@babel/preset-env';
+import babelPluginPolyfillCorejs3Module from 'babel-plugin-polyfill-corejs3';
 
 // @babel/preset-env is CJS with an interop default export
 const babelPresetEnv = babelPresetEnvModule.default ?? babelPresetEnvModule;
+const babelPluginPolyfillCorejs3 = babelPluginPolyfillCorejs3Module.default ?? babelPluginPolyfillCorejs3Module;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = pathFn.dirname(__filename);
@@ -60,9 +62,18 @@ const config = {
                                     babelPresetEnv,
                                     {
                                         targets: "defaults",
-                                        useBuiltIns: "usage",
-                                        corejs: "3.9",
                                         shippedProposals: true
+                                    }
+                                ]
+                            ],
+                            plugins: [
+                                [
+                                    // babel 8 removed preset-env's useBuiltIns/corejs options;
+                                    // this plugin is the designated replacement for useBuiltIns: "usage"
+                                    babelPluginPolyfillCorejs3,
+                                    {
+                                        method: "usage-global",
+                                        version: "3.9"
                                     }
                                 ]
                             ]
