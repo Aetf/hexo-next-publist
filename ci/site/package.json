@@ -8,7 +8,7 @@
   "dependencies": {
     "hexo": "^8.0.0",
     "hexo-cli": "^4.3.0",
-    "hexo-renderer-marked": "^6.1.1",
+    "hexo-renderer-marked": "^7.0.0",
     "hexo-next-publist": "file:../.."
   },
   "devDependencies": {
