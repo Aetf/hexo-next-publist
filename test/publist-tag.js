@@ -341,9 +341,12 @@ test('Strict reject invalid bib date field', async t => {
     `;
 
     const publistTag = new PublistTag(hexo, opts);
-    await t.throwsAsync(async () => {
+    // any: true because PublistStrictAbort extends legacy verror's VError,
+    // which does not pass ava 8's util.types.isNativeError() check
+    const err = await t.throwsAsync(async () => {
         await publistTag._tag(['test'], instOpts, { source: 'test.bib' });
-    }, { instanceOf: PublistStrictAbort });
+    }, { any: true });
+    t.true(err instanceof PublistStrictAbort);
 });
 
 test('Link resolving', async t => {
@@ -535,9 +538,12 @@ test('Strict reject entry without date', async t => {
     `;
 
     const publistTag = new PublistTag(hexo, opts);
-    await t.throwsAsync(async () => {
+    // any: true because PublistStrictAbort extends legacy verror's VError,
+    // which does not pass ava 8's util.types.isNativeError() check
+    const err = await t.throwsAsync(async () => {
         await publistTag._tag(['test'], instOpts, { source: 'test.bib' });
-    }, { instanceOf: PublistStrictAbort });
+    }, { any: true });
+    t.true(err instanceof PublistStrictAbort);
 });
 
 test('Strict reject entry without confkey', async t => {
@@ -560,9 +566,12 @@ test('Strict reject entry without confkey', async t => {
     `;
 
     const publistTag = new PublistTag(hexo, opts);
-    await t.throwsAsync(async () => {
+    // any: true because PublistStrictAbort extends legacy verror's VError,
+    // which does not pass ava 8's util.types.isNativeError() check
+    const err = await t.throwsAsync(async () => {
         await publistTag._tag(['test'], instOpts, { source: 'test.bib' });
-    }, { instanceOf: PublistStrictAbort });
+    }, { any: true });
+    t.true(err instanceof PublistStrictAbort);
 });
 
 test('Entry rendering with coauthor', async t => {
