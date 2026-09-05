@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.1.1](https://github.com/Aetf/hexo-next-publist/compare/v3.1.0...v3.1.1) (2026-09-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency memfs to v4.69.1 ([38db1e1](https://github.com/Aetf/hexo-next-publist/commit/38db1e124b5f4a8e86f3fa3b3252416a8762d49c))
+* **deps:** update dependency webpack to v5.110.0 ([50150ad](https://github.com/Aetf/hexo-next-publist/commit/50150ad525d45b263078ce2a7f4e2ac8163c94a1))
+* **deps:** update rust crate regress to 0.12 ([#238](https://github.com/Aetf/hexo-next-publist/issues/238)) ([5aee48c](https://github.com/Aetf/hexo-next-publist/commit/5aee48cf5ac014c2bc8de4e9a80004c0c35b0d8f))
+
 ## [3.1.0](https://github.com/Aetf/hexo-next-publist/compare/v3.0.0...v3.1.0) (2026-08-22)
 
 
