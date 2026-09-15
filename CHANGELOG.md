@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.1.1](https://github.com/Aetf/hexo-next-publist/compare/v3.1.0...v3.1.1) (2026-09-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency memfs to v4.69.1 ([38db1e1](https://github.com/Aetf/hexo-next-publist/commit/38db1e124b5f4a8e86f3fa3b3252416a8762d49c))
+* **deps:** update dependency memfs to v4.71.0 ([7069eb4](https://github.com/Aetf/hexo-next-publist/commit/7069eb4f429520dd3776889f91b59548753e2cb1))
+* **deps:** update dependency memfs to v4.72.1 ([54e3327](https://github.com/Aetf/hexo-next-publist/commit/54e332791433da600525e75f4ca199c0b94818c1))
+* **deps:** update dependency memfs to v4.73.0 ([3a6bc36](https://github.com/Aetf/hexo-next-publist/commit/3a6bc369afb7d86dfde0538bafe4b5ba2ffa5eff))
+* **deps:** update dependency memfs to v4.74.0 ([89fd6c0](https://github.com/Aetf/hexo-next-publist/commit/89fd6c0acc478c9296ef646b869cb20ad1abd12c))
+* **deps:** update dependency memfs to v4.75.0 ([60593e2](https://github.com/Aetf/hexo-next-publist/commit/60593e2cc9afa4b72d22e1579dee16d9458335ba))
+* **deps:** update dependency memfs to v4.76.0 ([9b0df77](https://github.com/Aetf/hexo-next-publist/commit/9b0df7794b1d6b8ba9772ae3c616ef7c0365f908))
+* **deps:** update dependency sass to v1.104.0 ([2f5fe39](https://github.com/Aetf/hexo-next-publist/commit/2f5fe392c530da84e1c4f74660b595e2170151a6))
+* **deps:** update dependency webpack to v5.110.0 ([50150ad](https://github.com/Aetf/hexo-next-publist/commit/50150ad525d45b263078ce2a7f4e2ac8163c94a1))
+* **deps:** update rust crate regress to 0.12 ([#238](https://github.com/Aetf/hexo-next-publist/issues/238)) ([5aee48c](https://github.com/Aetf/hexo-next-publist/commit/5aee48cf5ac014c2bc8de4e9a80004c0c35b0d8f))
+
 ## [3.1.0](https://github.com/Aetf/hexo-next-publist/compare/v3.0.0...v3.1.0) (2026-08-22)
 
 
